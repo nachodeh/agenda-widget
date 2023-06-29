@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_event_text_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="14sp"
+    android:textColor="@color/white"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:text="An event happening tomorrow"
+    android:shadowColor="#80000000"
+    android:shadowDx="1"
+    android:shadowDy="1"
+    android:shadowRadius="4"
+    />

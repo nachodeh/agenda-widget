@@ -1,0 +1,150 @@
+package com.flowmosaic.calendar.ui
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.flowmosaic.calendar.data.CalendarData
+import com.flowmosaic.calendar.data.CalendarFetcher
+import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ShowCalendarDialog(openDialog: MutableState<Boolean>) {
+    val context = LocalContext.current
+    val calendarFetcher = CalendarFetcher()
+    val calendarList = remember { mutableStateListOf<CalendarData>() }
+    val selectedCalendars = remember { mutableStateListOf<String>() }
+
+    LaunchedEffect(Unit) {
+        calendarList.addAll(calendarFetcher.queryCalendarData(context))
+        selectedCalendars.addAll(AgendaWidgetPrefs.getSelectedCalendars(context, calendarList))
+    }
+
+    val checkedItems = BooleanArray(calendarList.size) { index ->
+        selectedCalendars.contains(calendarList[index].id.toString())
+    }
+
+    Dialog(
+        onDismissRequest = {
+            openDialog.value = false
+        },
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        content = {
+            CalendarDialogContent(
+                calendarList = calendarList,
+                selectedCalendars = selectedCalendars,
+                checkedItems = checkedItems,
+                onCheckedChange = { index, isChecked ->
+                    val calendarId = calendarList[index].id.toString()
+                    if (isChecked) {
+                        selectedCalendars.add(calendarId)
+                    } else {
+                        selectedCalendars.remove(calendarId)
+                    }
+                    checkedItems[index] = isChecked
+                },
+                onSaveClick = {
+                    AgendaWidgetPrefs.setSelectedCalendars(context, selectedCalendars.toSet())
+                    openDialog.value = false
+                },
+                onCancelClick = {
+                    openDialog.value = false
+                }
+            )
+        }
+    )
+}
+
+@Composable
+private fun CalendarDialogContent(
+    calendarList: List<CalendarData>,
+    selectedCalendars: MutableList<String>,
+    checkedItems: BooleanArray,
+    onCheckedChange: (Int, Boolean) -> Unit,
+    onSaveClick: () -> Unit,
+    onCancelClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier.padding(16.dp),
+        shape = MaterialTheme.shapes.large
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            for (i in calendarList.indices) {
+                val calendar = calendarList[i]
+                CalendarRow(
+                    isChecked = checkedItems[i],
+                    calendarName = calendar.name,
+                    onCheckedChange = { isChecked ->
+                        onCheckedChange(i, isChecked)
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(onClick = onSaveClick) {
+                    Text(text = "Save")
+                }
+                Button(onClick = onCancelClick) {
+                    Text(text = "Cancel")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CalendarRow(
+    isChecked: Boolean,
+    calendarName: String,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(),
+                onClick = {
+                    onCheckedChange(!isChecked)
+                }
+            )
+            .padding(vertical = 8.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = isChecked,
+            onCheckedChange = onCheckedChange
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = calendarName)
+    }
+}
