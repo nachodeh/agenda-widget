@@ -3,6 +3,7 @@ package com.flowmosaic.calendar.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,6 +48,14 @@ fun PreferencesScreen() {
         AgendaWidgetPrefs.setShowEndTime(context, newValue)
     }
 
+    val numberOfDays = remember {
+        mutableStateOf(AgendaWidgetPrefs.getNumberOfDays(context))
+    }
+    val setNumberOfDays: (Int) -> Unit = { newValue ->
+        numberOfDays.value = newValue
+        AgendaWidgetPrefs.setNumberOfDays(context, newValue)
+    }
+
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog)
     }
@@ -70,13 +81,22 @@ fun PreferencesScreen() {
                 color = MaterialTheme.colorScheme.onPrimary
             )
         }
-        ButtonRow(enableAction = showCalendarSelectionDialog)
-        CheckboxRow(showEndTime, setShowEndTime)
+        ButtonRow(displayText = "Select calendars", enableAction = showCalendarSelectionDialog)
+        CheckboxRow(
+            displayText = "Show end time",
+            checkboxValue = showEndTime,
+            saveCheckboxValue = setShowEndTime
+        )
+        NumberSelectorRow(
+            displayText = "Number of days to display",
+            numberValue = numberOfDays,
+            saveNumberValue = setNumberOfDays
+        )
     }
 }
 
 @Composable
-fun ButtonRow(enableAction: MutableState<Boolean>) {
+fun ButtonRow(displayText: String, enableAction: MutableState<Boolean>) {
     val coroutineScope = rememberCoroutineScope()
     Row(
         modifier = Modifier
@@ -90,17 +110,17 @@ fun ButtonRow(enableAction: MutableState<Boolean>) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Select Calendars", style = MaterialTheme.typography.bodyMedium)
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
         Icon(Icons.Default.ArrowForward, contentDescription = null)
     }
 }
 
 @Composable
 fun CheckboxRow(
-    checkboxValue: MutableState<Boolean>, saveCheckboxValue: (Boolean) -> Unit
+    displayText: String,
+    checkboxValue: MutableState<Boolean>,
+    saveCheckboxValue: (Boolean) -> Unit
 ) {
-    val context = LocalContext.current
-
     Row(modifier = Modifier
         .fillMaxWidth()
         .clickable {
@@ -110,7 +130,47 @@ fun CheckboxRow(
         .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = "Show End Time", style = MaterialTheme.typography.bodyMedium)
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
         Checkbox(checked = checkboxValue.value, onCheckedChange = null)
     }
 }
+
+@Composable
+fun NumberSelectorRow(
+    displayText: String,
+    numberValue: MutableState<Int>,
+    saveNumberValue: (Int) -> Unit
+) {
+    val options = listOf(1, 7, 10, 30)
+    var expanded = remember { mutableStateOf(false) }
+    val text = "${numberValue.value}"
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+
+        Box {
+            Text(text = text, modifier = Modifier.clickable { expanded.value = true })
+            DropdownMenu(
+                expanded = expanded.value,
+                onDismissRequest = { expanded.value = false },
+            ) {
+                options.forEach { option ->
+                    DropdownMenuItem(
+                        onClick = {
+                            numberValue.value = option
+                            saveNumberValue(option)
+                            expanded.value = false
+                        }, text = { Text(option.toString()) })
+                }
+            }
+        }
+    }
+}
+
+

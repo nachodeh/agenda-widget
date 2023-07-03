@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
 data class CalendarData(val id: Long, val name: String)
 
@@ -61,7 +62,8 @@ class CalendarFetcher {
     private fun getCalendarEvents(context: Context): List<CalendarEvent> {
         val events = arrayListOf<CalendarEvent>()
         val currentTime = Calendar.getInstance().timeInMillis
-        val endTime = currentTime + (7 * 24 * 60 * 60 * 1000) // One week from now
+        val endTime =
+            currentTime + TimeUnit.DAYS.toMillis(AgendaWidgetPrefs.getNumberOfDays(context).toLong())
         val selectedCalendarIds = AgendaWidgetPrefs.getSelectedCalendars(context, null)
 
         val projection = arrayOf(
