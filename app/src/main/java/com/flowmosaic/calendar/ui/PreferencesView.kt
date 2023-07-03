@@ -1,5 +1,6 @@
 package com.flowmosaic.calendar.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,17 +34,19 @@ fun PreferencesScreen() {
     val calendarFetcher = CalendarFetcher()
     val calendarList = remember { mutableStateOf(listOf<CalendarData>()) }
     val selectedCalendars = remember { mutableStateOf(setOf<String>()) }
+    val showCalendarSelectionDialog = remember {
+        mutableStateOf(false)
+    }
     val showEndTime = remember {
         mutableStateOf(AgendaWidgetPrefs.getShowEndTime(context))
     }
-    val coroutineScope = rememberCoroutineScope()
-
-    val showDialog = remember {
-        mutableStateOf(false)
+    val setShowEndTime: (Boolean) -> Unit = { newValue ->
+        showEndTime.value = newValue
+        AgendaWidgetPrefs.setShowEndTime(context, newValue)
     }
 
-    if (showDialog.value) {
-        ShowCalendarDialog(openDialog = showDialog)
+    if (showCalendarSelectionDialog.value) {
+        ShowCalendarDialog(openDialog = showCalendarSelectionDialog)
     }
 
     LaunchedEffect(key1 = Unit) {
@@ -55,41 +59,58 @@ fun PreferencesScreen() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(text = "Agenda Widget", style = MaterialTheme.typography.headlineMedium)
+            Text(
+                text = "Agenda Widget",
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    coroutineScope.launch {
-                        showDialog.value = true
-                    }
-                }
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Select Calendars", style = MaterialTheme.typography.bodyMedium)
-            Icon(Icons.Default.ArrowForward, contentDescription = null)
-        }
+        ButtonRow(enableAction = showCalendarSelectionDialog)
+        CheckboxRow(showEndTime, setShowEndTime)
+    }
+}
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    showEndTime.value = !showEndTime.value
-                    AgendaWidgetPrefs.setShowEndTime(context, showEndTime.value)
+@Composable
+fun ButtonRow(enableAction: MutableState<Boolean>) {
+    val coroutineScope = rememberCoroutineScope()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                coroutineScope.launch {
+                    enableAction.value = true
                 }
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Show End Time", style = MaterialTheme.typography.bodyMedium)
-            Checkbox(checked = showEndTime.value, onCheckedChange = null)
+            }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = "Select Calendars", style = MaterialTheme.typography.bodyMedium)
+        Icon(Icons.Default.ArrowForward, contentDescription = null)
+    }
+}
+
+@Composable
+fun CheckboxRow(
+    checkboxValue: MutableState<Boolean>, saveCheckboxValue: (Boolean) -> Unit
+) {
+    val context = LocalContext.current
+
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .clickable {
+            checkboxValue.value = !checkboxValue.value
+            saveCheckboxValue(checkboxValue.value)
         }
+        .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(text = "Show End Time", style = MaterialTheme.typography.bodyMedium)
+        Checkbox(checked = checkboxValue.value, onCheckedChange = null)
     }
 }
