@@ -1,6 +1,5 @@
 package com.flowmosaic.calendar.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
@@ -98,7 +99,11 @@ fun ButtonRow(displayText: String, enableAction: MutableState<Boolean>) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
-        Icon(Icons.Default.ArrowForward, contentDescription = null)
+        Icon(
+            imageVector = Icons.Default.ArrowForward,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
@@ -118,7 +123,12 @@ fun CheckboxRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
-        Checkbox(checked = checkboxValue.value, onCheckedChange = null)
+        Checkbox(
+            checked = checkboxValue.value, onCheckedChange = null, colors = CheckboxDefaults.colors(
+                checkedColor = MaterialTheme.colorScheme.primary,
+                uncheckedColor = MaterialTheme.colorScheme.primary
+            )
+        )
     }
 }
 
@@ -135,6 +145,7 @@ fun NumberSelectorRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { expanded.value = true }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -142,7 +153,13 @@ fun NumberSelectorRow(
         Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
 
         Box {
-            Text(text = text, modifier = Modifier.clickable { expanded.value = true })
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
             DropdownMenu(
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
@@ -158,6 +175,7 @@ fun NumberSelectorRow(
             }
         }
     }
+
 }
 
 
