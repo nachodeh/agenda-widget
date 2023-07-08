@@ -67,20 +67,7 @@ fun PreferencesScreen() {
     }
 
     Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = "Agenda Widget",
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        }
+        Header()
         ButtonRow(displayText = "Select calendars", enableAction = showCalendarSelectionDialog)
         CheckboxRow(
             displayText = "Show end time",
