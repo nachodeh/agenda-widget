@@ -128,7 +128,7 @@ fun NumberSelectorRow(
     numberValue: MutableState<Int>,
     saveNumberValue: (Int) -> Unit
 ) {
-    val options = listOf(1, 7, 10, 30)
+    val options = listOf(1, 3, 7, 10, 30)
     var expanded = remember { mutableStateOf(false) }
     val text = "${numberValue.value}"
 
