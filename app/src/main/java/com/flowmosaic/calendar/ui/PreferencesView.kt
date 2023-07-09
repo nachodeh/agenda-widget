@@ -27,6 +27,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +46,7 @@ fun PreferencesScreen() {
     val calendarFetcher = CalendarFetcher()
     val calendarList = remember { mutableStateOf(listOf<CalendarData>()) }
     val selectedCalendars = remember { mutableStateOf(setOf<String>()) }
-    val showCalendarSelectionDialog = remember {
+    val showCalendarSelectionDialog = rememberSaveable {
         mutableStateOf(false)
     }
     val showEndTime = remember {
@@ -199,7 +200,7 @@ fun ColorSelectorRow(
     selectedColor: MutableState<Color>,
     saveColorValue: (Color) -> Unit
 ) {
-    val showDialog = remember {
+    val showDialog = rememberSaveable {
         mutableStateOf(false)
     }
 

@@ -3,13 +3,17 @@ package com.flowmosaic.calendar.ui
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
@@ -89,25 +93,35 @@ private fun CalendarDialogContent(
     onCancelClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .padding(16.dp)
+            .wrapContentSize()
+            .heightIn(min = 100.dp, max = 500.dp)
+            .widthIn(min = 100.dp, max = 500.dp),
         shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.primaryContainer,
+        color = MaterialTheme.colorScheme.secondaryContainer,
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            for (i in calendarList.indices) {
-                val calendar = calendarList[i]
-                CalendarRow(
-                    isChecked = checkedItems[i],
-                    calendarName = calendar.name,
-                    onCheckedChange = { isChecked ->
-                        onCheckedChange(i, isChecked)
-                    }
-                )
+        Box(modifier = Modifier.padding(16.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(bottom = 80.dp) // Ensure there's enough space for the buttons
+            ) {
+                itemsIndexed(calendarList) { index, calendar ->
+                    CalendarRow(
+                        isChecked = checkedItems[index],
+                        calendarName = calendar.name,
+                        onCheckedChange = { isChecked ->
+                            onCheckedChange(index, isChecked)
+                        }
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(onClick = onSaveClick) {
