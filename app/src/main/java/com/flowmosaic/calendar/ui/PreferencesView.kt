@@ -55,13 +55,17 @@ fun PreferencesScreen() {
         showEndTime.value = newValue
         AgendaWidgetPrefs.setShowEndTime(context, newValue)
     }
-
     val numberOfDays = remember {
         mutableStateOf(AgendaWidgetPrefs.getNumberOfDays(context))
     }
     val setNumberOfDays: (Int) -> Unit = { newValue ->
         numberOfDays.value = newValue
         AgendaWidgetPrefs.setNumberOfDays(context, newValue)
+    }
+    val colorState = remember { mutableStateOf(AgendaWidgetPrefs.getTextColor(context)) }
+    val setColorState: (Color) -> Unit = { newValue ->
+        colorState.value = newValue
+        AgendaWidgetPrefs.setTextColor(context, newValue)
     }
 
     if (showCalendarSelectionDialog.value) {
@@ -87,11 +91,6 @@ fun PreferencesScreen() {
             numberValue = numberOfDays,
             saveNumberValue = setNumberOfDays
         )
-        val colorState = remember { mutableStateOf(AgendaWidgetPrefs.getTextColor(context)) }
-        val setColorState: (Color) -> Unit = { newValue ->
-            colorState.value = newValue
-            AgendaWidgetPrefs.setTextColor(context, newValue)
-        }
         ColorSelectorRow(
             displayText = "Text color",
             selectedColor = colorState,
