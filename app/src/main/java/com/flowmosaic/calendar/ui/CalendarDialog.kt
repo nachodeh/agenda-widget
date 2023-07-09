@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -57,7 +58,6 @@ fun ShowCalendarDialog(openDialog: MutableState<Boolean>) {
         content = {
             CalendarDialogContent(
                 calendarList = calendarList,
-                selectedCalendars = selectedCalendars,
                 checkedItems = checkedItems,
                 onCheckedChange = { index, isChecked ->
                     val calendarId = calendarList[index].id.toString()
@@ -83,7 +83,6 @@ fun ShowCalendarDialog(openDialog: MutableState<Boolean>) {
 @Composable
 private fun CalendarDialogContent(
     calendarList: List<CalendarData>,
-    selectedCalendars: MutableList<String>,
     checkedItems: BooleanArray,
     onCheckedChange: (Int, Boolean) -> Unit,
     onSaveClick: () -> Unit,
@@ -91,7 +90,8 @@ private fun CalendarDialogContent(
 ) {
     Surface(
         modifier = Modifier.padding(16.dp),
-        shape = MaterialTheme.shapes.large
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             for (i in calendarList.indices) {
