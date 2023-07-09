@@ -1,5 +1,8 @@
 package com.flowmosaic.calendar.ui
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,6 +10,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Checkbox
@@ -24,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -79,6 +86,16 @@ fun PreferencesScreen() {
             displayText = "Number of days to display",
             numberValue = numberOfDays,
             saveNumberValue = setNumberOfDays
+        )
+        val colorState = remember { mutableStateOf(AgendaWidgetPrefs.getTextColor(context)) }
+        val setColorState: (Color) -> Unit = { newValue ->
+            colorState.value = newValue
+            AgendaWidgetPrefs.setTextColor(context, newValue)
+        }
+        ColorSelectorRow(
+            displayText = "Text color",
+            selectedColor = colorState,
+            saveColorValue = setColorState
         )
     }
 }
@@ -158,7 +175,7 @@ fun NumberSelectorRow(
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(horizontal = 4.dp)
+                modifier = Modifier.padding(horizontal = 0.dp)
             )
             DropdownMenu(
                 expanded = expanded.value,
@@ -175,7 +192,63 @@ fun NumberSelectorRow(
             }
         }
     }
+}
 
+@Composable
+fun ColorSelectorRow(
+    displayText: String,
+    selectedColor: MutableState<Color>,
+    saveColorValue: (Color) -> Unit
+) {
+    val showDialog = remember {
+        mutableStateOf(false)
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .clickable { showDialog.value = true },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+        Canvas(
+            modifier = Modifier
+                .clip(RoundedCornerShape(2.dp))
+                .border(
+                    2.dp,
+                    MaterialTheme.colorScheme.primary,
+                    RoundedCornerShape(1.dp)
+                )
+                .background(selectedColor.value)
+                .requiredSize(24.dp)
+        ) {}
+    }
+
+    val colors = listOf(
+        Color(0xFFFFFFFF),
+        Color(0xFF000000),
+        Color(0xFF888888),
+        Color(0xFFEF9A9A),
+        Color(0xFFF48FB1),
+        Color(0xFF80CBC4),
+        Color(0xFFA5D6A7),
+        Color(0xFFFFCC80),
+        Color(0xFFFFAB91),
+        Color(0xFF81D4FA),
+        Color(0xFFCE93D8),
+        Color(0xFFB39DDB)
+    )
+
+    if (showDialog.value) {
+        ColorDialog(
+            colors,
+            onDismiss = { showDialog.value = false },
+            selectedColor.value,
+            onColorSelected = saveColorValue
+        )
+    }
 }
 
 
