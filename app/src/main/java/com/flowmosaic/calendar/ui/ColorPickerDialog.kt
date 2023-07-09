@@ -4,9 +4,15 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -14,12 +20,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ColorDialog(
     colorList: List<Color>,
@@ -31,16 +40,17 @@ fun ColorDialog(
 
     Dialog(
         onDismissRequest = onDismiss,
-//        properties = DialogProperties(usePlatformDefaultWidth = false),
+        properties = DialogProperties(usePlatformDefaultWidth = false),
         content = {
             Surface(
                 shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.background,
-                modifier = Modifier.padding(8.dp).size(320.dp, 420.dp),
+                color = MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.wrapContentSize().padding(16.dp),
             ) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
                     state = gridState,
+                    modifier = Modifier.padding(16.dp),
                 ) {
                     items(colorList.size) { index ->
                         val color = colorList[index]

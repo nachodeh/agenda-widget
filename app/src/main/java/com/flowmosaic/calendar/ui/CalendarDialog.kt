@@ -91,7 +91,7 @@ private fun CalendarDialogContent(
     Surface(
         modifier = Modifier.padding(16.dp),
         shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.primaryContainer,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             for (i in calendarList.indices) {
