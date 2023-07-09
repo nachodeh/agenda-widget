@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Checkbox
@@ -81,15 +81,15 @@ fun PreferencesScreen() {
     Column {
         Header()
         ButtonRow(displayText = "Select calendars", enableAction = showCalendarSelectionDialog)
-        CheckboxRow(
-            displayText = "Show end time",
-            checkboxValue = showEndTime,
-            saveCheckboxValue = setShowEndTime
-        )
         NumberSelectorRow(
             displayText = "Number of days to display",
             numberValue = numberOfDays,
             saveNumberValue = setNumberOfDays
+        )
+        CheckboxRow(
+            displayText = "Show end time",
+            checkboxValue = showEndTime,
+            saveCheckboxValue = setShowEndTime
         )
         ColorSelectorRow(
             displayText = "Text color",
@@ -206,19 +206,19 @@ fun ColorSelectorRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .clickable { showDialog.value = true },
+            .clickable { showDialog.value = true }
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
         Canvas(
             modifier = Modifier
-                .clip(RoundedCornerShape(2.dp))
+                .clip(CircleShape)
                 .border(
-                    2.dp,
+                    1.75.dp,
                     MaterialTheme.colorScheme.primary,
-                    RoundedCornerShape(1.dp)
+                    CircleShape
                 )
                 .background(selectedColor.value)
                 .requiredSize(24.dp)
