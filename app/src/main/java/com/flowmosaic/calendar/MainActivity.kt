@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.PreferencesScreen
@@ -74,7 +75,7 @@ private fun RequestPermissionsScreen() {
                 modifier = Modifier.padding(horizontal = 8.dp),
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "Agenda Widget needs access to your calendar to display events. Please grant the calendar permissions to use the widget.")
+                Text(text = stringResource(id = R.string.calendar_access_info))
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = { calendarPermissionsState.launchMultiplePermissionRequest() },
@@ -85,7 +86,7 @@ private fun RequestPermissionsScreen() {
                             shape = RoundedCornerShape(8.dp)
                         ),
                 ) {
-                    Text("Request Permissions")
+                    Text(stringResource(id = R.string.request_permissions))
                 }
             }
         }

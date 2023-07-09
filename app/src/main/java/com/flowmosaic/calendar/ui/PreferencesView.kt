@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
@@ -81,19 +82,19 @@ fun PreferencesScreen() {
 
     Column {
         Header()
-        ButtonRow(displayText = "Select calendars", enableAction = showCalendarSelectionDialog)
+        ButtonRow(displayText = context.getString(R.string.select_calendars), enableAction = showCalendarSelectionDialog)
         NumberSelectorRow(
-            displayText = "Number of days to display",
+            displayText = context.getString(R.string.number_of_days_to_display),
             numberValue = numberOfDays,
             saveNumberValue = setNumberOfDays
         )
         CheckboxRow(
-            displayText = "Show end time",
+            displayText = context.getString(R.string.show_end_time),
             checkboxValue = showEndTime,
             saveCheckboxValue = setShowEndTime
         )
         ColorSelectorRow(
-            displayText = "Text color",
+            displayText = context.getString(R.string.text_color),
             selectedColor = colorState,
             saveColorValue = setColorState
         )

@@ -50,7 +50,7 @@ class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsServic
             }
 
             val text = when (item) {
-                is CalendarViewItem.Day -> CalendarDateUtils.getFormattedDate(item.date.time)
+                is CalendarViewItem.Day -> CalendarDateUtils.getFormattedDate(context, item.date.time)
                 is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(item.event, context)
             }
 

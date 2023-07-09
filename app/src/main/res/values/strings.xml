@@ -1,7 +1,16 @@
 <resources>
     <string name="app_name">Agenda Widget</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="app_widget_description">This is an app widget description</string>
-    <string name="title_activity_main2">MainActivity2</string>
+    <string name="app_widget_description">Agenda widget to display your upcoming events in a simple format</string>
+
+    <string name="select_calendars">Select calendars</string>
+    <string name="number_of_days_to_display">Number of days to display</string>
+    <string name="show_end_time">Show end time</string>
+    <string name="text_color">Text color</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="request_permissions">Request Permissions</string>
+    <string name="calendar_access_info">Agenda Widget needs access to your calendar to display events. Please grant the calendar permissions to use the widget.</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+
 </resources>

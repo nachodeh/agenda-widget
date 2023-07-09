@@ -1,6 +1,7 @@
 package com.flowmosaic.calendar.data
 
 import android.content.Context
+import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -9,14 +10,19 @@ import java.util.Locale
 
 object CalendarDateUtils {
 
-    fun getFormattedDate(startTimeInMillis: Long): String {
+    fun getFormattedDate(context: Context, startTimeInMillis: Long): String {
         val eventCalendar = Calendar.getInstance().apply { timeInMillis = startTimeInMillis }
         val currentDate = Calendar.getInstance()
         val tomorrowDate = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }
+        val weekLaterDate = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 7) }
 
         return when {
-            isSameDay(eventCalendar, currentDate) -> "Today"
-            isSameDay(eventCalendar, tomorrowDate) -> "Tomorrow"
+            isSameDay(eventCalendar, currentDate) -> context.getString(R.string.today)
+            isSameDay(eventCalendar, tomorrowDate) -> context.getString(R.string.tomorrow)
+            eventCalendar.after(weekLaterDate) -> {
+                val sdf = SimpleDateFormat("EEEE, d MMMM", Locale.getDefault())
+                sdf.format(eventCalendar.time)
+            }
             else -> eventCalendar.getDisplayName(
                 Calendar.DAY_OF_WEEK,
                 Calendar.LONG,
