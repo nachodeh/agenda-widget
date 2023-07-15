@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_widget_description">Widget de agenda para mostrar tus próximos eventos en un formato simple</string>
+    <string name="tap_to_set_up">Toca para configurar %1$s</string>
+    <string name="select_calendars">Seleccionar calendarios</string>
+    <string name="number_of_days_to_display">Número de días para mostrar</string>
+    <string name="show_end_time">Mostrar hora de finalización</string>
+    <string name="text_color">Color de texto</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="request_permissions">Solicitar permisos</string>
+    <string name="calendar_access_info">Widget de agenda necesita acceso a tu calendario para mostrar eventos. Por favor, otorga los permisos del calendario para usar el widget.</string>
+    <string name="today">Hoy</string>
+    <string name="tomorrow">Mañana</string>
+    <string name="date_placeholder">Marcador de fecha</string>
+    <string name="event_placeholder">Marcador de evento</string>
+</resources>
