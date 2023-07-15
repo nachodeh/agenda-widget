@@ -1,5 +1,6 @@
 package com.flowmosaic.calendar
 
+import android.Manifest
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -7,10 +8,12 @@ import android.content.ComponentName
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.CalendarContract
 import android.util.Log
 import android.widget.RemoteViews
+import androidx.core.content.ContextCompat
 import com.flowmosaic.calendar.remoteviews.EventsWidgetService
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
@@ -45,6 +48,7 @@ class AgendaWidget : AppWidgetProvider() {
                     updateWidget(context, AppWidgetManager.getInstance(context), widgetId)
                 }
             }
+
             CLICK_ACTION -> {
                 val time: Long = intent.getLongExtra(EXTRA_DATE, 0)
                 val eventId: Long = intent.getLongExtra(EXTRA_EVENT_ID, 0)
@@ -56,10 +60,12 @@ class AgendaWidget : AppWidgetProvider() {
                         builder.appendPath("time")
                         ContentUris.appendId(builder, time)
                     }
+
                     eventId > 0 -> {
                         builder.appendPath("events")
                         ContentUris.appendId(builder, eventId)
                     }
+
                     else -> {
                         builder.appendPath("time")
                         ContentUris.appendId(builder, System.currentTimeMillis())
@@ -86,6 +92,28 @@ class AgendaWidget : AppWidgetProvider() {
     }
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int) {
+        if (hasCalendarPermission(context)) {
+            renderCalendarWidget(context, appWidgetManager, widgetId)
+        } else {
+            Log.d("nachodehlog", "updateWidget")
+            showPermissionRequestView(context, appWidgetManager, widgetId)
+        }
+    }
+
+    fun forceWidgetUpdate(context: Context) {
+        Log.d("nachodehlog", "forceWidgetUpdate")
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val widgetComponent = ComponentName(context, AgendaWidget::class.java)
+        val widgetIds = appWidgetManager.getAppWidgetIds(widgetComponent)
+        onUpdate(context, appWidgetManager, widgetIds)
+    }
+
+
+    private fun renderCalendarWidget(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        widgetId: Int
+    ) {
         val views = RemoteViews(context.packageName, R.layout.agenda_widget)
         val intent = Intent(context, EventsWidgetService::class.java)
         views.setRemoteAdapter(R.id.events_list_view, intent)
@@ -107,12 +135,36 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(widgetId, views)
     }
 
-    fun forceWidgetUpdate(context: Context) {
-        Log.d("nachodehlog", "forceWidgetUpdate")
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-        val widgetComponent = ComponentName(context, AgendaWidget::class.java)
-        val widgetIds = appWidgetManager.getAppWidgetIds(widgetComponent)
-        onUpdate(context, appWidgetManager, widgetIds)
+
+    private fun showPermissionRequestView(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        widgetId: Int
+    ) {
+        val views = RemoteViews(context.packageName, R.layout.permission_request_widget)
+        val appName = context.getString(R.string.app_name)
+        val tapToSetupString = context.getString(R.string.tap_to_set_up, appName)
+        views.setTextViewText(R.id.permission_request_text, tapToSetupString)
+
+        val intent = Intent(context, MainActivity::class.java)
+        val flags = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, flags)
+        views.setOnClickPendingIntent(R.id.permission_request_text, pendingIntent)
+
+        appWidgetManager.updateAppWidget(widgetId, views)
+    }
+
+    private fun hasCalendarPermission(context: Context): Boolean {
+        val readCalendarPermission = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.READ_CALENDAR
+        )
+        val writeCalendarPermission = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.WRITE_CALENDAR
+        )
+        return readCalendarPermission == PackageManager.PERMISSION_GRANTED &&
+                writeCalendarPermission == PackageManager.PERMISSION_GRANTED
     }
 
 }

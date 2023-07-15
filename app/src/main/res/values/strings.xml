@@ -2,6 +2,7 @@
     <string name="app_name">Agenda Widget</string>
     <string name="app_widget_description">Agenda widget to display your upcoming events in a simple format</string>
 
+    <string name="tap_to_set_up">Tap to set up %1$s</string>
     <string name="select_calendars">Select calendars</string>
     <string name="number_of_days_to_display">Number of days to display</string>
     <string name="show_end_time">Show end time</string>
