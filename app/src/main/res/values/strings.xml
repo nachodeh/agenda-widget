@@ -14,4 +14,7 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
 
+    <string name="date_placeholder">Date placeholder</string>
+    <string name="event_placeholder">Event placeholder</string>
+
 </resources>

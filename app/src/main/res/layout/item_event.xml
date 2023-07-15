@@ -7,7 +7,7 @@
     android:textColor="@color/white"
     android:paddingTop="2dp"
     android:paddingBottom="2dp"
-    android:text="An event happening tomorrow"
+    android:text="@string/event_placeholder"
     android:shadowColor="#80000000"
     android:shadowDx="1"
     android:shadowDy="1"

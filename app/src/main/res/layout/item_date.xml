@@ -8,7 +8,7 @@
     android:textColor="@color/white"
     android:paddingTop="4dp"
     android:paddingBottom="3dp"
-    android:text="Tomorrow"
+    android:text="@string/date_placeholder"
     android:shadowColor="#80000000"
     android:shadowDx="1"
     android:shadowDy="1"
