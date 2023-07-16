@@ -26,6 +26,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -79,6 +82,9 @@ fun ColorDialog(
                             .clickable {
                                 onColorSelected(color)
                                 onDismiss()
+                            }
+                            .semantics {
+                                contentDescription = "Color swatch: ${color.toArgb().toString(16)}"
                             }
                         ) {
                         }
