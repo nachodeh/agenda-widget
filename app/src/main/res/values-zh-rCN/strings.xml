@@ -8,7 +8,7 @@
     <string name="text_color">文字颜色</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
-    <string name="request_permissions">请求权限</string>
+    <string name="grant_permissions">授予权限</string>
     <string name="calendar_access_info">日程部件需要访问您的日历以显示事件。请授予日历权限以使用部件。</string>
     <string name="today">今天</string>
     <string name="tomorrow">明天</string>

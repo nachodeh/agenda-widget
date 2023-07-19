@@ -9,7 +9,7 @@
     <string name="text_color">Text color</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
-    <string name="request_permissions">Request Permissions</string>
+    <string name="grant_permissions">Grant Permissions</string>
     <string name="calendar_access_info">Agenda Widget needs access to your calendar to display events. Please grant the calendar permissions to use the widget.</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>

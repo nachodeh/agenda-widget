@@ -8,7 +8,7 @@
     <string name="text_color">Color de texto</string>
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
-    <string name="request_permissions">Solicitar permisos</string>
+    <string name="grant_permissions">Conceder permisos</string>
     <string name="calendar_access_info">Widget de agenda necesita acceso a tu calendario para mostrar eventos. Por favor, otorga los permisos del calendario para usar el widget.</string>
     <string name="today">Hoy</string>
     <string name="tomorrow">Mañana</string>
