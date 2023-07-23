@@ -82,7 +82,10 @@ fun PreferencesScreen() {
 
     Column {
         Header()
-        ButtonRow(displayText = context.getString(R.string.select_calendars), enableAction = showCalendarSelectionDialog)
+        ButtonRow(
+            displayText = context.getString(R.string.select_calendars),
+            enableAction = showCalendarSelectionDialog
+        )
         NumberSelectorRow(
             displayText = context.getString(R.string.number_of_days_to_display),
             numberValue = numberOfDays,
@@ -181,6 +184,9 @@ fun NumberSelectorRow(
             DropdownMenu(
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
+                modifier = Modifier.background(
+                    color = MaterialTheme.colorScheme.background,
+                ),
             ) {
                 options.forEach { option ->
                     DropdownMenuItem(
