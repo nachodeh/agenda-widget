@@ -1,0 +1,59 @@
+package com.flowmosaic.calendar.analytics
+
+import android.content.Context
+import android.os.Bundle
+import com.google.firebase.analytics.FirebaseAnalytics
+
+object FirebaseLogger {
+
+    enum class WidgetStatus(val status: String) {
+        ENABLED("enabled"),
+        DELETED("deleted"),
+        DISABLED("disabled"),
+    }
+
+    enum class ScreenName(val screenName: String) {
+        REQUEST_PERMISSIONS("request_permissions"),
+        WIDGET("widget"),
+        PREFS("prefs")
+    }
+
+    enum class RequestPermissionsItemName(val itemName: String) {
+        REQUEST_PERMISSIONS_BUTTON("request_permissions_button"),
+    }
+
+    enum class WidgetItemName(val itemName: String) {
+        DATE("date"),
+        EVENT("event")
+    }
+
+    enum class PrefsScreenItemName(val itemName: String) {
+        SELECT_CALENDARS("select_calendars"),
+        NUMBER_DAYS("number_of_days"),
+        SHOW_END_TIME("show_end_time"),
+        TEXT_COLOR("text_color")
+    }
+
+    fun logScreenShownEvent(context: Context, screenName: ScreenName) {
+        val bundle = Bundle().apply {
+            putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName.screenName)
+        }
+        FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+    }
+
+    fun logWidgetLifecycleEvent(context: Context, widgetStatus: WidgetStatus) {
+        val bundle = Bundle().apply {
+            putString("type", widgetStatus.status)
+        }
+        FirebaseAnalytics.getInstance(context).logEvent("widget_lifecycle_event", bundle)
+    }
+
+    fun logSelectItemEvent(context: Context, screenName: ScreenName, name: String) {
+        val bundle = Bundle().apply {
+            putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName.screenName)
+            putString(FirebaseAnalytics.Param.ITEM_NAME, name)
+        }
+        FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+    }
+
+}

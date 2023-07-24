@@ -14,7 +14,9 @@ import android.provider.CalendarContract
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
+import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.remoteviews.EventsWidgetService
+import com.google.firebase.ktx.Firebase
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
 const val CLICK_ACTION = "com.flowmosaic.calendar.CLICK_ACTION"
@@ -31,6 +33,7 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
+        Log.d("nachodehlog", "onUpdate")
         for (appWidgetId in appWidgetIds) {
             updateWidget(context, appWidgetManager, appWidgetId)
         }
@@ -57,11 +60,21 @@ class AgendaWidget : AppWidgetProvider() {
 
                 when {
                     time > 0 -> {
+                        FirebaseLogger.logSelectItemEvent(
+                            context,
+                            FirebaseLogger.ScreenName.WIDGET,
+                            FirebaseLogger.WidgetItemName.DATE.itemName
+                        )
                         builder.appendPath("time")
                         ContentUris.appendId(builder, time)
                     }
 
                     eventId > 0 -> {
+                        FirebaseLogger.logSelectItemEvent(
+                            context,
+                            FirebaseLogger.ScreenName.WIDGET,
+                            FirebaseLogger.WidgetItemName.EVENT.itemName
+                        )
                         builder.appendPath("events")
                         ContentUris.appendId(builder, eventId)
                     }
@@ -85,23 +98,27 @@ class AgendaWidget : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
+        FirebaseLogger.logWidgetLifecycleEvent(context, FirebaseLogger.WidgetStatus.ENABLED)
     }
 
     override fun onDisabled(context: Context) {
         // Enter relevant functionality for when the last widget is disabled
+        FirebaseLogger.logWidgetLifecycleEvent(context, FirebaseLogger.WidgetStatus.DISABLED)
+    }
+
+    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        FirebaseLogger.logWidgetLifecycleEvent(context, FirebaseLogger.WidgetStatus.DELETED)
     }
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int) {
         if (hasCalendarPermission(context)) {
             renderCalendarWidget(context, appWidgetManager, widgetId)
         } else {
-            Log.d("nachodehlog", "updateWidget")
             showPermissionRequestView(context, appWidgetManager, widgetId)
         }
     }
 
     fun forceWidgetUpdate(context: Context) {
-        Log.d("nachodehlog", "forceWidgetUpdate")
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val widgetComponent = ComponentName(context, AgendaWidget::class.java)
         val widgetIds = appWidgetManager.getAppWidgetIds(widgetComponent)
