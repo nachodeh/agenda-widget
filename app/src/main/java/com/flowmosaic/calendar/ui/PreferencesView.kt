@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
+import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
@@ -72,6 +73,11 @@ fun PreferencesScreen() {
 
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog)
+        FirebaseLogger.logSelectItemEvent(
+            context,
+            FirebaseLogger.ScreenName.PREFS,
+            FirebaseLogger.PrefsScreenItemName.SELECT_CALENDARS.itemName
+        )
     }
 
     LaunchedEffect(key1 = Unit) {
@@ -134,11 +140,17 @@ fun CheckboxRow(
     checkboxValue: MutableState<Boolean>,
     saveCheckboxValue: (Boolean) -> Unit
 ) {
+    val context = LocalContext.current
     Row(modifier = Modifier
         .fillMaxWidth()
         .clickable {
             checkboxValue.value = !checkboxValue.value
             saveCheckboxValue(checkboxValue.value)
+            FirebaseLogger.logSelectItemEvent(
+                context,
+                FirebaseLogger.ScreenName.PREFS,
+                FirebaseLogger.PrefsScreenItemName.SHOW_END_TIME.itemName
+            )
         }
         .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -160,13 +172,21 @@ fun NumberSelectorRow(
     saveNumberValue: (Int) -> Unit
 ) {
     val options = listOf(1, 3, 7, 10, 30)
-    var expanded = remember { mutableStateOf(false) }
+    val expanded = remember { mutableStateOf(false) }
     val text = "${numberValue.value}"
+    val context = LocalContext.current
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { expanded.value = true }
+            .clickable {
+                expanded.value = true
+                FirebaseLogger.logSelectItemEvent(
+                    context,
+                    FirebaseLogger.ScreenName.PREFS,
+                    FirebaseLogger.PrefsScreenItemName.NUMBER_DAYS.itemName
+                )
+            }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -207,6 +227,7 @@ fun ColorSelectorRow(
     selectedColor: MutableState<Color>,
     saveColorValue: (Color) -> Unit
 ) {
+    val context = LocalContext.current
     val showDialog = rememberSaveable {
         mutableStateOf(false)
     }
@@ -214,7 +235,14 @@ fun ColorSelectorRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { showDialog.value = true }
+            .clickable {
+                showDialog.value = true
+                FirebaseLogger.logSelectItemEvent(
+                    context,
+                    FirebaseLogger.ScreenName.PREFS,
+                    FirebaseLogger.PrefsScreenItemName.TEXT_COLOR.itemName
+                )
+            }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

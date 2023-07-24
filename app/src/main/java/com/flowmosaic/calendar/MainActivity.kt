@@ -19,14 +19,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.PreferencesScreen
 import com.flowmosaic.calendar.ui.theme.CalendarWidgetTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
 
@@ -56,6 +60,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun RequestPermissionsScreen() {
+    val context = LocalContext.current
     val calendarPermissionsState = rememberMultiplePermissionsState(
         listOf(
             Manifest.permission.WRITE_CALENDAR,
@@ -64,8 +69,16 @@ private fun RequestPermissionsScreen() {
     )
 
     if (calendarPermissionsState.allPermissionsGranted) {
+        FirebaseLogger.logScreenShownEvent(
+            context,
+            FirebaseLogger.ScreenName.PREFS,
+        )
         PreferencesScreen()
     } else {
+        FirebaseLogger.logScreenShownEvent(
+            context,
+            FirebaseLogger.ScreenName.REQUEST_PERMISSIONS,
+        )
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -81,7 +94,14 @@ private fun RequestPermissionsScreen() {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { calendarPermissionsState.launchMultiplePermissionRequest() },
+                    onClick = {
+                        calendarPermissionsState.launchMultiplePermissionRequest()
+                        FirebaseLogger.logSelectItemEvent(
+                            context,
+                            FirebaseLogger.ScreenName.REQUEST_PERMISSIONS,
+                            FirebaseLogger.RequestPermissionsItemName.REQUEST_PERMISSIONS_BUTTON.itemName
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth(0.6f)
                         .background(

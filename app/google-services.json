@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "853735343788",
+    "project_id": "agenda-widget-1759c",
+    "storage_bucket": "agenda-widget-1759c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853735343788:android:1f82cc2794067161c8c109",
+        "android_client_info": {
+          "package_name": "com.flowmosaic.calendar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853735343788-10g1lu3gt16ie4bnqis57spup6f2jjes.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcCUrplijE0QBVWVNvZewReenfUA7r7iQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "853735343788-10g1lu3gt16ie4bnqis57spup6f2jjes.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
