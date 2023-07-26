@@ -5,7 +5,8 @@ import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.compose.ui.graphics.toArgb
-import com.flowmosaic.calendar.EXTRA_DATE
+import com.flowmosaic.calendar.EXTRA_END_TIME
+import com.flowmosaic.calendar.EXTRA_START_TIME
 import com.flowmosaic.calendar.EXTRA_EVENT_ID
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.data.CalendarDateUtils
@@ -63,10 +64,12 @@ class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsServic
     private fun getFillInIntent(item: CalendarViewItem): Intent {
         return when (item) {
             is CalendarViewItem.Day -> Intent().apply {
-                putExtra(EXTRA_DATE, item.date.time)
+                putExtra(EXTRA_START_TIME, item.date.time)
             }
             is CalendarViewItem.Event -> Intent().apply {
                 putExtra(EXTRA_EVENT_ID, item.event.eventId)
+                putExtra(EXTRA_START_TIME, item.event.startTimeInMillis)
+                putExtra(EXTRA_END_TIME, item.event.endTimeInMillis)
             }
         }
     }
