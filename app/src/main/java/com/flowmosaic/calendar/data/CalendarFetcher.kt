@@ -119,7 +119,7 @@ class CalendarFetcher {
                 val endDateTime =
                     cursor.getLong(cursor.getColumnIndex(CalendarContract.Instances.END))
 
-                if (calendarId.toString() in selectedCalendarIds) {
+                if (calendarId.toString() in selectedCalendarIds && endDateTime >= System.currentTimeMillis()) {
                     events.add(
                         CalendarEvent(
                             startDateTime,
