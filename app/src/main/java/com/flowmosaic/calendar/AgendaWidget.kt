@@ -11,16 +11,15 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.CalendarContract
-import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
 import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.remoteviews.EventsWidgetService
-import com.google.firebase.ktx.Firebase
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
 const val CLICK_ACTION = "com.flowmosaic.calendar.CLICK_ACTION"
-const val EXTRA_DATE = "com.flowmosaic.calendar.DATE"
+const val EXTRA_START_TIME = "com.flowmosaic.calendar.START_TIME"
+const val EXTRA_END_TIME = "com.flowmosaic.calendar.END_TIME"
 const val EXTRA_EVENT_ID = "com.flowmosaic.calendar.EVENT_ID"
 
 /**
@@ -33,7 +32,6 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        Log.d("nachodehlog", "onUpdate")
         for (appWidgetId in appWidgetIds) {
             updateWidget(context, appWidgetManager, appWidgetId)
         }
@@ -53,22 +51,12 @@ class AgendaWidget : AppWidgetProvider() {
             }
 
             CLICK_ACTION -> {
-                val time: Long = intent.getLongExtra(EXTRA_DATE, 0)
+                val startTime: Long = intent.getLongExtra(EXTRA_START_TIME, 0)
+                val endTime: Long = intent.getLongExtra(EXTRA_END_TIME, 0)
                 val eventId: Long = intent.getLongExtra(EXTRA_EVENT_ID, 0)
-
                 val builder: Uri.Builder = CalendarContract.CONTENT_URI.buildUpon()
 
                 when {
-                    time > 0 -> {
-                        FirebaseLogger.logSelectItemEvent(
-                            context,
-                            FirebaseLogger.ScreenName.WIDGET,
-                            FirebaseLogger.WidgetItemName.DATE.itemName
-                        )
-                        builder.appendPath("time")
-                        ContentUris.appendId(builder, time)
-                    }
-
                     eventId > 0 -> {
                         FirebaseLogger.logSelectItemEvent(
                             context,
@@ -77,6 +65,16 @@ class AgendaWidget : AppWidgetProvider() {
                         )
                         builder.appendPath("events")
                         ContentUris.appendId(builder, eventId)
+                    }
+
+                    startTime > 0 -> {
+                        FirebaseLogger.logSelectItemEvent(
+                            context,
+                            FirebaseLogger.ScreenName.WIDGET,
+                            FirebaseLogger.WidgetItemName.DATE.itemName
+                        )
+                        builder.appendPath("time")
+                        ContentUris.appendId(builder, startTime)
                     }
 
                     else -> {
@@ -88,6 +86,8 @@ class AgendaWidget : AppWidgetProvider() {
                 val viewIntent = Intent(Intent.ACTION_VIEW)
                     .setData(builder.build())
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime)
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime)
 
                 context.startActivity(viewIntent)
             }
