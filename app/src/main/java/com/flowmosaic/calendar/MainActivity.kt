@@ -29,8 +29,6 @@ import com.flowmosaic.calendar.ui.PreferencesScreen
 import com.flowmosaic.calendar.ui.theme.CalendarWidgetTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 
 class MainActivity : ComponentActivity() {
 
