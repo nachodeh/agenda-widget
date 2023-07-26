@@ -7,6 +7,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 object FirebaseLogger {
 
     enum class WidgetStatus(val status: String) {
+        ACTIVE("active"),
         ENABLED("enabled"),
         DELETED("deleted"),
         DISABLED("disabled"),
@@ -41,9 +42,16 @@ object FirebaseLogger {
         FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
 
-    fun logWidgetLifecycleEvent(context: Context, widgetStatus: WidgetStatus) {
+    fun logWidgetLifecycleEvent(
+        context: Context, widgetStatus: WidgetStatus, additionalParams: Map<String, String>? = null
+    ) {
         val bundle = Bundle().apply {
             putString("type", widgetStatus.status)
+            additionalParams?.let { params ->
+                for ((key, value) in params) {
+                    putString(key, value)
+                }
+            }
         }
         FirebaseAnalytics.getInstance(context).logEvent("widget_lifecycle_event", bundle)
     }

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.flowmosaic.calendar.data.CalendarData
+import java.util.concurrent.TimeUnit
 
 object AgendaWidgetPrefs {
 
@@ -12,6 +13,16 @@ object AgendaWidgetPrefs {
     private const val PREF_SHOW_END_TIME = "key_show_end_time"
     private const val PREF_NUMBER_OF_DAYS = "key_number_of_days"
     private const val PREF_TEXT_COLOR = "key_text_color"
+    private const val PREF_LAST_LOGGED = "lastLogged"
+
+    fun getShouldLogWidgetActivityEvent(context: Context): Boolean {
+        val lastLogged = getPreferences(context).getLong(PREF_LAST_LOGGED, 0)
+        return (System.currentTimeMillis() - lastLogged) > TimeUnit.DAYS.toMillis(1)
+    }
+
+    fun setWidgetActivityEventLastLoggedTimestamp(context: Context) {
+        getPreferences(context).edit().putLong(PREF_LAST_LOGGED, System.currentTimeMillis()).apply()
+    }
 
     fun getSelectedCalendars(
         context: Context,

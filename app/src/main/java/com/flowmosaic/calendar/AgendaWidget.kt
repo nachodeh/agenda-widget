@@ -14,6 +14,7 @@ import android.provider.CalendarContract
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
 import com.flowmosaic.calendar.analytics.FirebaseLogger
+import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.remoteviews.EventsWidgetService
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
@@ -32,6 +33,14 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
+        if (AgendaWidgetPrefs.getShouldLogWidgetActivityEvent(context)) {
+            FirebaseLogger.logWidgetLifecycleEvent(
+                context, FirebaseLogger.WidgetStatus.ACTIVE, mapOf(
+                    "number_of_widgets" to appWidgetIds.size.toString(),
+                )
+            )
+            AgendaWidgetPrefs.setWidgetActivityEventLastLoggedTimestamp(context)
+        }
         for (appWidgetId in appWidgetIds) {
             updateWidget(context, appWidgetManager, appWidgetId)
         }
