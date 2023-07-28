@@ -1,6 +1,7 @@
 package com.flowmosaic.calendar.data
 
 import android.content.Context
+import android.database.Cursor
 import android.provider.CalendarContract
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,7 @@ data class CalendarEvent(
     val startTimeInMillis: Long,
     val endTimeInMillis: Long,
     val title: String,
-    val location: String,
+    val location: String?,
     val isAllDay: Boolean,
     val eventId: Long
 )
@@ -63,7 +64,9 @@ class CalendarFetcher {
         val events = arrayListOf<CalendarEvent>()
         val currentTime = Calendar.getInstance().timeInMillis
         val endTime =
-            currentTime + TimeUnit.DAYS.toMillis(AgendaWidgetPrefs.getNumberOfDays(context).toLong())
+            currentTime + TimeUnit.DAYS.toMillis(
+                AgendaWidgetPrefs.getNumberOfDays(context).toLong()
+            )
         val selectedCalendarIds = AgendaWidgetPrefs.getSelectedCalendars(context, null)
 
         val projection = arrayOf(
@@ -105,21 +108,28 @@ class CalendarFetcher {
 
         eventCursor?.use { cursor ->
             while (cursor.moveToNext()) {
-                val calendarId = cursor.getLong(cursor.getColumnIndex(CalendarContract.Instances.CALENDAR_ID))
-                val eventId =
-                    cursor.getLong(cursor.getColumnIndex(CalendarContract.Instances.EVENT_ID))
-                val title =
-                    cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.TITLE))
+                val calendarId =
+                    cursor.safeGet(CalendarContract.Instances.CALENDAR_ID, Cursor::getLong)
+                val eventId = cursor.safeGet(CalendarContract.Instances.EVENT_ID, Cursor::getLong)
+                val title = cursor.safeGet(CalendarContract.Instances.TITLE, Cursor::getString)
                 val location =
-                    cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.EVENT_LOCATION))
-                val allDay =
-                    (cursor.getInt(cursor.getColumnIndex(CalendarContract.Instances.ALL_DAY)) != 0)
+                    cursor.safeGet(CalendarContract.Instances.EVENT_LOCATION, Cursor::getString)
+                val allDay = cursor.safeGet(CalendarContract.Instances.ALL_DAY, Cursor::getInt)
+                    ?.let { it != 0 }
                 val startDateTime =
-                    cursor.getLong(cursor.getColumnIndex(CalendarContract.Instances.BEGIN))
-                val endDateTime =
-                    cursor.getLong(cursor.getColumnIndex(CalendarContract.Instances.END))
+                    cursor.safeGet(CalendarContract.Instances.BEGIN, Cursor::getLong)
+                val endDateTime = cursor.safeGet(CalendarContract.Instances.END, Cursor::getLong)
 
-                if (calendarId.toString() in selectedCalendarIds && endDateTime >= System.currentTimeMillis()) {
+                if (calendarId != null &&
+                    eventId != null &&
+                    title != null &&
+                    location != null &&
+                    allDay != null &&
+                    startDateTime != null &&
+                    endDateTime != null &&
+                    calendarId.toString() in selectedCalendarIds &&
+                    endDateTime >= System.currentTimeMillis()
+                ) {
                     events.add(
                         CalendarEvent(
                             startDateTime,
@@ -135,6 +145,11 @@ class CalendarFetcher {
         }
 
         return events
+    }
+
+    private fun <T> Cursor.safeGet(columnName: String, getter: Cursor.(Int) -> T): T? {
+        val columnIndex = getColumnIndex(columnName)
+        return if (columnIndex != -1) getter(columnIndex) else null
     }
 
     private fun parseAndTransformCalendarItems(parsedCalendarEvents: List<CalendarEvent>): List<CalendarViewItem> {
