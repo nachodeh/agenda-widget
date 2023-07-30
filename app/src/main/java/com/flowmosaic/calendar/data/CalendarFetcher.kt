@@ -153,8 +153,31 @@ class CalendarFetcher {
     }
 
     private fun parseAndTransformCalendarItems(parsedCalendarEvents: List<CalendarEvent>): List<CalendarViewItem> {
+        // Get the current date at the start of the day
+        val currentDayStartTime = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+
+        // Get the current date at the end of the day
+        val currentDayEndTime = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+            set(Calendar.MILLISECOND, 999)
+        }.timeInMillis
+
         return parsedCalendarEvents
-            .groupBy { CalendarDateUtils.getDateFromTimestamp(it.startTimeInMillis) }
+            .groupBy { event ->
+                // If the event spans multiple days and includes the current day, group it by the current date
+                if (event.startTimeInMillis <= currentDayEndTime && event.endTimeInMillis >= currentDayStartTime) {
+                    CalendarDateUtils.getDateFromTimestamp(currentDayStartTime)
+                } else {
+                    CalendarDateUtils.getDateFromTimestamp(event.startTimeInMillis)
+                }
+            }
             .flatMap { (date, events) ->
                 listOf(CalendarViewItem.Day(date)) + events.map { CalendarViewItem.Event(it) }
             }
@@ -165,6 +188,5 @@ class CalendarFetcher {
                 }
             }
     }
-
 
 }
