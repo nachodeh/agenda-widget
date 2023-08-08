@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 data class CalendarData(val id: Long, val name: String)
@@ -153,31 +154,44 @@ class CalendarFetcher {
     }
 
     private fun parseAndTransformCalendarItems(parsedCalendarEvents: List<CalendarEvent>): List<CalendarViewItem> {
+        val timeZone = TimeZone.getDefault()
         // Get the current date at the start of the day
-        val currentDayStartTime = Calendar.getInstance().apply {
+        val currentDayStartTime = Calendar.getInstance(timeZone).apply {
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }.timeInMillis
 
-        // Get the current date at the end of the day
-        val currentDayEndTime = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 23)
-            set(Calendar.MINUTE, 59)
-            set(Calendar.SECOND, 59)
-            set(Calendar.MILLISECOND, 999)
-        }.timeInMillis
-
         return parsedCalendarEvents
-            .groupBy { event ->
-                // If the event spans multiple days and includes the current day, group it by the current date
-                if (event.startTimeInMillis <= currentDayEndTime && event.endTimeInMillis >= currentDayStartTime) {
-                    CalendarDateUtils.getDateFromTimestamp(currentDayStartTime)
-                } else {
-                    CalendarDateUtils.getDateFromTimestamp(event.startTimeInMillis)
+            .map { event ->
+
+                var adjustedEvent = event
+
+                // Adjust start time if it's earlier than today
+                if (adjustedEvent.startTimeInMillis < currentDayStartTime) {
+                    adjustedEvent = adjustedEvent.copy(startTimeInMillis = currentDayStartTime + 1)
                 }
+
+                // Adjust end time for all-day events that end at 1 AM
+                if (adjustedEvent.isAllDay && Calendar.getInstance()
+                        .apply { timeInMillis = adjustedEvent.endTimeInMillis }
+                        .get(Calendar.HOUR_OF_DAY) == 1
+                ) {
+                    adjustedEvent =
+                        adjustedEvent.copy(endTimeInMillis = Calendar.getInstance().apply {
+                            timeInMillis = adjustedEvent.endTimeInMillis
+                            add(Calendar.DAY_OF_MONTH, -1)
+                            set(Calendar.HOUR_OF_DAY, 23)
+                            set(Calendar.MINUTE, 59)
+                            set(Calendar.SECOND, 59)
+                            set(Calendar.MILLISECOND, 999)
+                        }.timeInMillis)
+                }
+
+                adjustedEvent
             }
+            .groupBy { CalendarDateUtils.getDateFromTimestamp(it.startTimeInMillis) }
             .flatMap { (date, events) ->
                 listOf(CalendarViewItem.Day(date)) + events.map { CalendarViewItem.Event(it) }
             }
@@ -188,5 +202,6 @@ class CalendarFetcher {
                 }
             }
     }
+
 
 }
