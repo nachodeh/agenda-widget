@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name" translatable="false">Agenda Widget</string>
+    <string name="app_widget_description">วิดเจ็ตวางกำหนดการเพื่อแสดงกิจกรรมที่จะเกิดขึ้นในรูปแบบที่เรียบง่าย</string>
+
+    <string name="tap_to_set_up">แตะเพื่อตั้งค่า %1$s</string>
+    <string name="select_calendars">เลือกปฏิทิน</string>
+    <string name="number_of_days_to_display">จำนวนวันที่ต้องการแสดง</string>
+    <string name="show_end_time">แสดงเวลาที่สิ้นสุด</string>
+    <string name="text_color">สีข้อความ</string>
+    <string name="save">บันทึก</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="grant_permissions">อนุญาตสิทธิ์</string>
+    <string name="calendar_access_info">Agenda Widget ต้องการเข้าถึงปฏิทินของคุณเพื่อแสดงกิจกรรม โปรดให้สิทธิ์เข้าถึงปฏิทินเพื่อใช้วิดเจ็ต</string>
+    <string name="today">วันนี้</string>
+    <string name="tomorrow">พรุ่งนี้</string>
+
+    <string name="date_placeholder">ตัวยึดวันที่</string>
+    <string name="event_placeholder">ตัวยึดเหตุการณ์</string>
+</resources>
