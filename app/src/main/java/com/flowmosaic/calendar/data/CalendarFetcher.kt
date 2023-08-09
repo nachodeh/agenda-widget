@@ -190,7 +190,7 @@ class CalendarFetcher {
                 }
 
                 // If it's an all-day event and spans multiple days, create an event for each day
-                if (adjustedEvent.isAllDay) {
+                if (adjustedEvent.isAllDay || spansMultipleDays(adjustedEvent)) {
                     val startCalendar = Calendar.getInstance()
                         .apply { timeInMillis = adjustedEvent.startTimeInMillis }
                     val endCalendar = Calendar.getInstance()
@@ -198,16 +198,30 @@ class CalendarFetcher {
                     val eventsList = mutableListOf<CalendarEvent>()
 
                     while (startCalendar.before(endCalendar)) {
+                        val nextDayStartCalendar = startCalendar.clone() as Calendar
+                        nextDayStartCalendar.set(Calendar.HOUR_OF_DAY, 24)
+                        nextDayStartCalendar.set(Calendar.MINUTE, 0)
+                        nextDayStartCalendar.set(Calendar.SECOND, 0)
+                        nextDayStartCalendar.set(Calendar.MILLISECOND, 0)
+
+                        val eventEndTime: Long = if (nextDayStartCalendar.before(endCalendar)) {
+                            nextDayStartCalendar.timeInMillis
+                        } else {
+                            adjustedEvent.endTimeInMillis
+                        }
+
                         val clonedEvent = adjustedEvent.copy(
                             startTimeInMillis = startCalendar.timeInMillis,
-                            endTimeInMillis = startCalendar.apply {
-                                set(Calendar.HOUR_OF_DAY, 24)
-                                set(Calendar.MINUTE, 0)
-                                set(Calendar.SECOND, 0)
-                                set(Calendar.MILLISECOND, 0)
-                            }.timeInMillis
+                            endTimeInMillis = eventEndTime
                         )
                         eventsList.add(clonedEvent)
+
+                        // Move to next day 00:00
+                        startCalendar.add(Calendar.DAY_OF_MONTH, 1)
+                        startCalendar.set(Calendar.HOUR_OF_DAY, 0)
+                        startCalendar.set(Calendar.MINUTE, 0)
+                        startCalendar.set(Calendar.SECOND, 0)
+                        startCalendar.set(Calendar.MILLISECOND, 0)
                     }
                     eventsList
                 } else {
@@ -227,5 +241,12 @@ class CalendarFetcher {
             }
     }
 
+    private fun spansMultipleDays(event: CalendarEvent): Boolean {
+        val startCal = Calendar.getInstance().apply { timeInMillis = event.startTimeInMillis }
+        val endCal = Calendar.getInstance().apply { timeInMillis = event.endTimeInMillis }
+
+        return startCal.get(Calendar.DAY_OF_YEAR) != endCal.get(Calendar.DAY_OF_YEAR) ||
+                startCal.get(Calendar.YEAR) != endCal.get(Calendar.YEAR)
+    }
 
 }

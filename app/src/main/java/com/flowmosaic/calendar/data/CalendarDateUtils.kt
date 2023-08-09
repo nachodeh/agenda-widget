@@ -55,18 +55,25 @@ object CalendarDateUtils {
         val startTimeMillis = calendarEvent.startTimeInMillis
         val endTimeMillis = calendarEvent.endTimeInMillis
         val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        val isEndAtMidnightOfNextDay = Calendar.getInstance().apply {
+            timeInMillis = endTimeMillis
+            add(Calendar.MILLISECOND, -1) // subtracting 1 millisecond to get to the previous day
+        }.let {
+            it.get(Calendar.HOUR_OF_DAY) == 23 &&
+                    it.get(Calendar.MINUTE) == 59 &&
+                    it.get(Calendar.SECOND) == 59
+        }
+
         return if (!showEndTime) {
             dateFormat.format(Date(startTimeMillis))
         } else {
             "${dateFormat.format(Date(startTimeMillis))} - ${
-                dateFormat.format(
-                    Date(
-                        endTimeMillis
-                    )
-                )
+                if (isEndAtMidnightOfNextDay) "24:00" else dateFormat.format(Date(endTimeMillis))
             }"
         }
     }
+
 
     private fun isSameDay(cal1: Calendar, cal2: Calendar): Boolean {
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
