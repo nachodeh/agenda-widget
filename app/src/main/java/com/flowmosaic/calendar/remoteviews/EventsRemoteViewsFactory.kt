@@ -68,8 +68,8 @@ class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsServic
             }
             is CalendarViewItem.Event -> Intent().apply {
                 putExtra(EXTRA_EVENT_ID, item.event.eventId)
-                putExtra(EXTRA_START_TIME, item.event.startTimeInMillis)
-                putExtra(EXTRA_END_TIME, item.event.endTimeInMillis)
+                putExtra(EXTRA_START_TIME, item.event.actualStartTime)
+                putExtra(EXTRA_END_TIME, item.event.actualEndTime)
             }
         }
     }

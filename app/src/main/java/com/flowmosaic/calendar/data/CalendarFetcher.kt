@@ -19,7 +19,9 @@ data class CalendarEvent(
     val title: String,
     val location: String?,
     val isAllDay: Boolean,
-    val eventId: Long
+    val eventId: Long,
+    val actualStartTime: Long,
+    val actualEndTime: Long,
 )
 
 sealed class CalendarViewItem {
@@ -117,30 +119,45 @@ class CalendarFetcher {
                     cursor.safeGet(CalendarContract.Instances.EVENT_LOCATION, Cursor::getString)
                 val allDay = cursor.safeGet(CalendarContract.Instances.ALL_DAY, Cursor::getInt)
                     ?.let { it != 0 }
-                val startDateTime =
+                val actualStartTime =
                     cursor.safeGet(CalendarContract.Instances.BEGIN, Cursor::getLong)
-                val endDateTime = cursor.safeGet(CalendarContract.Instances.END, Cursor::getLong)
+                val actualEndTime = cursor.safeGet(CalendarContract.Instances.END, Cursor::getLong)
+
 
                 if (calendarId != null &&
                     eventId != null &&
                     title != null &&
                     location != null &&
                     allDay != null &&
-                    startDateTime != null &&
-                    endDateTime != null &&
-                    calendarId.toString() in selectedCalendarIds &&
-                    endDateTime >= System.currentTimeMillis()
+                    actualStartTime != null &&
+                    actualEndTime != null &&
+                    calendarId.toString() in selectedCalendarIds
                 ) {
-                    events.add(
-                        CalendarEvent(
-                            startDateTime,
-                            endDateTime,
-                            title,
-                            location,
-                            allDay,
-                            eventId
+                    var startDateTime = actualStartTime
+                    var endDateTime = actualEndTime
+                    if (allDay == true) {
+                        val timeZone = TimeZone.getDefault()
+                        val startOffsetMillis = timeZone.getOffset(startDateTime)
+                        startDateTime -= startOffsetMillis
+
+                        val endOffsetMillis = timeZone.getOffset(endDateTime)
+                        endDateTime -= endOffsetMillis
+                    }
+                    // Only add events happening in the future according to the timezone offset
+                    if (endDateTime > System.currentTimeMillis()) {
+                        events.add(
+                            CalendarEvent(
+                                startDateTime,
+                                endDateTime,
+                                title,
+                                location,
+                                allDay,
+                                eventId,
+                                actualStartTime,
+                                actualEndTime
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -164,32 +181,39 @@ class CalendarFetcher {
         }.timeInMillis
 
         return parsedCalendarEvents
-            .map { event ->
-
+            .flatMap { event ->
                 var adjustedEvent = event
 
                 // Adjust start time if it's earlier than today
                 if (adjustedEvent.startTimeInMillis < currentDayStartTime) {
-                    adjustedEvent = adjustedEvent.copy(startTimeInMillis = currentDayStartTime + 1)
+                    adjustedEvent = adjustedEvent.copy(startTimeInMillis = currentDayStartTime)
                 }
 
-                // Adjust end time for all-day events that end at 1 AM
-                if (adjustedEvent.isAllDay && Calendar.getInstance()
+                // If it's an all-day event and spans multiple days, create an event for each day
+                if (adjustedEvent.isAllDay) {
+                    val startCalendar = Calendar.getInstance()
+                        .apply { timeInMillis = adjustedEvent.startTimeInMillis }
+                    val endCalendar = Calendar.getInstance()
                         .apply { timeInMillis = adjustedEvent.endTimeInMillis }
-                        .get(Calendar.HOUR_OF_DAY) == 1
-                ) {
-                    adjustedEvent =
-                        adjustedEvent.copy(endTimeInMillis = Calendar.getInstance().apply {
-                            timeInMillis = adjustedEvent.endTimeInMillis
-                            add(Calendar.DAY_OF_MONTH, -1)
-                            set(Calendar.HOUR_OF_DAY, 23)
-                            set(Calendar.MINUTE, 59)
-                            set(Calendar.SECOND, 59)
-                            set(Calendar.MILLISECOND, 999)
-                        }.timeInMillis)
+                    val eventsList = mutableListOf<CalendarEvent>()
+
+                    while (startCalendar.before(endCalendar)) {
+                        val clonedEvent = adjustedEvent.copy(
+                            startTimeInMillis = startCalendar.timeInMillis,
+                            endTimeInMillis = startCalendar.apply {
+                                set(Calendar.HOUR_OF_DAY, 24)
+                                set(Calendar.MINUTE, 0)
+                                set(Calendar.SECOND, 0)
+                                set(Calendar.MILLISECOND, 0)
+                            }.timeInMillis
+                        )
+                        eventsList.add(clonedEvent)
+                    }
+                    eventsList
+                } else {
+                    listOf(adjustedEvent)
                 }
 
-                adjustedEvent
             }
             .groupBy { CalendarDateUtils.getDateFromTimestamp(it.startTimeInMillis) }
             .flatMap { (date, events) ->
