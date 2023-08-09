@@ -3,6 +3,8 @@ package com.flowmosaic.calendar.analytics
 import android.content.Context
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.mixpanel.android.mpmetrics.MixpanelAPI
+import org.json.JSONObject
 
 object FirebaseLogger {
 
@@ -35,11 +37,20 @@ object FirebaseLogger {
         TEXT_COLOR("text_color")
     }
 
+    private fun getMixpanelInstance(context: Context): MixpanelAPI {
+        return MixpanelAPI.getInstance(context, "30601539929e247063f85a5d72a925e3", true)
+    }
+
     fun logScreenShownEvent(context: Context, screenName: ScreenName) {
         val bundle = Bundle().apply {
             putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName.screenName)
         }
         FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
+
+        // Mixpanel log
+        val properties = JSONObject()
+        properties.put(FirebaseAnalytics.Param.SCREEN_NAME, screenName.screenName)
+        getMixpanelInstance(context).track(FirebaseAnalytics.Event.SCREEN_VIEW, properties)
     }
 
     fun logWidgetLifecycleEvent(
@@ -54,6 +65,17 @@ object FirebaseLogger {
             }
         }
         FirebaseAnalytics.getInstance(context).logEvent("widget_lifecycle_event", bundle)
+
+        // Mixpanel log
+        val properties = JSONObject().apply {
+            put("type", widgetStatus.status)
+            additionalParams?.let { params ->
+                for ((key, value) in params) {
+                    put(key, value)
+                }
+            }
+        }
+        getMixpanelInstance(context).track("widget_lifecycle_event", properties)
     }
 
     fun logSelectItemEvent(context: Context, screenName: ScreenName, name: String) {
@@ -62,6 +84,13 @@ object FirebaseLogger {
             putString(FirebaseAnalytics.Param.ITEM_NAME, name)
         }
         FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+
+        // Mixpanel log
+        val properties = JSONObject().apply {
+            put(FirebaseAnalytics.Param.SCREEN_NAME, screenName.screenName)
+            put(FirebaseAnalytics.Param.ITEM_NAME, name)
+        }
+        getMixpanelInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, properties)
     }
 
 }
