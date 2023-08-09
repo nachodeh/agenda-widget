@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">Agenda Widget</string>
     <string name="app_widget_description">วิดเจ็ตวางกำหนดการเพื่อแสดงกิจกรรมที่จะเกิดขึ้นในรูปแบบที่เรียบง่าย</string>
 
     <string name="tap_to_set_up">แตะเพื่อตั้งค่า %1$s</string>
