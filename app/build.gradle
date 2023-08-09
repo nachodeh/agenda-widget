@@ -93,4 +93,7 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
 
+    // Mixpanel
+    implementation 'com.mixpanel.android:mixpanel-android:7.+'
+
 }
