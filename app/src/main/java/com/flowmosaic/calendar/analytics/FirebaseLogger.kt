@@ -93,4 +93,8 @@ object FirebaseLogger {
         getMixpanelInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, properties)
     }
 
+    fun flushMixpanelEvents(context: Context) {
+        getMixpanelInstance(context).flush()
+    }
+
 }

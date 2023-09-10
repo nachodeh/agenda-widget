@@ -40,6 +40,7 @@ class AgendaWidget : AppWidgetProvider() {
                 )
             )
             AgendaWidgetPrefs.setWidgetActivityEventLastLoggedTimestamp(context)
+            FirebaseLogger.flushMixpanelEvents(context)
         }
         for (appWidgetId in appWidgetIds) {
             updateWidget(context, appWidgetManager, appWidgetId)
