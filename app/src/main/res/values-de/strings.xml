@@ -5,6 +5,7 @@
     <string name="select_calendars">Kalender auswählen</string>
     <string name="number_of_days_to_display">Anzahl der anzuzeigenden Tage</string>
     <string name="show_end_time">Endzeit anzeigen</string>
+    <string name="font_size">Schriftgröße</string>
     <string name="text_color">Textfarbe</string>
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>
@@ -15,4 +16,7 @@
 
     <string name="date_placeholder">Datumsplatzhalter</string>
     <string name="event_placeholder">Ereignisplatzhalter</string>
+    <string name="font_size_small">Klein</string>
+    <string name="font_size_medium">Mittel</string>
+    <string name="font_size_large">Groß</string>
 </resources>

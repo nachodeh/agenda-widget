@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.data.CalendarData
 import java.util.concurrent.TimeUnit
 
@@ -14,6 +15,17 @@ object AgendaWidgetPrefs {
     private const val PREF_NUMBER_OF_DAYS = "key_number_of_days"
     private const val PREF_TEXT_COLOR = "key_text_color"
     private const val PREF_LAST_LOGGED = "lastLogged"
+    private const val PREF_FONT_SIZE = "key_font_size"
+
+    enum class FontSize(val displayResId: Int) {
+        SMALL(R.string.font_size_small),
+        MEDIUM(R.string.font_size_medium),
+        LARGE(R.string.font_size_large);
+
+        fun getDisplayText(context: Context): String {
+            return context.getString(displayResId)
+        }
+    }
 
     fun getShouldLogWidgetActivityEvent(context: Context): Boolean {
         val lastLogged = getPreferences(context).getLong(PREF_LAST_LOGGED, 0)
@@ -74,6 +86,14 @@ object AgendaWidgetPrefs {
         getPreferences(context).edit().putInt(PREF_TEXT_COLOR, colorInt).apply()
     }
 
+    fun getFontSize(context: Context): FontSize {
+        val size = getPreferences(context).getString(PREF_FONT_SIZE, FontSize.MEDIUM.name) ?: FontSize.MEDIUM.name
+        return FontSize.valueOf(size)
+    }
+
+    fun setFontSize(context: Context, fontSize: FontSize) {
+        getPreferences(context).edit().putString(PREF_FONT_SIZE, fontSize.name).apply()
+    }
 
     private fun getPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)

@@ -5,6 +5,7 @@
     <string name="select_calendars">Sélectionner des calendriers</string>
     <string name="number_of_days_to_display">Nombre de jours à afficher</string>
     <string name="show_end_time">Afficher l\'heure de fin</string>
+    <string name="font_size">Taille de police</string>
     <string name="text_color">Couleur du texte</string>
     <string name="save">Enregistrer</string>
     <string name="cancel">Annuler</string>
@@ -14,4 +15,7 @@
     <string name="tomorrow">Demain</string>
     <string name="date_placeholder">Espace réservé pour la date</string>
     <string name="event_placeholder">Espace réservé pour l\'événement</string>
+    <string name="font_size_small">Petit</string>
+    <string name="font_size_medium">Moyen</string>
+    <string name="font_size_large">Grand</string>
 </resources>
