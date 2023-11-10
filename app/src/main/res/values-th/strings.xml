@@ -5,6 +5,7 @@
     <string name="select_calendars">เลือกปฏิทิน</string>
     <string name="number_of_days_to_display">จำนวนวันที่ต้องการแสดง</string>
     <string name="show_end_time">แสดงเวลาที่สิ้นสุด</string>
+    <string name="font_size">ขนาดตัวอักษร</string>
     <string name="text_color">สีข้อความ</string>
     <string name="save">บันทึก</string>
     <string name="cancel">ยกเลิก</string>
@@ -15,4 +16,7 @@
 
     <string name="date_placeholder">ตัวยึดวันที่</string>
     <string name="event_placeholder">ตัวยึดเหตุการณ์</string>
+    <string name="font_size_small">เล็ก</string>
+    <string name="font_size_medium">กลาง</string>
+    <string name="font_size_large">ใหญ่</string>
 </resources>

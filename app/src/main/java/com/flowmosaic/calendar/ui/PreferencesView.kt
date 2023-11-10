@@ -41,6 +41,7 @@ import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @Composable
 fun PreferencesScreen() {
@@ -69,6 +70,14 @@ fun PreferencesScreen() {
     val setColorState: (Color) -> Unit = { newValue ->
         colorState.value = newValue
         AgendaWidgetPrefs.setTextColor(context, newValue)
+    }
+
+    val fontSize = remember {
+        mutableStateOf(AgendaWidgetPrefs.getFontSize(context))
+    }
+    val setFontSize: (AgendaWidgetPrefs.FontSize) -> Unit = { newValue ->
+        fontSize.value = newValue
+        AgendaWidgetPrefs.setFontSize(context, newValue)
     }
 
     if (showCalendarSelectionDialog.value) {
@@ -101,6 +110,11 @@ fun PreferencesScreen() {
             displayText = context.getString(R.string.show_end_time),
             checkboxValue = showEndTime,
             saveCheckboxValue = setShowEndTime
+        )
+        FontSizeSelectorRow(
+            displayText = context.getString(R.string.font_size),
+            fontSizeValue = fontSize,
+            saveFontSizeValue = setFontSize
         )
         ColorSelectorRow(
             displayText = context.getString(R.string.text_color),
@@ -171,7 +185,7 @@ fun NumberSelectorRow(
     numberValue: MutableState<Int>,
     saveNumberValue: (Int) -> Unit
 ) {
-    val options = listOf(1, 3, 7, 10, 30, 90, 365)
+    val options = listOf(1, 2, 3, 7, 10, 30, 90, 365)
     val expanded = remember { mutableStateOf(false) }
     val text = "${numberValue.value}"
     val context = LocalContext.current
@@ -215,6 +229,57 @@ fun NumberSelectorRow(
                             saveNumberValue(option)
                             expanded.value = false
                         }, text = { Text(option.toString()) })
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun FontSizeSelectorRow(
+    displayText: String,
+    fontSizeValue: MutableState<AgendaWidgetPrefs.FontSize>,
+    saveFontSizeValue: (AgendaWidgetPrefs.FontSize) -> Unit
+) {
+    val options = AgendaWidgetPrefs.FontSize.values()
+    val expanded = remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                expanded.value = true
+                // Add your logging event here if necessary
+            }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+
+        Box {
+            Text(
+                text = fontSizeValue.value.getDisplayText(context),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 0.dp)
+            )
+            DropdownMenu(
+                expanded = expanded.value,
+                onDismissRequest = { expanded.value = false },
+                modifier = Modifier.background(
+                    color = MaterialTheme.colorScheme.background,
+                ),
+            ) {
+                options.forEach { option ->
+                    DropdownMenuItem(
+                        onClick = {
+                            fontSizeValue.value = option
+                            saveFontSizeValue(option)
+                            expanded.value = false
+                        }, text = { Text(option.getDisplayText(context)) })
                 }
             }
         }

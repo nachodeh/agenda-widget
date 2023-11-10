@@ -5,6 +5,7 @@
     <string name="select_calendars">कैलेंडर का चयन करें</string>
     <string name="number_of_days_to_display">प्रदर्शित करने के लिए दिनों की संख्या</string>
     <string name="show_end_time">समाप्ति समय दिखाएं</string>
+    <string name="font_size">फ़ॉन्ट आकार</string>
     <string name="text_color">पाठ का रंग</string>
     <string name="save">सहेजें</string>
     <string name="cancel">रद्द करें</string>
@@ -14,4 +15,7 @@
     <string name="tomorrow">कल</string>
     <string name="date_placeholder">तारीख के स्थलभरण</string>
     <string name="event_placeholder">इवेंट के स्थलभरण</string>
+    <string name="font_size_small">छोटा</string>
+    <string name="font_size_medium">मध्यम</string>
+    <string name="font_size_large">"बड़ा "</string>
 </resources>
