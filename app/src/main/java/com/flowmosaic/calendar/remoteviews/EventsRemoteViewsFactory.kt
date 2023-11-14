@@ -45,30 +45,25 @@ class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsServic
             is CalendarViewItem.Event -> R.layout.item_event
         }
 
-        val remoteViews = RemoteViews(context.packageName, layoutResId)
-
-        val (textViewId, defaultTextSizeSp) = when (item) {
-            is CalendarViewItem.Day -> R.id.item_date_text_view to 16f
-            is CalendarViewItem.Event -> R.id.item_event_text_view to 14f
+        return RemoteViews(context.packageName, layoutResId).apply {
+            val (textViewId, defaultTextSizeSp) = when (item) {
+                is CalendarViewItem.Day -> R.id.item_date_text_view to 16f
+                is CalendarViewItem.Event -> R.id.item_event_text_view to 14f
+            }
+            val text = when (item) {
+                is CalendarViewItem.Day -> CalendarDateUtils.getFormattedDate(context, item.date.time)
+                is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(item.event, context)
+            }
+            val fontSizeAdjustment = when (AgendaWidgetPrefs.getFontSize(context)) {
+                AgendaWidgetPrefs.FontSize.SMALL -> -2f
+                AgendaWidgetPrefs.FontSize.MEDIUM -> 0f
+                AgendaWidgetPrefs.FontSize.LARGE -> 2f
+            }
+            setTextViewText(textViewId, text)
+            setTextColor(textViewId, AgendaWidgetPrefs.getTextColor(context).toArgb())
+            setTextViewTextSize(textViewId, TypedValue.COMPLEX_UNIT_SP, defaultTextSizeSp + fontSizeAdjustment)
+            setOnClickFillInIntent(textViewId, getFillInIntent(item))
         }
-
-        val text = when (item) {
-            is CalendarViewItem.Day -> CalendarDateUtils.getFormattedDate(context, item.date.time)
-            is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(item.event, context)
-        }
-
-        val fontSizeAdjustment = when (AgendaWidgetPrefs.getFontSize(context)) {
-            AgendaWidgetPrefs.FontSize.SMALL -> -2f
-            AgendaWidgetPrefs.FontSize.MEDIUM -> 0f
-            AgendaWidgetPrefs.FontSize.LARGE -> 2f
-        }
-
-        remoteViews.setTextViewText(textViewId, text)
-        remoteViews.setTextColor(textViewId, AgendaWidgetPrefs.getTextColor(context).toArgb())
-        remoteViews.setTextViewTextSize(textViewId, TypedValue.COMPLEX_UNIT_SP, defaultTextSizeSp + fontSizeAdjustment)
-        remoteViews.setOnClickFillInIntent(textViewId, getFillInIntent(item))
-
-        return remoteViews
     }
 
 
