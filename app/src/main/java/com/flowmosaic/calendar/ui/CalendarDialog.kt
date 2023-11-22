@@ -112,13 +112,15 @@ private fun CalendarDialogContent(
                     .padding(bottom = 80.dp) // Ensure there's enough space for the buttons
             ) {
                 itemsIndexed(calendarList) { index, calendar ->
-                    CalendarRow(
-                        isChecked = checkedItems[index],
-                        calendarName = calendar.name,
-                        onCheckedChange = { isChecked ->
-                            onCheckedChange(index, isChecked)
-                        }
-                    )
+                    if (index < checkedItems.size) {
+                        CalendarRow(
+                            isChecked = checkedItems[index],
+                            calendarName = calendar.name,
+                            onCheckedChange = { isChecked ->
+                                onCheckedChange(index, isChecked)
+                            }
+                        )
+                    }
                 }
             }
 
