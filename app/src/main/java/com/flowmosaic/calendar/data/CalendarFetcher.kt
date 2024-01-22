@@ -66,10 +66,19 @@ class CalendarFetcher {
     private fun getCalendarEvents(context: Context): List<CalendarEvent> {
         val events = arrayListOf<CalendarEvent>()
         val currentTime = Calendar.getInstance().timeInMillis
-        val endTime =
-            currentTime + TimeUnit.DAYS.toMillis(
-                AgendaWidgetPrefs.getNumberOfDays(context).toLong()
-            )
+        // ChatGPT I need you to address this. We get the max end time, however some events span multiple days which go beyond the max end time. In that case, I want the event end time to be max end time
+//        val endTime =
+//            currentTime + TimeUnit.DAYS.toMillis(
+//                AgendaWidgetPrefs.getNumberOfDays(context).toLong()
+//            )
+        val endTime = Calendar.getInstance().apply {
+            timeInMillis = currentTime
+            add(Calendar.DAY_OF_MONTH, AgendaWidgetPrefs.getNumberOfDays(context) - 1)
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+            set(Calendar.MILLISECOND, 999)
+        }.timeInMillis
         val selectedCalendarIds = AgendaWidgetPrefs.getSelectedCalendars(context, null)
 
         val projection = arrayOf(
@@ -135,6 +144,8 @@ class CalendarFetcher {
                 ) {
                     var startDateTime = actualStartTime
                     var endDateTime = actualEndTime
+                    var maxEndTime = endTime
+
                     if (allDay == true) {
                         val timeZone = TimeZone.getDefault()
                         val startOffsetMillis = timeZone.getOffset(startDateTime)
@@ -142,13 +153,17 @@ class CalendarFetcher {
 
                         val endOffsetMillis = timeZone.getOffset(endDateTime)
                         endDateTime -= endOffsetMillis
+
+                        val maxEndTimeOffsetMillis = timeZone.getOffset(maxEndTime)
+                        maxEndTime -= maxEndTimeOffsetMillis
                     }
                     // Only add events happening in the future according to the timezone offset
                     if (endDateTime > System.currentTimeMillis()) {
+                        val adjustedEndTime = if (endDateTime > maxEndTime) maxEndTime else endDateTime
                         events.add(
                             CalendarEvent(
                                 startDateTime,
-                                endDateTime,
+                                adjustedEndTime,
                                 title,
                                 location,
                                 allDay,
