@@ -6,6 +6,9 @@
     <string name="number_of_days_to_display">प्रदर्शित करने के लिए दिनों की संख्या</string>
     <string name="show_end_time">समाप्ति समय दिखाएं</string>
     <string name="font_size">फ़ॉन्ट आकार</string>
+    <string name="text_alignment_left">बाएँ</string>
+    <string name="text_alignment_center">केंद्र</string>
+    <string name="text_alignment_right">दाएँ</string>
     <string name="text_color">पाठ का रंग</string>
     <string name="save">सहेजें</string>
     <string name="cancel">रद्द करें</string>
@@ -18,4 +21,5 @@
     <string name="font_size_small">छोटा</string>
     <string name="font_size_medium">मध्यम</string>
     <string name="font_size_large">"बड़ा "</string>
+    <string name="text_alignment">पाठ संरेखण</string>
 </resources>
