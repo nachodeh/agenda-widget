@@ -41,7 +41,6 @@ import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 @Composable
 fun PreferencesScreen() {
@@ -80,6 +79,14 @@ fun PreferencesScreen() {
         AgendaWidgetPrefs.setFontSize(context, newValue)
     }
 
+    val textAlignment = remember {
+        mutableStateOf(AgendaWidgetPrefs.getTextAlignment(context))
+    }
+    val setTextAlignment: (AgendaWidgetPrefs.TextAlignment) -> Unit = { newValue ->
+        textAlignment.value = newValue
+        AgendaWidgetPrefs.setTextAlignment(context, newValue)
+    }
+
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog)
         FirebaseLogger.logSelectItemEvent(
@@ -115,6 +122,11 @@ fun PreferencesScreen() {
             displayText = context.getString(R.string.font_size),
             fontSizeValue = fontSize,
             saveFontSizeValue = setFontSize
+        )
+        TextAlignmentSelectorRow(
+            displayText = context.getString(R.string.text_alignment),
+            textAlignmentValue = textAlignment,
+            saveTextAlignmentValue = setTextAlignment,
         )
         ColorSelectorRow(
             displayText = context.getString(R.string.text_color),
@@ -278,6 +290,57 @@ fun FontSizeSelectorRow(
                         onClick = {
                             fontSizeValue.value = option
                             saveFontSizeValue(option)
+                            expanded.value = false
+                        }, text = { Text(option.getDisplayText(context)) })
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TextAlignmentSelectorRow(
+    displayText: String,
+    textAlignmentValue: MutableState<AgendaWidgetPrefs.TextAlignment>,
+    saveTextAlignmentValue: (AgendaWidgetPrefs.TextAlignment) -> Unit
+) {
+    val options = AgendaWidgetPrefs.TextAlignment.values()
+    val expanded = remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                expanded.value = true
+                // Add your logging event here if necessary
+            }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+
+        Box {
+            Text(
+                text = textAlignmentValue.value.getDisplayText(context),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(horizontal = 0.dp)
+            )
+            DropdownMenu(
+                expanded = expanded.value,
+                onDismissRequest = { expanded.value = false },
+                modifier = Modifier.background(
+                    color = MaterialTheme.colorScheme.background,
+                ),
+            ) {
+                options.forEach { option ->
+                    DropdownMenuItem(
+                        onClick = {
+                            textAlignmentValue.value = option
+                            saveTextAlignmentValue(option)
                             expanded.value = false
                         }, text = { Text(option.getDisplayText(context)) })
                 }

@@ -6,6 +6,9 @@
     <string name="number_of_days_to_display">展示的天數</string>
     <string name="show_end_time">展示結束時間</string>
     <string name="font_size">字体大小</string>
+    <string name="text_alignment_left">左</string>
+    <string name="text_alignment_center">中</string>
+    <string name="text_alignment_right">右</string>
     <string name="text_color">文字顏色</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
@@ -18,4 +21,5 @@
     <string name="font_size_small">小</string>
     <string name="font_size_medium">中</string>
     <string name="font_size_large">大</string>
+    <string name="text_alignment">"文字对齐 "</string>
 </resources>

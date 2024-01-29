@@ -16,11 +16,22 @@ object AgendaWidgetPrefs {
     private const val PREF_TEXT_COLOR = "key_text_color"
     private const val PREF_LAST_LOGGED = "lastLogged"
     private const val PREF_FONT_SIZE = "key_font_size"
+    private const val PREF_TEXT_ALIGNMENT = "key_text_alignment"
 
-    enum class FontSize(val displayResId: Int) {
+    enum class FontSize(private val displayResId: Int) {
         SMALL(R.string.font_size_small),
         MEDIUM(R.string.font_size_medium),
         LARGE(R.string.font_size_large);
+
+        fun getDisplayText(context: Context): String {
+            return context.getString(displayResId)
+        }
+    }
+
+    enum class TextAlignment(private val displayResId: Int) {
+        LEFT(R.string.text_alignment_left),
+        CENTER(R.string.text_alignment_center),
+        RIGHT(R.string.text_alignment_right);
 
         fun getDisplayText(context: Context): String {
             return context.getString(displayResId)
@@ -93,6 +104,15 @@ object AgendaWidgetPrefs {
 
     fun setFontSize(context: Context, fontSize: FontSize) {
         getPreferences(context).edit().putString(PREF_FONT_SIZE, fontSize.name).apply()
+    }
+
+    fun getTextAlignment(context: Context): TextAlignment {
+        val size = getPreferences(context).getString(PREF_TEXT_ALIGNMENT, TextAlignment.LEFT.name) ?: TextAlignment.LEFT.name
+        return TextAlignment.valueOf(size)
+    }
+
+    fun setTextAlignment(context: Context, textAlignment: TextAlignment) {
+        getPreferences(context).edit().putString(PREF_TEXT_ALIGNMENT, textAlignment.name).apply()
     }
 
     private fun getPreferences(context: Context): SharedPreferences {

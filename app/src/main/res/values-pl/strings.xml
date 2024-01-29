@@ -6,6 +6,9 @@
     <string name="number_of_days_to_display">Liczba dni do wyświetlenia</string>
     <string name="show_end_time">Pokaż godzinę zakończenia</string>
     <string name="font_size">Rozmiar czcionki</string>
+    <string name="text_alignment_left">Lewo</string>
+    <string name="text_alignment_center">Środek</string>
+    <string name="text_alignment_right">Prawo</string>
     <string name="text_color">Kolor tekstu</string>
     <string name="save">Zapisz</string>
     <string name="cancel">Anuluj</string>
@@ -19,4 +22,5 @@
     <string name="font_size_small">Mały</string>
     <string name="font_size_medium">Średni</string>
     <string name="font_size_large">Duży</string>
+    <string name="text_alignment">Wyrównanie tekstu</string>
 </resources>

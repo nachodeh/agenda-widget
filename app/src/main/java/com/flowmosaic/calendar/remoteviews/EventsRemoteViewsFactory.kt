@@ -3,6 +3,7 @@ package com.flowmosaic.calendar.remoteviews
 import android.content.Context
 import android.content.Intent
 import android.util.TypedValue
+import android.view.Gravity
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.compose.ui.graphics.toArgb
@@ -59,9 +60,16 @@ class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsServic
                 AgendaWidgetPrefs.FontSize.MEDIUM -> 0f
                 AgendaWidgetPrefs.FontSize.LARGE -> 2f
             }
+            val textAlignment = when (AgendaWidgetPrefs.getTextAlignment(context)) {
+                AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.LEFT
+                AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
+                AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.RIGHT
+            }
+
             setTextViewText(textViewId, text)
             setTextColor(textViewId, AgendaWidgetPrefs.getTextColor(context).toArgb())
             setTextViewTextSize(textViewId, TypedValue.COMPLEX_UNIT_SP, defaultTextSizeSp + fontSizeAdjustment)
+            setInt(textViewId, "setGravity", textAlignment)
             setOnClickFillInIntent(textViewId, getFillInIntent(item))
         }
     }
