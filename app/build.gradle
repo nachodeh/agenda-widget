@@ -96,4 +96,7 @@ dependencies {
     // Mixpanel
     implementation 'com.mixpanel.android:mixpanel-android:7.+'
 
+    // Amplitude
+    implementation 'com.amplitude:analytics-android:1.+'
+
 }
