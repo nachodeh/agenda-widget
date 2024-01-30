@@ -2,6 +2,9 @@ package com.flowmosaic.calendar.analytics
 
 import android.content.Context
 import android.os.Bundle
+import com.amplitude.android.Amplitude
+import com.amplitude.android.Configuration
+import com.amplitude.android.DefaultTrackingOptions
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import org.json.JSONObject
@@ -37,6 +40,16 @@ object FirebaseLogger {
         TEXT_COLOR("text_color")
     }
 
+    fun getAmplitudeInstance(context: Context): Amplitude {
+        return Amplitude(
+            Configuration(
+                apiKey = "040dc24f4d338b42206d69f262a0b6b5",
+                context = context.applicationContext,
+                defaultTracking = DefaultTrackingOptions.ALL,
+            )
+        )
+    }
+
     private fun getMixpanelInstance(context: Context): MixpanelAPI {
         return MixpanelAPI.getInstance(context, "30601539929e247063f85a5d72a925e3", true)
     }
@@ -50,7 +63,11 @@ object FirebaseLogger {
         // Mixpanel log
         val properties = JSONObject()
         properties.put(FirebaseAnalytics.Param.SCREEN_NAME, screenName.screenName)
+        val propertiesMap = mutableMapOf<String, Any?>(
+            FirebaseAnalytics.Param.SCREEN_NAME to screenName.screenName,
+        )
         getMixpanelInstance(context).track(FirebaseAnalytics.Event.SCREEN_VIEW, properties)
+        getAmplitudeInstance(context).track(FirebaseAnalytics.Event.SCREEN_VIEW, propertiesMap)
     }
 
     fun logWidgetLifecycleEvent(
@@ -75,7 +92,14 @@ object FirebaseLogger {
                 }
             }
         }
+        val propertiesMap = mutableMapOf<String, Any?>(
+            "type" to widgetStatus.status
+        )
+        additionalParams?.let { params ->
+            propertiesMap.putAll(params)
+        }
         getMixpanelInstance(context).track("widget_lifecycle_event", properties)
+        getAmplitudeInstance(context).track("widget_lifecycle_event", propertiesMap)
     }
 
     fun logSelectItemEvent(context: Context, screenName: ScreenName, name: String) {
@@ -90,11 +114,17 @@ object FirebaseLogger {
             put(FirebaseAnalytics.Param.SCREEN_NAME, screenName.screenName)
             put(FirebaseAnalytics.Param.ITEM_NAME, name)
         }
+        val propertiesMap = mutableMapOf<String, Any?>(
+            FirebaseAnalytics.Param.SCREEN_NAME to screenName.screenName,
+            FirebaseAnalytics.Param.ITEM_NAME to name,
+        )
         getMixpanelInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, properties)
+        getAmplitudeInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, propertiesMap)
     }
 
     fun flushMixpanelEvents(context: Context) {
         getMixpanelInstance(context).flush()
+        getAmplitudeInstance(context).flush()
     }
 
 }
