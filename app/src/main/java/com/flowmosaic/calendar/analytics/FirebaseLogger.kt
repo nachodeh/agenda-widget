@@ -37,7 +37,11 @@ object FirebaseLogger {
         SELECT_CALENDARS("select_calendars"),
         NUMBER_DAYS("number_of_days"),
         SHOW_END_TIME("show_end_time"),
-        TEXT_COLOR("text_color")
+        USE_12_HOUR("use_12_hour"),
+        TEXT_COLOR("text_color"),
+        FONT_SIZE("font_size"),
+        TEXT_ALIGNMENT("text_alignment"),
+        OPACITY("opacity"),
     }
 
     fun getAmplitudeInstance(context: Context): Amplitude {

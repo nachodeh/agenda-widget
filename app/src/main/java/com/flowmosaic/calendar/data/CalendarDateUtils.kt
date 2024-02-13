@@ -23,6 +23,7 @@ object CalendarDateUtils {
                 val sdf = SimpleDateFormat("EEEE, d MMMM", Locale.getDefault())
                 sdf.format(eventCalendar.time)
             }
+
             else -> eventCalendar.getDisplayName(
                 Calendar.DAY_OF_WEEK,
                 Calendar.LONG,
@@ -36,7 +37,11 @@ object CalendarDateUtils {
             calendarEvent.title
         } else {
             val formattedTimeRange =
-                getFormattedTime(calendarEvent, AgendaWidgetPrefs.getShowEndTime(context))
+                getFormattedTime(
+                    calendarEvent,
+                    AgendaWidgetPrefs.getShowEndTime(context),
+                    AgendaWidgetPrefs.getHourFormat12(context)
+                )
             "$formattedTimeRange | ${calendarEvent.title}"
         }
     }
@@ -51,10 +56,16 @@ object CalendarDateUtils {
         }.time
     }
 
-    private fun getFormattedTime(calendarEvent: CalendarEvent, showEndTime: Boolean): String {
+    private fun getFormattedTime(
+        calendarEvent: CalendarEvent,
+        showEndTime: Boolean,
+        use12HourFormat: Boolean
+    ): String {
         val startTimeMillis = calendarEvent.startTimeInMillis
         val endTimeMillis = calendarEvent.endTimeInMillis
-        val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        val pattern = if (use12HourFormat) "h:mm a" else "HH:mm"
+        val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
 
         val isEndAtMidnightOfNextDay = Calendar.getInstance().apply {
             timeInMillis = endTimeMillis
@@ -69,7 +80,11 @@ object CalendarDateUtils {
             dateFormat.format(Date(startTimeMillis))
         } else {
             "${dateFormat.format(Date(startTimeMillis))} - ${
-                if (isEndAtMidnightOfNextDay) "24:00" else dateFormat.format(Date(endTimeMillis))
+                if (isEndAtMidnightOfNextDay) {
+                    if (use12HourFormat) "12:00 AM" else "24:00"
+                } else {
+                    dateFormat.format(Date(endTimeMillis))
+                }
             }"
         }
     }

@@ -5,6 +5,7 @@
     <string name="select_calendars">Seleccionar calendarios</string>
     <string name="number_of_days_to_display">Número de días para mostrar</string>
     <string name="show_end_time">Mostrar hora de finalización</string>
+    <string name="use_12_hour_format">Usar formato de 12 horas</string>
     <string name="font_size">Tamaño de fuente</string>
     <string name="text_alignment_left">Izquierda</string>
     <string name="text_alignment_center">Centro</string>

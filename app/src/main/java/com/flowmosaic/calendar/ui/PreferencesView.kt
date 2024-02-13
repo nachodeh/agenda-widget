@@ -1,5 +1,6 @@
 package com.flowmosaic.calendar.ui
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -94,6 +95,14 @@ fun PreferencesScreen() {
 
     val opacityState = remember { mutableFloatStateOf(AgendaWidgetPrefs.getOpacity(context)) }
 
+    val use12HourFormat = remember {
+        mutableStateOf(AgendaWidgetPrefs.getHourFormat12(context))
+    }
+    val setUse12HourFormat: (Boolean) -> Unit = { newValue ->
+        use12HourFormat.value = newValue
+        AgendaWidgetPrefs.setHourFormat12(context, newValue)
+    }
+
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog)
         FirebaseLogger.logSelectItemEvent(
@@ -122,8 +131,15 @@ fun PreferencesScreen() {
         )
         CheckboxRow(
             displayText = context.getString(R.string.show_end_time),
+            loggingItem = FirebaseLogger.PrefsScreenItemName.SHOW_END_TIME,
             checkboxValue = showEndTime,
             saveCheckboxValue = setShowEndTime
+        )
+        CheckboxRow(
+            displayText = context.getString(R.string.use_12_hour_format),
+            loggingItem = FirebaseLogger.PrefsScreenItemName.USE_12_HOUR,
+            checkboxValue = use12HourFormat,
+            saveCheckboxValue = setUse12HourFormat
         )
         FontSizeSelectorRow(
             displayText = context.getString(R.string.font_size),
@@ -177,6 +193,7 @@ fun ButtonRow(displayText: String, enableAction: MutableState<Boolean>) {
 @Composable
 fun CheckboxRow(
     displayText: String,
+    loggingItem: FirebaseLogger.PrefsScreenItemName,
     checkboxValue: MutableState<Boolean>,
     saveCheckboxValue: (Boolean) -> Unit
 ) {
@@ -189,7 +206,7 @@ fun CheckboxRow(
             FirebaseLogger.logSelectItemEvent(
                 context,
                 FirebaseLogger.ScreenName.PREFS,
-                FirebaseLogger.PrefsScreenItemName.SHOW_END_TIME.itemName
+                loggingItem.itemName,
             )
         }
         .padding(16.dp),
@@ -305,6 +322,11 @@ fun FontSizeSelectorRow(
                             fontSizeValue.value = option
                             saveFontSizeValue(option)
                             expanded.value = false
+                            FirebaseLogger.logSelectItemEvent(
+                                context,
+                                FirebaseLogger.ScreenName.PREFS,
+                                FirebaseLogger.PrefsScreenItemName.FONT_SIZE.itemName
+                            )
                         }, text = { Text(option.getDisplayText(context)) })
                 }
             }
@@ -356,6 +378,11 @@ fun TextAlignmentSelectorRow(
                             textAlignmentValue.value = option
                             saveTextAlignmentValue(option)
                             expanded.value = false
+                            FirebaseLogger.logSelectItemEvent(
+                                context,
+                                FirebaseLogger.ScreenName.PREFS,
+                                FirebaseLogger.PrefsScreenItemName.TEXT_ALIGNMENT.itemName
+                            )
                         }, text = { Text(option.getDisplayText(context)) })
                 }
             }
@@ -450,6 +477,13 @@ fun OpacitySelectorRow(
             onValueChange = { newValue ->
                 opacityValue.value = newValue
                 saveOpacityValue(newValue)
+            },
+            onValueChangeFinished = {
+                FirebaseLogger.logSelectItemEvent(
+                    context,
+                    FirebaseLogger.ScreenName.PREFS,
+                    FirebaseLogger.PrefsScreenItemName.OPACITY.itemName
+                )
             },
             valueRange = 0f..1f,
             steps = 10,

@@ -18,6 +18,8 @@ object AgendaWidgetPrefs {
     private const val PREF_FONT_SIZE = "key_font_size"
     private const val PREF_TEXT_ALIGNMENT = "key_text_alignment"
     private const val PREF_OPACITY = "key_opacity"
+    private const val PREF_HOUR_FORMAT_12 = "key_hour_format_12"
+
 
     enum class FontSize(private val displayResId: Int) {
         SMALL(R.string.font_size_small),
@@ -99,7 +101,8 @@ object AgendaWidgetPrefs {
     }
 
     fun getFontSize(context: Context): FontSize {
-        val size = getPreferences(context).getString(PREF_FONT_SIZE, FontSize.MEDIUM.name) ?: FontSize.MEDIUM.name
+        val size = getPreferences(context).getString(PREF_FONT_SIZE, FontSize.MEDIUM.name)
+            ?: FontSize.MEDIUM.name
         return FontSize.valueOf(size)
     }
 
@@ -108,7 +111,8 @@ object AgendaWidgetPrefs {
     }
 
     fun getTextAlignment(context: Context): TextAlignment {
-        val size = getPreferences(context).getString(PREF_TEXT_ALIGNMENT, TextAlignment.LEFT.name) ?: TextAlignment.LEFT.name
+        val size = getPreferences(context).getString(PREF_TEXT_ALIGNMENT, TextAlignment.LEFT.name)
+            ?: TextAlignment.LEFT.name
         return TextAlignment.valueOf(size)
     }
 
@@ -124,8 +128,19 @@ object AgendaWidgetPrefs {
         getPreferences(context).edit().putFloat(PREF_OPACITY, opacity).apply()
     }
 
+    fun getHourFormat12(context: Context): Boolean {
+        return getPreferences(context).getBoolean(PREF_HOUR_FORMAT_12, false)
+    }
+
+    fun setHourFormat12(context: Context, use12HourFormat: Boolean) {
+        getPreferences(context).edit().putBoolean(PREF_HOUR_FORMAT_12, use12HourFormat).apply()
+    }
+
     private fun getPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
+        return context.getSharedPreferences(
+            context.packageName + "_preferences",
+            Context.MODE_PRIVATE
+        )
     }
 
 }
