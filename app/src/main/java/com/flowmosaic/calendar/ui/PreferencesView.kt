@@ -452,8 +452,8 @@ fun OpacitySelectorRow(
                 saveOpacityValue(newValue)
             },
             valueRange = 0f..1f,
-            steps = 100,
-            modifier = Modifier.weight(1f)
+            steps = 10,
+            modifier = Modifier.weight(1f),
         )
     }
 }
