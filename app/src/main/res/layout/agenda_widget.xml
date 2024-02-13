@@ -1,11 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Widget.CalendarWidget.AppWidget.Container"
+    android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.CalendarWidget.AppWidgetContainer"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
-    android:background="@color/transparent">
+    android:background="@color/transparent"
+    >
 
     <ListView
         android:id="@+id/events_list_view"

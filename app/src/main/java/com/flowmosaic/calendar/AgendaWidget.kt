@@ -1,6 +1,7 @@
 package com.flowmosaic.calendar
 
 import android.Manifest
+import android.R.attr
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -13,9 +14,11 @@ import android.net.Uri
 import android.provider.CalendarContract
 import android.widget.RemoteViews
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.remoteviews.EventsWidgetService
+
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
 const val CLICK_ACTION = "com.flowmosaic.calendar.CLICK_ACTION"
@@ -144,6 +147,12 @@ class AgendaWidget : AppWidgetProvider() {
         val views = RemoteViews(context.packageName, R.layout.agenda_widget)
         val intent = Intent(context, EventsWidgetService::class.java)
         views.setRemoteAdapter(R.id.events_list_view, intent)
+
+        // Set the widget background color
+        val backgroundColor = 0x000000
+        val opacity = AgendaWidgetPrefs.getOpacity(context)
+        val color = ColorUtils.setAlphaComponent(backgroundColor, (opacity * 255).toInt())
+        views.setInt(R.id.main_view, "setBackgroundColor", color)
 
         val toastPendingIntent: PendingIntent = Intent(
             context,

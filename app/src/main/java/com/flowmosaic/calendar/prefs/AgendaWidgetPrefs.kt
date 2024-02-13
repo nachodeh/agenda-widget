@@ -17,6 +17,7 @@ object AgendaWidgetPrefs {
     private const val PREF_LAST_LOGGED = "lastLogged"
     private const val PREF_FONT_SIZE = "key_font_size"
     private const val PREF_TEXT_ALIGNMENT = "key_text_alignment"
+    private const val PREF_OPACITY = "key_opacity"
 
     enum class FontSize(private val displayResId: Int) {
         SMALL(R.string.font_size_small),
@@ -113,6 +114,14 @@ object AgendaWidgetPrefs {
 
     fun setTextAlignment(context: Context, textAlignment: TextAlignment) {
         getPreferences(context).edit().putString(PREF_TEXT_ALIGNMENT, textAlignment.name).apply()
+    }
+
+    fun getOpacity(context: Context): Float {
+        return getPreferences(context).getFloat(PREF_OPACITY, 0f)
+    }
+
+    fun setOpacity(context: Context, opacity: Float) {
+        getPreferences(context).edit().putFloat(PREF_OPACITY, opacity).apply()
     }
 
     private fun getPreferences(context: Context): SharedPreferences {
