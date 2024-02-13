@@ -9,8 +9,8 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.compose.ui.graphics.toArgb
 import com.flowmosaic.calendar.EXTRA_END_TIME
-import com.flowmosaic.calendar.EXTRA_START_TIME
 import com.flowmosaic.calendar.EXTRA_EVENT_ID
+import com.flowmosaic.calendar.EXTRA_START_TIME
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.data.CalendarDateUtils
 import com.flowmosaic.calendar.data.CalendarFetcher
