@@ -5,6 +5,7 @@
     <string name="select_calendars">選擇日曆</string>
     <string name="number_of_days_to_display">展示的天數</string>
     <string name="show_end_time">展示結束時間</string>
+    <string name="use_12_hour_format">使用12小时制</string>
     <string name="font_size">字体大小</string>
     <string name="text_alignment_left">左</string>
     <string name="text_alignment_center">中</string>
