@@ -10,6 +10,7 @@
     <string name="text_alignment_center">केंद्र</string>
     <string name="text_alignment_right">दाएँ</string>
     <string name="text_color">पाठ का रंग</string>
+    <string name="background_opacity">पृष्ठभूमि की अस्पष्टता</string>
     <string name="save">सहेजें</string>
     <string name="cancel">रद्द करें</string>
     <string name="grant_permissions">अनुमतियाँ दें</string>

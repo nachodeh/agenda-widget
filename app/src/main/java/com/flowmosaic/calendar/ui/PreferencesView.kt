@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
@@ -139,7 +141,7 @@ fun PreferencesScreen() {
             saveColorValue = setColorState
         )
         OpacitySelectorRow(
-            displayText = "Opacity",
+            displayText = context.getString(R.string.background_opacity),
             opacityValue = opacityState,
             saveOpacityValue = { newValue ->
                 AgendaWidgetPrefs.setOpacity(context, newValue)
@@ -442,6 +444,7 @@ fun OpacitySelectorRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.width(32.dp)) // Adjust spacing as needed
         Slider(
             value = opacityValue.value,
             onValueChange = { newValue ->
@@ -450,7 +453,7 @@ fun OpacitySelectorRow(
             },
             valueRange = 0f..1f,
             steps = 100,
-            modifier = Modifier.requiredSize(150.dp)
+            modifier = Modifier.weight(1f)
         )
     }
 }

@@ -10,6 +10,7 @@
     <string name="text_alignment_center">ตรงกลาง</string>
     <string name="text_alignment_right">ขวา</string>
     <string name="text_color">สีข้อความ</string>
+    <string name="background_opacity">ความโปร่งใสของพื้นหลัง</string>
     <string name="save">บันทึก</string>
     <string name="cancel">ยกเลิก</string>
     <string name="grant_permissions">อนุญาตสิทธิ์</string>
