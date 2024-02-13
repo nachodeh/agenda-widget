@@ -66,11 +66,6 @@ class CalendarFetcher {
     private fun getCalendarEvents(context: Context): List<CalendarEvent> {
         val events = arrayListOf<CalendarEvent>()
         val currentTime = Calendar.getInstance().timeInMillis
-        // ChatGPT I need you to address this. We get the max end time, however some events span multiple days which go beyond the max end time. In that case, I want the event end time to be max end time
-//        val endTime =
-//            currentTime + TimeUnit.DAYS.toMillis(
-//                AgendaWidgetPrefs.getNumberOfDays(context).toLong()
-//            )
         val endTime = Calendar.getInstance().apply {
             timeInMillis = currentTime
             add(Calendar.DAY_OF_MONTH, AgendaWidgetPrefs.getNumberOfDays(context) - 1)

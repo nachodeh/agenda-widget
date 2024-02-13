@@ -10,6 +10,7 @@
     <string name="text_alignment_center">Środek</string>
     <string name="text_alignment_right">Prawo</string>
     <string name="text_color">Kolor tekstu</string>
+    <string name="background_opacity">Przezroczystość tła</string>
     <string name="save">Zapisz</string>
     <string name="cancel">Anuluj</string>
     <string name="grant_permissions">Przyznaj uprawnienia</string>
