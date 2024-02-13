@@ -20,10 +20,13 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -59,7 +62,7 @@ fun PreferencesScreen() {
         AgendaWidgetPrefs.setShowEndTime(context, newValue)
     }
     val numberOfDays = remember {
-        mutableStateOf(AgendaWidgetPrefs.getNumberOfDays(context))
+        mutableIntStateOf(AgendaWidgetPrefs.getNumberOfDays(context))
     }
     val setNumberOfDays: (Int) -> Unit = { newValue ->
         numberOfDays.value = newValue
@@ -86,6 +89,8 @@ fun PreferencesScreen() {
         textAlignment.value = newValue
         AgendaWidgetPrefs.setTextAlignment(context, newValue)
     }
+
+    val opacityState = remember { mutableFloatStateOf(AgendaWidgetPrefs.getOpacity(context)) }
 
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog)
@@ -132,6 +137,13 @@ fun PreferencesScreen() {
             displayText = context.getString(R.string.text_color),
             selectedColor = colorState,
             saveColorValue = setColorState
+        )
+        OpacitySelectorRow(
+            displayText = "Opacity",
+            opacityValue = opacityState,
+            saveOpacityValue = { newValue ->
+                AgendaWidgetPrefs.setOpacity(context, newValue)
+            }
         )
     }
 }
@@ -413,5 +425,35 @@ fun ColorSelectorRow(
         )
     }
 }
+
+@Composable
+fun OpacitySelectorRow(
+    displayText: String,
+    opacityValue: MutableState<Float>,
+    saveOpacityValue: (Float) -> Unit
+) {
+    val context = LocalContext.current
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+        Slider(
+            value = opacityValue.value,
+            onValueChange = { newValue ->
+                opacityValue.value = newValue
+                saveOpacityValue(newValue)
+            },
+            valueRange = 0f..1f,
+            steps = 100,
+            modifier = Modifier.requiredSize(150.dp)
+        )
+    }
+}
+
 
 
