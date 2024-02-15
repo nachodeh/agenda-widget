@@ -1,6 +1,7 @@
 package com.flowmosaic.calendar.data
 
 import android.content.Context
+import androidx.compose.ui.text.capitalize
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import java.text.SimpleDateFormat
@@ -14,21 +15,26 @@ object CalendarDateUtils {
         val eventCalendar = Calendar.getInstance().apply { timeInMillis = startTimeInMillis }
         val currentDate = Calendar.getInstance()
         val tomorrowDate = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }
-        val weekLaterDate = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 7) }
+        val weekLaterDate = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 6) }
 
         return when {
             isSameDay(eventCalendar, currentDate) -> context.getString(R.string.today)
             isSameDay(eventCalendar, tomorrowDate) -> context.getString(R.string.tomorrow)
             eventCalendar.after(weekLaterDate) -> {
-                val sdf = SimpleDateFormat("EEEE, d MMMM", Locale.getDefault())
+//                val sdf = SimpleDateFormat("EEEE, d MMMM", Locale.getDefault())
+                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                sdf.format(eventCalendar.time)
+            }
+            else -> {
+                val sdf = SimpleDateFormat("EEEE", Locale.getDefault())
                 sdf.format(eventCalendar.time)
             }
 
-            else -> eventCalendar.getDisplayName(
-                Calendar.DAY_OF_WEEK,
-                Calendar.LONG,
-                Locale.getDefault()
-            ) as String
+//            else -> eventCalendar.getDisplayName(
+//                Calendar.DAY_OF_WEEK,
+//                Calendar.LONG,
+//                Locale.getDefault()
+//            ) as String
         }
     }
 
