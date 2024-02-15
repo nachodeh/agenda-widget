@@ -99,4 +99,8 @@ dependencies {
     // Amplitude
     implementation 'com.amplitude:analytics-android:1.+'
 
+    // Reviews API
+    implementation 'com.google.android.play:review:2.0.1'
+    implementation 'com.google.android.play:review-ktx:2.0.1'
+
 }

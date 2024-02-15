@@ -5,9 +5,13 @@ import android.os.Bundle
 import com.amplitude.android.Amplitude
 import com.amplitude.android.Configuration
 import com.amplitude.android.DefaultTrackingOptions
+import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mixpanel.android.mpmetrics.MixpanelAPI
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
+
 
 object FirebaseLogger {
 
@@ -124,6 +128,33 @@ object FirebaseLogger {
         )
         getMixpanelInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, properties)
         getAmplitudeInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, propertiesMap)
+
+        launchInAppReview(context)
+    }
+
+    private fun launchInAppReview(context: Context) {
+        val pm = context.packageManager
+        val pi = pm.getPackageInfo(context.packageName, 0)
+        val currentTimeMs = System.currentTimeMillis()
+        val lastReviewPrompt = AgendaWidgetPrefs.getLastReviewPrompt(context)
+
+        if ((currentTimeMs - TimeUnit.DAYS.toMillis(2) < pi.firstInstallTime)
+            || (currentTimeMs - TimeUnit.DAYS.toMillis(15) < lastReviewPrompt)
+        ) {
+            return
+        }
+
+        AgendaWidgetPrefs.setLastReviewPrompt(context, currentTimeMs)
+
+        val manager = ReviewManagerFactory.create(context)
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                getAmplitudeInstance(context).track("in_app_review", mapOf("success" to true))
+            } else {
+                getAmplitudeInstance(context).track("in_app_review", mapOf("success" to false))
+            }
+        }
     }
 
     fun flushMixpanelEvents(context: Context) {
