@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.capitalize
 import com.flowmosaic.calendar.EXTRA_END_TIME
 import com.flowmosaic.calendar.EXTRA_EVENT_ID
 import com.flowmosaic.calendar.EXTRA_START_TIME
@@ -16,6 +17,7 @@ import com.flowmosaic.calendar.data.CalendarDateUtils
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.data.CalendarViewItem
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
+import java.util.Locale
 
 class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsService.RemoteViewsFactory {
 
@@ -70,6 +72,7 @@ class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsServic
             }
             val text = when (item) {
                 is CalendarViewItem.Day -> CalendarDateUtils.getFormattedDate(context, item.date.time)
+                    .capitalize(Locale.getDefault())
                 is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(item.event, context)
             }
             val fontSizeAdjustment = when (AgendaWidgetPrefs.getFontSize(context)) {
