@@ -6,6 +6,7 @@
     <string name="number_of_days_to_display">จำนวนวันที่ต้องการแสดง</string>
     <string name="show_end_time">แสดงเวลาที่สิ้นสุด</string>
     <string name="use_12_hour_format">ใช้รูปแบบ 12 ชั่วโมง</string>
+    <string name="date_separator_visible">แสดงตัวคั่นวันที่</string>
     <string name="font_size">ขนาดตัวอักษร</string>
     <string name="text_alignment_left">ซ้าย</string>
     <string name="text_alignment_center">ตรงกลาง</string>

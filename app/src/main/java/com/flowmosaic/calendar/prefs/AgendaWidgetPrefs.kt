@@ -20,6 +20,7 @@ object AgendaWidgetPrefs {
     private const val PREF_OPACITY = "key_opacity"
     private const val PREF_HOUR_FORMAT_12 = "key_hour_format_12"
     private const val LAST_REVIEW_PROMPT = "key_last_review_prompt"
+    private const val SEPARATOR_VISIBLE = "key_separator_visible"
 
     enum class FontSize(private val displayResId: Int) {
         SMALL(R.string.font_size_small),
@@ -130,6 +131,14 @@ object AgendaWidgetPrefs {
 
     fun getHourFormat12(context: Context): Boolean {
         return getPreferences(context).getBoolean(PREF_HOUR_FORMAT_12, false)
+    }
+
+    fun setSeparatorVisible(context: Context, visible: Boolean) {
+        getPreferences(context).edit().putBoolean(SEPARATOR_VISIBLE, visible).apply()
+    }
+
+    fun getSeparatorVisible(context: Context): Boolean {
+        return getPreferences(context).getBoolean(SEPARATOR_VISIBLE, false)
     }
 
     fun setHourFormat12(context: Context, use12HourFormat: Boolean) {

@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Divider
@@ -103,6 +105,14 @@ fun PreferencesScreen() {
         AgendaWidgetPrefs.setHourFormat12(context, newValue)
     }
 
+    val showDateSeparator = remember {
+        mutableStateOf(AgendaWidgetPrefs.getSeparatorVisible(context))
+    }
+    val setShowDateSeparator: (Boolean) -> Unit = { newValue ->
+        showDateSeparator.value = newValue
+        AgendaWidgetPrefs.setSeparatorVisible(context, newValue)
+    }
+
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog)
         FirebaseLogger.logSelectItemEvent(
@@ -118,54 +128,67 @@ fun PreferencesScreen() {
             AgendaWidgetPrefs.getSelectedCalendars(context, calendarList.value)
     }
 
+
     Column {
+
         Header()
-        TitleWithDivider(title = "General")
-        ButtonRow(
-            displayText = context.getString(R.string.select_calendars),
-            enableAction = showCalendarSelectionDialog
-        )
-        NumberSelectorRow(
-            displayText = context.getString(R.string.number_of_days_to_display),
-            numberValue = numberOfDays,
-            saveNumberValue = setNumberOfDays
-        )
-        TitleWithDivider(title = "Date and Time", spaceOnTop = true)
-        CheckboxRow(
-            displayText = context.getString(R.string.show_end_time),
-            loggingItem = FirebaseLogger.PrefsScreenItemName.SHOW_END_TIME,
-            checkboxValue = showEndTime,
-            saveCheckboxValue = setShowEndTime
-        )
-        CheckboxRow(
-            displayText = context.getString(R.string.use_12_hour_format),
-            loggingItem = FirebaseLogger.PrefsScreenItemName.USE_12_HOUR,
-            checkboxValue = use12HourFormat,
-            saveCheckboxValue = setUse12HourFormat
-        )
-        TitleWithDivider(title = "Appearance", spaceOnTop = true)
-        FontSizeSelectorRow(
-            displayText = context.getString(R.string.font_size),
-            fontSizeValue = fontSize,
-            saveFontSizeValue = setFontSize
-        )
-        TextAlignmentSelectorRow(
-            displayText = context.getString(R.string.text_alignment),
-            textAlignmentValue = textAlignment,
-            saveTextAlignmentValue = setTextAlignment,
-        )
-        ColorSelectorRow(
-            displayText = context.getString(R.string.text_color),
-            selectedColor = colorState,
-            saveColorValue = setColorState
-        )
-        OpacitySelectorRow(
-            displayText = context.getString(R.string.background_opacity),
-            opacityValue = opacityState,
-            saveOpacityValue = { newValue ->
-                AgendaWidgetPrefs.setOpacity(context, newValue)
-            }
-        )
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+        ) {
+            TitleWithDivider(title = "General")
+            ButtonRow(
+                displayText = context.getString(R.string.select_calendars),
+                enableAction = showCalendarSelectionDialog
+            )
+            NumberSelectorRow(
+                displayText = context.getString(R.string.number_of_days_to_display),
+                numberValue = numberOfDays,
+                saveNumberValue = setNumberOfDays
+            )
+            TitleWithDivider(title = "Date and Time", spaceOnTop = true)
+            CheckboxRow(
+                displayText = context.getString(R.string.show_end_time),
+                loggingItem = FirebaseLogger.PrefsScreenItemName.SHOW_END_TIME,
+                checkboxValue = showEndTime,
+                saveCheckboxValue = setShowEndTime
+            )
+            CheckboxRow(
+                displayText = context.getString(R.string.use_12_hour_format),
+                loggingItem = FirebaseLogger.PrefsScreenItemName.USE_12_HOUR,
+                checkboxValue = use12HourFormat,
+                saveCheckboxValue = setUse12HourFormat
+            )
+            TitleWithDivider(title = "Appearance", spaceOnTop = true)
+            FontSizeSelectorRow(
+                displayText = context.getString(R.string.font_size),
+                fontSizeValue = fontSize,
+                saveFontSizeValue = setFontSize
+            )
+            TextAlignmentSelectorRow(
+                displayText = context.getString(R.string.text_alignment),
+                textAlignmentValue = textAlignment,
+                saveTextAlignmentValue = setTextAlignment,
+            )
+            ColorSelectorRow(
+                displayText = context.getString(R.string.text_color),
+                selectedColor = colorState,
+                saveColorValue = setColorState
+            )
+            OpacitySelectorRow(
+                displayText = context.getString(R.string.background_opacity),
+                opacityValue = opacityState,
+                saveOpacityValue = { newValue ->
+                    AgendaWidgetPrefs.setOpacity(context, newValue)
+                }
+            )
+            CheckboxRow(
+                displayText = context.getString(R.string.date_separator_visible),
+                loggingItem = FirebaseLogger.PrefsScreenItemName.DATE_SEPARATOR,
+                checkboxValue = showDateSeparator,
+                saveCheckboxValue = setShowDateSeparator
+            )
+        }
     }
 }
 
@@ -251,7 +274,7 @@ fun NumberSelectorRow(
         Box {
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(horizontal = 0.dp)
@@ -302,7 +325,7 @@ fun FontSizeSelectorRow(
         Box {
             Text(
                 text = fontSizeValue.value.getDisplayText(context),
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(horizontal = 0.dp)
@@ -358,7 +381,7 @@ fun TextAlignmentSelectorRow(
         Box {
             Text(
                 text = textAlignmentValue.value.getDisplayText(context),
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(horizontal = 0.dp)
@@ -510,7 +533,8 @@ fun TitleWithDivider(title: String, spaceOnTop: Boolean = false) {
         Text(
             text = title,
             style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.secondary
+            color = MaterialTheme.colorScheme.secondary,
+            fontWeight = FontWeight.Bold,
         )
     }
 }
