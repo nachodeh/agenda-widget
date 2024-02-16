@@ -1,6 +1,5 @@
 package com.flowmosaic.calendar.ui
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,19 +10,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -120,6 +120,7 @@ fun PreferencesScreen() {
 
     Column {
         Header()
+        TitleWithDivider(title = "General")
         ButtonRow(
             displayText = context.getString(R.string.select_calendars),
             enableAction = showCalendarSelectionDialog
@@ -129,6 +130,7 @@ fun PreferencesScreen() {
             numberValue = numberOfDays,
             saveNumberValue = setNumberOfDays
         )
+        TitleWithDivider(title = "Date and Time", spaceOnTop = true)
         CheckboxRow(
             displayText = context.getString(R.string.show_end_time),
             loggingItem = FirebaseLogger.PrefsScreenItemName.SHOW_END_TIME,
@@ -141,6 +143,7 @@ fun PreferencesScreen() {
             checkboxValue = use12HourFormat,
             saveCheckboxValue = setUse12HourFormat
         )
+        TitleWithDivider(title = "Appearance", spaceOnTop = true)
         FontSizeSelectorRow(
             displayText = context.getString(R.string.font_size),
             fontSizeValue = fontSize,
@@ -213,12 +216,7 @@ fun CheckboxRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
-        Checkbox(
-            checked = checkboxValue.value, onCheckedChange = null, colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colorScheme.primary,
-                uncheckedColor = MaterialTheme.colorScheme.primary
-            )
-        )
+        Switch(checked = checkboxValue.value, onCheckedChange = null)
     }
 }
 
@@ -488,6 +486,31 @@ fun OpacitySelectorRow(
             valueRange = 0f..1f,
             steps = 10,
             modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@Composable
+fun TitleWithDivider(title: String, spaceOnTop: Boolean = false) {
+    if (spaceOnTop) {
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+    Divider(color = MaterialTheme.colorScheme.secondary, thickness = .5.dp)
+    Spacer(modifier = Modifier.height(8.dp))
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = 16.dp,
+                top = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp
+            ) // Adjust padding as needed
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.secondary
         )
     }
 }

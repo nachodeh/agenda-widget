@@ -24,4 +24,7 @@
     <string name="font_size_medium">मध्यम</string>
     <string name="font_size_large">"बड़ा "</string>
     <string name="text_alignment">पाठ संरेखण</string>
+    <string name="prefs_title_general">सामान्य</string>
+    <string name="prefs_title_date_time">तारीख और समय</string>
+    <string name="prefs_title_appearance">दिखावट</string>
 </resources>
