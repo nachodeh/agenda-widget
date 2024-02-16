@@ -42,6 +42,7 @@ object FirebaseLogger {
         NUMBER_DAYS("number_of_days"),
         SHOW_END_TIME("show_end_time"),
         USE_12_HOUR("use_12_hour"),
+        DATE_SEPARATOR("date_separator"),
         TEXT_COLOR("text_color"),
         FONT_SIZE("font_size"),
         TEXT_ALIGNMENT("text_alignment"),

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.compose.ui.graphics.toArgb
@@ -19,7 +20,8 @@ import com.flowmosaic.calendar.data.CalendarViewItem
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import java.util.Locale
 
-class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsService.RemoteViewsFactory {
+class EventsRemoteViewsFactory(private val context: Context) :
+    RemoteViewsService.RemoteViewsFactory {
 
     private val calendarFetcher = CalendarFetcher()
     private val events: MutableList<CalendarViewItem> = mutableListOf()
@@ -71,9 +73,16 @@ class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsServic
                 is CalendarViewItem.Event -> if (isColorLight) R.id.item_event_text_view else R.id.item_event_text_view_dark
             }
             val text = when (item) {
-                is CalendarViewItem.Day -> CalendarDateUtils.getFormattedDate(context, item.date.time)
+                is CalendarViewItem.Day -> CalendarDateUtils.getFormattedDate(
+                    context,
+                    item.date.time
+                )
                     .capitalize(Locale.getDefault())
-                is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(item.event, context)
+
+                is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(
+                    item.event,
+                    context
+                )
             }
             val fontSizeAdjustment = when (AgendaWidgetPrefs.getFontSize(context)) {
                 AgendaWidgetPrefs.FontSize.SMALL -> -2f
@@ -85,9 +94,21 @@ class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsServic
                 AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
                 AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.RIGHT
             }
+            val separatorVisibility =
+                if (AgendaWidgetPrefs.getSeparatorVisible(context)) View.VISIBLE else View.GONE
+            setViewVisibility(R.id.date_separator, separatorVisibility)
+            setInt(
+                R.id.date_separator,
+                "setBackgroundColor",
+                textColor
+            )
             setTextViewText(textViewId, text)
             setTextColor(textViewId, textColor)
-            setTextViewTextSize(textViewId, TypedValue.COMPLEX_UNIT_SP, defaultTextSizeSp + fontSizeAdjustment)
+            setTextViewTextSize(
+                textViewId,
+                TypedValue.COMPLEX_UNIT_SP,
+                defaultTextSizeSp + fontSizeAdjustment
+            )
             setInt(textViewId, "setGravity", textAlignment)
             setOnClickFillInIntent(textViewId, getFillInIntent(item))
         }
@@ -98,6 +119,7 @@ class EventsRemoteViewsFactory(private val context: Context) : RemoteViewsServic
             is CalendarViewItem.Day -> Intent().apply {
                 putExtra(EXTRA_START_TIME, item.date.time)
             }
+
             is CalendarViewItem.Event -> Intent().apply {
                 putExtra(EXTRA_EVENT_ID, item.event.eventId)
                 putExtra(EXTRA_START_TIME, item.event.actualStartTime)

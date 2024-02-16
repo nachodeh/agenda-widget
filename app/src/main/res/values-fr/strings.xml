@@ -6,6 +6,7 @@
     <string name="number_of_days_to_display">Nombre de jours à afficher</string>
     <string name="show_end_time">Afficher l\'heure de fin</string>
     <string name="use_12_hour_format">Utiliser le format 12 heures</string>
+    <string name="date_separator_visible">Afficher le séparateur de date</string>
     <string name="font_size">Taille de police</string>
     <string name="text_alignment_left">Gauche</string>
     <string name="text_alignment_center">Centre</string>

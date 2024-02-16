@@ -1,16 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item_date_text_view"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="16sp"
-    android:textStyle="bold"
-    android:textColor="@color/white"
-    android:paddingTop="4dp"
-    android:paddingBottom="3dp"
-    android:text="@string/date_placeholder"
-    android:shadowColor="#80000000"
-    android:shadowDx="1"
-    android:shadowDy="1"
-    android:shadowRadius="4"
-    />
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="4dp"
+    >
+
+    <TextView
+        android:id="@+id/item_date_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shadowColor="#80000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="4"
+        android:text="@string/date_placeholder"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/date_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:alpha="0.2"/>
+
+    <!-- Line Divider -->
+    <!--    <View-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="1dp"-->
+    <!--        android:background="@color/white"/> &lt;!&ndash; Adjust color as needed &ndash;&gt;-->
+
+</LinearLayout>

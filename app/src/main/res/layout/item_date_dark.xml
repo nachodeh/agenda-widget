@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item_date_text_view_dark"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="16sp"
-    android:textStyle="bold"
-    android:textColor="@color/white"
-    android:paddingTop="4dp"
-    android:paddingBottom="3dp"
-    android:text="@string/date_placeholder"
-    android:shadowColor="#80ffffff"
-    android:shadowDx="1"
-    android:shadowDy="1"
-    android:shadowRadius="4"
-    />
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="4dp">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/item_date_text_view_dark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shadowColor="#80ffffff"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="4"
+        android:text="@string/date_placeholder"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/date_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:alpha="0.2"
+        android:background="@color/white_80"
+        android:orientation="horizontal"
+        android:visibility="gone" />
+
+</LinearLayout>
