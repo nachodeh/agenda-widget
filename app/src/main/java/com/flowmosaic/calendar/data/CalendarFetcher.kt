@@ -31,8 +31,8 @@ sealed class CalendarViewItem {
 
 class CalendarFetcher {
 
-    fun readCalendarData(context: Context): List<CalendarViewItem> {
-        val events = getCalendarEvents(context)
+    fun readCalendarData(context: Context, widgetId: String): List<CalendarViewItem> {
+        val events = getCalendarEvents(context, widgetId)
         return parseAndTransformCalendarItems(events)
     }
 
@@ -63,18 +63,18 @@ class CalendarFetcher {
         calendarList
     }
 
-    private fun getCalendarEvents(context: Context): List<CalendarEvent> {
+    private fun getCalendarEvents(context: Context, widgetId: String): List<CalendarEvent> {
         val events = arrayListOf<CalendarEvent>()
         val currentTime = Calendar.getInstance().timeInMillis
         val endTime = Calendar.getInstance().apply {
             timeInMillis = currentTime
-            add(Calendar.DAY_OF_MONTH, AgendaWidgetPrefs.getNumberOfDays(context) - 1)
+            add(Calendar.DAY_OF_MONTH, AgendaWidgetPrefs.getNumberOfDays(context, widgetId) - 1)
             set(Calendar.HOUR_OF_DAY, 23)
             set(Calendar.MINUTE, 59)
             set(Calendar.SECOND, 59)
             set(Calendar.MILLISECOND, 999)
         }.timeInMillis
-        val selectedCalendarIds = AgendaWidgetPrefs.getSelectedCalendars(context, null)
+        val selectedCalendarIds = AgendaWidgetPrefs.getSelectedCalendars(context, null, widgetId)
 
         val projection = arrayOf(
             CalendarContract.Instances.CALENDAR_ID,

@@ -43,7 +43,7 @@ import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ShowCalendarDialog(openDialog: MutableState<Boolean>) {
+fun ShowCalendarDialog(openDialog: MutableState<Boolean>, widgetId: String) {
     val context = LocalContext.current
     val calendarFetcher = CalendarFetcher()
     val calendarList = remember { mutableStateListOf<CalendarData>() }
@@ -51,7 +51,7 @@ fun ShowCalendarDialog(openDialog: MutableState<Boolean>) {
 
     LaunchedEffect(Unit) {
         calendarList.addAll(calendarFetcher.queryCalendarData(context))
-        selectedCalendars.addAll(AgendaWidgetPrefs.getSelectedCalendars(context, calendarList))
+        selectedCalendars.addAll(AgendaWidgetPrefs.getSelectedCalendars(context, calendarList, widgetId))
     }
 
     val checkedItems = BooleanArray(calendarList.size) { index ->
@@ -77,7 +77,7 @@ fun ShowCalendarDialog(openDialog: MutableState<Boolean>) {
                     checkedItems[index] = isChecked
                 },
                 onSaveClick = {
-                    AgendaWidgetPrefs.setSelectedCalendars(context, selectedCalendars.toSet())
+                    AgendaWidgetPrefs.setSelectedCalendars(context, selectedCalendars.toSet(), widgetId)
                     openDialog.value = false
                 },
                 onCancelClick = {

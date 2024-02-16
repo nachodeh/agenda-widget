@@ -146,11 +146,12 @@ class AgendaWidget : AppWidgetProvider() {
     ) {
         val views = RemoteViews(context.packageName, R.layout.agenda_widget)
         val intent = Intent(context, EventsWidgetService::class.java)
+        intent.putExtra(EventsWidgetService.KEY_WIDGET_ID, widgetId.toString())
         views.setRemoteAdapter(R.id.events_list_view, intent)
 
         // Set the widget background color
         val backgroundColor = 0x000000
-        val opacity = AgendaWidgetPrefs.getOpacity(context)
+        val opacity = AgendaWidgetPrefs.getOpacity(context, widgetId.toString())
         val color = ColorUtils.setAlphaComponent(backgroundColor, (opacity * 255).toInt())
         views.setInt(R.id.main_view, "setBackgroundColor", color)
 

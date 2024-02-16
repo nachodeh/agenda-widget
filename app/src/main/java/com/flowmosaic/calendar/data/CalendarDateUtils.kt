@@ -38,15 +38,15 @@ object CalendarDateUtils {
         }
     }
 
-    fun getCalendarEventText(calendarEvent: CalendarEvent, context: Context): String {
+    fun getCalendarEventText(calendarEvent: CalendarEvent, context: Context, widgetId: String): String {
         return if (calendarEvent.isAllDay) {
             calendarEvent.title
         } else {
             val formattedTimeRange =
                 getFormattedTime(
                     calendarEvent,
-                    AgendaWidgetPrefs.getShowEndTime(context),
-                    AgendaWidgetPrefs.getHourFormat12(context)
+                    AgendaWidgetPrefs.getShowEndTime(context, widgetId),
+                    AgendaWidgetPrefs.getHourFormat12(context, widgetId)
                 )
             "$formattedTimeRange | ${calendarEvent.title}"
         }
