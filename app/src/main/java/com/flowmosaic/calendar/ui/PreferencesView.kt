@@ -43,7 +43,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.flowmosaic.calendar.R
+import com.flowmosaic.calendar.WidgetUtil
 import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
@@ -53,6 +56,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun PreferencesScreen() {
     val context = LocalContext.current
+    var widgetId = remember { mutableStateOf("") }
+
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        val widgetUtil = WidgetUtil()
+        val widgetIds = widgetUtil.getAllWidgetIds(context)
+        widgetId.value = if (widgetIds.isEmpty()) "" else widgetIds[0].toString()
+    }
+
     val calendarFetcher = CalendarFetcher()
     val calendarList = remember { mutableStateOf(listOf<CalendarData>()) }
     val selectedCalendars = remember { mutableStateOf(setOf<String>()) }
@@ -60,61 +71,61 @@ fun PreferencesScreen() {
         mutableStateOf(false)
     }
     val showEndTime = remember {
-        mutableStateOf(AgendaWidgetPrefs.getShowEndTime(context))
+        mutableStateOf(AgendaWidgetPrefs.getShowEndTime(context, widgetId.value))
     }
     val setShowEndTime: (Boolean) -> Unit = { newValue ->
         showEndTime.value = newValue
-        AgendaWidgetPrefs.setShowEndTime(context, newValue)
+        AgendaWidgetPrefs.setShowEndTime(context, newValue, widgetId.value)
     }
     val numberOfDays = remember {
-        mutableIntStateOf(AgendaWidgetPrefs.getNumberOfDays(context))
+        mutableIntStateOf(AgendaWidgetPrefs.getNumberOfDays(context, widgetId.value))
     }
     val setNumberOfDays: (Int) -> Unit = { newValue ->
         numberOfDays.value = newValue
-        AgendaWidgetPrefs.setNumberOfDays(context, newValue)
+        AgendaWidgetPrefs.setNumberOfDays(context, newValue, widgetId.value)
     }
-    val colorState = remember { mutableStateOf(AgendaWidgetPrefs.getTextColor(context)) }
+    val colorState = remember { mutableStateOf(AgendaWidgetPrefs.getTextColor(context, widgetId.value)) }
     val setColorState: (Color) -> Unit = { newValue ->
         colorState.value = newValue
-        AgendaWidgetPrefs.setTextColor(context, newValue)
+        AgendaWidgetPrefs.setTextColor(context, newValue, widgetId.value)
     }
 
     val fontSize = remember {
-        mutableStateOf(AgendaWidgetPrefs.getFontSize(context))
+        mutableStateOf(AgendaWidgetPrefs.getFontSize(context, widgetId.value))
     }
     val setFontSize: (AgendaWidgetPrefs.FontSize) -> Unit = { newValue ->
         fontSize.value = newValue
-        AgendaWidgetPrefs.setFontSize(context, newValue)
+        AgendaWidgetPrefs.setFontSize(context, newValue, widgetId.value)
     }
 
     val textAlignment = remember {
-        mutableStateOf(AgendaWidgetPrefs.getTextAlignment(context))
+        mutableStateOf(AgendaWidgetPrefs.getTextAlignment(context, widgetId.value))
     }
     val setTextAlignment: (AgendaWidgetPrefs.TextAlignment) -> Unit = { newValue ->
         textAlignment.value = newValue
-        AgendaWidgetPrefs.setTextAlignment(context, newValue)
+        AgendaWidgetPrefs.setTextAlignment(context, newValue, widgetId.value)
     }
 
-    val opacityState = remember { mutableFloatStateOf(AgendaWidgetPrefs.getOpacity(context)) }
+    val opacityState = remember { mutableFloatStateOf(AgendaWidgetPrefs.getOpacity(context, widgetId.value)) }
 
     val use12HourFormat = remember {
-        mutableStateOf(AgendaWidgetPrefs.getHourFormat12(context))
+        mutableStateOf(AgendaWidgetPrefs.getHourFormat12(context, widgetId.value))
     }
     val setUse12HourFormat: (Boolean) -> Unit = { newValue ->
         use12HourFormat.value = newValue
-        AgendaWidgetPrefs.setHourFormat12(context, newValue)
+        AgendaWidgetPrefs.setHourFormat12(context, newValue, widgetId.value)
     }
 
     val showDateSeparator = remember {
-        mutableStateOf(AgendaWidgetPrefs.getSeparatorVisible(context))
+        mutableStateOf(AgendaWidgetPrefs.getSeparatorVisible(context, widgetId.value))
     }
     val setShowDateSeparator: (Boolean) -> Unit = { newValue ->
         showDateSeparator.value = newValue
-        AgendaWidgetPrefs.setSeparatorVisible(context, newValue)
+        AgendaWidgetPrefs.setSeparatorVisible(context, newValue, widgetId.value)
     }
 
     if (showCalendarSelectionDialog.value) {
-        ShowCalendarDialog(openDialog = showCalendarSelectionDialog)
+        ShowCalendarDialog(openDialog = showCalendarSelectionDialog, widgetId.value)
         FirebaseLogger.logSelectItemEvent(
             context,
             FirebaseLogger.ScreenName.PREFS,
@@ -125,12 +136,11 @@ fun PreferencesScreen() {
     LaunchedEffect(key1 = Unit) {
         calendarList.value = calendarFetcher.queryCalendarData(context)
         selectedCalendars.value =
-            AgendaWidgetPrefs.getSelectedCalendars(context, calendarList.value)
+            AgendaWidgetPrefs.getSelectedCalendars(context, calendarList.value, widgetId.value)
     }
 
 
     Column {
-
         Header()
         Column(
             modifier = Modifier
@@ -179,7 +189,7 @@ fun PreferencesScreen() {
                 displayText = context.getString(R.string.background_opacity),
                 opacityValue = opacityState,
                 saveOpacityValue = { newValue ->
-                    AgendaWidgetPrefs.setOpacity(context, newValue)
+                    AgendaWidgetPrefs.setOpacity(context, newValue, widgetId.value)
                 }
             )
             CheckboxRow(

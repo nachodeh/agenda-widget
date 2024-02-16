@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.text.capitalize
 import com.flowmosaic.calendar.EXTRA_END_TIME
 import com.flowmosaic.calendar.EXTRA_EVENT_ID
 import com.flowmosaic.calendar.EXTRA_START_TIME
@@ -20,7 +19,7 @@ import com.flowmosaic.calendar.data.CalendarViewItem
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import java.util.Locale
 
-class EventsRemoteViewsFactory(private val context: Context) :
+class EventsRemoteViewsFactory(private val context: Context, private val widgetId: String) :
     RemoteViewsService.RemoteViewsFactory {
 
     private val calendarFetcher = CalendarFetcher()
@@ -55,7 +54,7 @@ class EventsRemoteViewsFactory(private val context: Context) :
     override fun getViewAt(position: Int): RemoteViews {
         val item = events[position]
 
-        val textColor = AgendaWidgetPrefs.getTextColor(context).toArgb()
+        val textColor = AgendaWidgetPrefs.getTextColor(context, widgetId).toArgb()
         val isColorLight = isColorLight(textColor)
 
         val layoutResId = when (item) {
@@ -81,21 +80,26 @@ class EventsRemoteViewsFactory(private val context: Context) :
 
                 is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(
                     item.event,
-                    context
+                    context,
+                    widgetId
                 )
             }
-            val fontSizeAdjustment = when (AgendaWidgetPrefs.getFontSize(context)) {
+            val fontSizeAdjustment = when (AgendaWidgetPrefs.getFontSize(context, widgetId)) {
                 AgendaWidgetPrefs.FontSize.SMALL -> -2f
                 AgendaWidgetPrefs.FontSize.MEDIUM -> 0f
                 AgendaWidgetPrefs.FontSize.LARGE -> 2f
             }
-            val textAlignment = when (AgendaWidgetPrefs.getTextAlignment(context)) {
+            val textAlignment = when (AgendaWidgetPrefs.getTextAlignment(context, widgetId)) {
                 AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.LEFT
                 AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
                 AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.RIGHT
             }
             val separatorVisibility =
-                if (AgendaWidgetPrefs.getSeparatorVisible(context)) View.VISIBLE else View.GONE
+                if (AgendaWidgetPrefs.getSeparatorVisible(
+                        context,
+                        widgetId
+                    )
+                ) View.VISIBLE else View.GONE
             setViewVisibility(R.id.date_separator, separatorVisibility)
             setInt(
                 R.id.date_separator,
@@ -145,7 +149,7 @@ class EventsRemoteViewsFactory(private val context: Context) :
     }
 
     private fun getEvents(): List<CalendarViewItem> {
-        return calendarFetcher.readCalendarData(context)
+        return calendarFetcher.readCalendarData(context, widgetId)
     }
 
 }

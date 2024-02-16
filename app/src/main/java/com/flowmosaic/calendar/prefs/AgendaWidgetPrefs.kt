@@ -19,8 +19,8 @@ object AgendaWidgetPrefs {
     private const val PREF_TEXT_ALIGNMENT = "key_text_alignment"
     private const val PREF_OPACITY = "key_opacity"
     private const val PREF_HOUR_FORMAT_12 = "key_hour_format_12"
-    private const val LAST_REVIEW_PROMPT = "key_last_review_prompt"
-    private const val SEPARATOR_VISIBLE = "key_separator_visible"
+    private const val PREF_LAST_REVIEW_PROMPT = "key_last_review_prompt"
+    private const val PREF_SEPARATOR_VISIBLE = "key_separator_visible"
 
     enum class FontSize(private val displayResId: Int) {
         SMALL(R.string.font_size_small),
@@ -51,11 +51,25 @@ object AgendaWidgetPrefs {
         getPreferences(context).edit().putLong(PREF_LAST_LOGGED, System.currentTimeMillis()).apply()
     }
 
+    fun getKeyWithWidgetId(context: Context, key: String, widgetId: String): String {
+        if (widgetId.isEmpty()) {
+            return key
+        }
+
+        val keyWithId = key.plus("_").plus(widgetId)
+        if (getPreferences(context).contains(keyWithId) || !getPreferences(context).contains(key)) {
+            return keyWithId
+        }
+        return key
+    }
+
     fun getSelectedCalendars(
         context: Context,
-        allCalendars: List<CalendarData>?
+        allCalendars: List<CalendarData>?,
+        widgetId: String,
     ): MutableSet<String> {
-        val selectedCalendars = getPreferences(context).getStringSet(PREF_SELECTED_CALENDARS, null)
+        val prefsKey = getKeyWithWidgetId(context, PREF_SELECTED_CALENDARS, widgetId)
+        val selectedCalendars = getPreferences(context).getStringSet(prefsKey, null)
 
         return selectedCalendars?.toMutableSet()
             ?: if (allCalendars == null) {
@@ -63,94 +77,111 @@ object AgendaWidgetPrefs {
             } else {
                 // Selected calendars not found in preferences, save allCalendars as selected
                 val allCalendarIds = allCalendars.map { it.id.toString() }.toMutableSet()
-                setSelectedCalendars(context, allCalendarIds)
+                setSelectedCalendars(context, allCalendarIds, widgetId)
                 allCalendarIds
             }
     }
 
-    fun setSelectedCalendars(context: Context, selectedCalendarIds: Set<String>) {
+    fun setSelectedCalendars(context: Context, selectedCalendarIds: Set<String>, widgetId: String,) {
+        val prefsKey = getKeyWithWidgetId(context, PREF_SELECTED_CALENDARS, widgetId)
         getPreferences(context).edit()
-            .putStringSet(PREF_SELECTED_CALENDARS, selectedCalendarIds)
+            .putStringSet(prefsKey, selectedCalendarIds)
             .apply()
     }
 
-    fun getShowEndTime(context: Context): Boolean {
-        return getPreferences(context).getBoolean(PREF_SHOW_END_TIME, false)
+    fun getShowEndTime(context: Context, widgetId: String,): Boolean {
+        val prefsKey = getKeyWithWidgetId(context, PREF_SHOW_END_TIME, widgetId)
+        return getPreferences(context).getBoolean(prefsKey, false)
     }
 
-    fun setShowEndTime(context: Context, showEndTime: Boolean) {
-        getPreferences(context).edit().putBoolean(PREF_SHOW_END_TIME, showEndTime).apply()
+    fun setShowEndTime(context: Context, showEndTime: Boolean, widgetId: String,) {
+        val prefsKey = getKeyWithWidgetId(context, PREF_SHOW_END_TIME, widgetId)
+        getPreferences(context).edit().putBoolean(prefsKey, showEndTime).apply()
     }
 
-    fun getNumberOfDays(context: Context): Int {
-        return getPreferences(context).getInt(PREF_NUMBER_OF_DAYS, 7)
+    fun getNumberOfDays(context: Context, widgetId: String,): Int {
+        val prefsKey = getKeyWithWidgetId(context, PREF_NUMBER_OF_DAYS, widgetId)
+        return getPreferences(context).getInt(prefsKey, 7)
     }
 
-    fun setNumberOfDays(context: Context, numberOfDays: Int) {
-        getPreferences(context).edit().putInt(PREF_NUMBER_OF_DAYS, numberOfDays).apply()
+    fun setNumberOfDays(context: Context, numberOfDays: Int, widgetId: String,) {
+        val prefsKey = getKeyWithWidgetId(context, PREF_NUMBER_OF_DAYS, widgetId)
+        getPreferences(context).edit().putInt(prefsKey, numberOfDays).apply()
     }
 
-    fun getTextColor(context: Context): Color {
+    fun getTextColor(context: Context, widgetId: String,): Color {
         val defaultColor = Color.White.toArgb()
-        val colorInt = getPreferences(context).getInt(PREF_TEXT_COLOR, defaultColor)
+        val prefsKey = getKeyWithWidgetId(context, PREF_TEXT_COLOR, widgetId)
+        val colorInt = getPreferences(context).getInt(prefsKey, defaultColor)
         return Color(colorInt)
     }
 
-    fun setTextColor(context: Context, textColor: Color) {
+    fun setTextColor(context: Context, textColor: Color, widgetId: String,) {
         val colorInt = textColor.toArgb()
-        getPreferences(context).edit().putInt(PREF_TEXT_COLOR, colorInt).apply()
+        val prefsKey = getKeyWithWidgetId(context, PREF_TEXT_COLOR, widgetId)
+        getPreferences(context).edit().putInt(prefsKey, colorInt).apply()
     }
 
-    fun getFontSize(context: Context): FontSize {
-        val size = getPreferences(context).getString(PREF_FONT_SIZE, FontSize.MEDIUM.name)
+    fun getFontSize(context: Context, widgetId: String,): FontSize {
+        val prefsKey = getKeyWithWidgetId(context, PREF_FONT_SIZE, widgetId)
+        val size = getPreferences(context).getString(prefsKey, FontSize.MEDIUM.name)
             ?: FontSize.MEDIUM.name
         return FontSize.valueOf(size)
     }
 
-    fun setFontSize(context: Context, fontSize: FontSize) {
-        getPreferences(context).edit().putString(PREF_FONT_SIZE, fontSize.name).apply()
+    fun setFontSize(context: Context, fontSize: FontSize, widgetId: String,) {
+        val prefsKey = getKeyWithWidgetId(context, PREF_FONT_SIZE, widgetId)
+        getPreferences(context).edit().putString(prefsKey, fontSize.name).apply()
     }
 
-    fun getTextAlignment(context: Context): TextAlignment {
-        val size = getPreferences(context).getString(PREF_TEXT_ALIGNMENT, TextAlignment.LEFT.name)
+    fun getTextAlignment(context: Context, widgetId: String,): TextAlignment {
+        val prefsKey = getKeyWithWidgetId(context, PREF_TEXT_ALIGNMENT, widgetId)
+        val size = getPreferences(context).getString(prefsKey, TextAlignment.LEFT.name)
             ?: TextAlignment.LEFT.name
         return TextAlignment.valueOf(size)
     }
 
-    fun setTextAlignment(context: Context, textAlignment: TextAlignment) {
-        getPreferences(context).edit().putString(PREF_TEXT_ALIGNMENT, textAlignment.name).apply()
+    fun setTextAlignment(context: Context, textAlignment: TextAlignment, widgetId: String,) {
+        val prefsKey = getKeyWithWidgetId(context, PREF_TEXT_ALIGNMENT, widgetId)
+        getPreferences(context).edit().putString(prefsKey, textAlignment.name).apply()
     }
 
-    fun getOpacity(context: Context): Float {
-        return getPreferences(context).getFloat(PREF_OPACITY, 0f)
+    fun getOpacity(context: Context, widgetId: String,): Float {
+        val prefsKey = getKeyWithWidgetId(context, PREF_OPACITY, widgetId)
+        return getPreferences(context).getFloat(prefsKey, 0f)
     }
 
-    fun setOpacity(context: Context, opacity: Float) {
-        getPreferences(context).edit().putFloat(PREF_OPACITY, opacity).apply()
+    fun setOpacity(context: Context, opacity: Float, widgetId: String,) {
+        val prefsKey = getKeyWithWidgetId(context, PREF_OPACITY, widgetId)
+        getPreferences(context).edit().putFloat(prefsKey, opacity).apply()
     }
 
-    fun getHourFormat12(context: Context): Boolean {
-        return getPreferences(context).getBoolean(PREF_HOUR_FORMAT_12, false)
+    fun getHourFormat12(context: Context, widgetId: String,): Boolean {
+        val prefsKey = getKeyWithWidgetId(context, PREF_HOUR_FORMAT_12, widgetId)
+        return getPreferences(context).getBoolean(prefsKey, false)
     }
 
-    fun setSeparatorVisible(context: Context, visible: Boolean) {
-        getPreferences(context).edit().putBoolean(SEPARATOR_VISIBLE, visible).apply()
+    fun setHourFormat12(context: Context, use12HourFormat: Boolean, widgetId: String,) {
+        val prefsKey = getKeyWithWidgetId(context, PREF_HOUR_FORMAT_12, widgetId)
+        getPreferences(context).edit().putBoolean(prefsKey, use12HourFormat).apply()
     }
 
-    fun getSeparatorVisible(context: Context): Boolean {
-        return getPreferences(context).getBoolean(SEPARATOR_VISIBLE, false)
+    fun setSeparatorVisible(context: Context, visible: Boolean, widgetId: String,) {
+        val prefsKey = getKeyWithWidgetId(context, PREF_SEPARATOR_VISIBLE, widgetId)
+        getPreferences(context).edit().putBoolean(prefsKey, visible).apply()
     }
 
-    fun setHourFormat12(context: Context, use12HourFormat: Boolean) {
-        getPreferences(context).edit().putBoolean(PREF_HOUR_FORMAT_12, use12HourFormat).apply()
+    fun getSeparatorVisible(context: Context, widgetId: String,): Boolean {
+        val prefsKey = getKeyWithWidgetId(context, PREF_SEPARATOR_VISIBLE, widgetId)
+        return getPreferences(context).getBoolean(prefsKey, false)
     }
 
     fun getLastReviewPrompt(context: Context): Long {
-        return getPreferences(context).getLong(LAST_REVIEW_PROMPT, 0)
+        return getPreferences(context).getLong(PREF_LAST_REVIEW_PROMPT, 0)
     }
 
     fun setLastReviewPrompt(context: Context, lastReviewPrompt: Long) {
-        getPreferences(context).edit().putLong(LAST_REVIEW_PROMPT, lastReviewPrompt).apply()
+        getPreferences(context).edit().putLong(PREF_LAST_REVIEW_PROMPT, lastReviewPrompt).apply()
     }
 
     private fun getPreferences(context: Context): SharedPreferences {
