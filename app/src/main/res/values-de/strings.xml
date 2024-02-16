@@ -25,4 +25,7 @@
     <string name="font_size_medium">Mittel</string>
     <string name="font_size_large">Groß</string>
     <string name="text_alignment">Textausrichtung</string>
+    <string name="prefs_title_general">Allgemein</string>
+    <string name="prefs_title_date_time">Datum und Uhrzeit</string>
+    <string name="prefs_title_appearance">Erscheinungsbild</string>
 </resources>

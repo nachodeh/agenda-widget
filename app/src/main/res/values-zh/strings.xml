@@ -24,4 +24,7 @@
     <string name="font_size_medium">中</string>
     <string name="font_size_large">大</string>
     <string name="text_alignment">"文字对齐 "</string>
+    <string name="prefs_title_general">通用</string>
+    <string name="prefs_title_date_time">日期和时间</string>
+    <string name="prefs_title_appearance">外观</string>
 </resources>
