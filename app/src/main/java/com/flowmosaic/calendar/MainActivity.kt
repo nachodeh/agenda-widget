@@ -157,20 +157,8 @@ private fun WidgetsListView() {
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
-            Header()
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 12.dp)
-            ) {
-                Text(
-                    text = context.getString(R.string.active_widgets),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
-
+            Header(subtitle = context.getString(R.string.active_widgets))
+            Spacer(modifier = Modifier.height(8.dp))
             widgetIds.value.forEachIndexed { index, id ->
                 val idx = index + 1;
                 LaunchWidgetConfigButton(id = id, text = "Widget $idx")
@@ -193,7 +181,7 @@ private fun LaunchWidgetConfigButton(id: Int, text: String) {
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer
         ),
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp)
+        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
 
     ) {
         Text(

@@ -132,11 +132,12 @@ fun PreferencesScreen(appWidgetId: Int) {
             AgendaWidgetPrefs.getSelectedCalendars(context, calendarList.value, widgetId)
     }
 
-
     Column {
-        Header()
         if (appWidgetId == 0) {
-            DefaultConfigTitle(title = context.getString(R.string.prefs_title_editing_default_config))
+            Header(subtitle = context.getString(R.string.prefs_title_editing_default_config))
+        }
+        else {
+            Header()
         }
         Column(
             modifier = Modifier
@@ -554,38 +555,6 @@ fun TitleWithDivider(title: String, spaceOnTop: Boolean = false, showDivider: Bo
             fontWeight = FontWeight.Bold,
         )
     }
-}
-
-@Composable
-fun DefaultConfigTitle(title: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-//            .padding(
-//                start = 16.dp,
-//                top = 16.dp,
-//                end = 16.dp,
-//                bottom = 16.dp
-//            ) // Adjust padding as needed
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 16.dp,
-                    top = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp
-                )
-        )
-        Divider(color = MaterialTheme.colorScheme.secondary, thickness = .5.dp)
-    }
-
 }
 
 
