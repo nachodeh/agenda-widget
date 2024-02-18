@@ -26,7 +26,9 @@
     <string name="font_size_medium">กลาง</string>
     <string name="font_size_large">ใหญ่</string>
     <string name="text_alignment">การจัดตำแหน่งข้อความ</string>
+    <string name="prefs_title_editing_default_config">แก้ไขการกำหนดค่าเริ่มต้น</string>
     <string name="prefs_title_general">ทั่วไป</string>
     <string name="prefs_title_date_time">วันที่และเวลา</string>
     <string name="prefs_title_appearance">"ลักษณะ "</string>
+    <string name="active_widgets">วิดเจ็ตที่ใช้งาน</string>
 </resources>

@@ -25,7 +25,9 @@
     <string name="font_size_medium">Mediano</string>
     <string name="font_size_large">Grande</string>
     <string name="text_alignment">Alineación de texto</string>
+    <string name="prefs_title_editing_default_config">Edición de la configuración predeterminada</string>
     <string name="prefs_title_general">General</string>
     <string name="prefs_title_date_time">Fecha y hora</string>
     <string name="prefs_title_appearance">Apariencia</string>
+    <string name="active_widgets">Widgets activos</string>
 </resources>

@@ -25,7 +25,9 @@
     <string name="font_size_medium">मध्यम</string>
     <string name="font_size_large">"बड़ा "</string>
     <string name="text_alignment">पाठ संरेखण</string>
+    <string name="prefs_title_editing_default_config">डिफ़ॉल्ट कॉन्फ़िगरेशन संपादन</string>
     <string name="prefs_title_general">सामान्य</string>
     <string name="prefs_title_date_time">तारीख और समय</string>
     <string name="prefs_title_appearance">दिखावट</string>
+    <string name="active_widgets">सक्रिय विजेट्स</string>
 </resources>
