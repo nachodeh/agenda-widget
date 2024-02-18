@@ -5,6 +5,7 @@
     <string name="select_calendars">เลือกปฏิทิน</string>
     <string name="number_of_days_to_display">จำนวนวันที่ต้องการแสดง</string>
     <string name="show_end_time">แสดงเวลาที่สิ้นสุด</string>
+    <string name="show_action_buttons">แสดงปุ่มดำเนินการ</string>
     <string name="use_12_hour_format">ใช้รูปแบบ 12 ชั่วโมง</string>
     <string name="date_separator_visible">แสดงตัวคั่นวันที่</string>
     <string name="font_size">ขนาดตัวอักษร</string>
@@ -32,4 +33,5 @@
     <string name="prefs_title_appearance">"ลักษณะ "</string>
     <string name="active_widgets">การกำหนดค่าวิดเจ็ต</string>
     <string name="default_configuration">ค่ากำหนดเริ่มต้น</string>
+    <string name="agenda_widget_updated">อัปเดตวิดเจ็ตกำหนดการ</string>
 </resources>

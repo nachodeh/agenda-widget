@@ -5,6 +5,7 @@
     <string name="select_calendars">Wybierz kalendarze</string>
     <string name="number_of_days_to_display">Liczba dni do wyświetlenia</string>
     <string name="show_end_time">Pokaż godzinę zakończenia</string>
+    <string name="show_action_buttons">Pokaż przyciski akcji</string>
     <string name="use_12_hour_format">Używaj formatu 12-godzinnego</string>
     <string name="date_separator_visible">Pokaż separator daty</string>
     <string name="font_size">Rozmiar czcionki</string>
@@ -32,4 +33,5 @@
     <string name="prefs_title_appearance">Wygląd</string>
     <string name="active_widgets">Konfiguracja widżetu</string>
     <string name="default_configuration">Domyślna konfiguracja</string>
+    <string name="agenda_widget_updated">Widget kalendarza zaktualizowany</string>
 </resources>

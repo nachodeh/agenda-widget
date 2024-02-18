@@ -5,6 +5,7 @@
     <string name="select_calendars">कैलेंडर का चयन करें</string>
     <string name="number_of_days_to_display">प्रदर्शित करने के लिए दिनों की संख्या</string>
     <string name="show_end_time">समाप्ति समय दिखाएं</string>
+    <string name="show_action_buttons">क्रिया बटन दिखाएं</string>
     <string name="use_12_hour_format">12 घंटे का प्रारूप उपयोग करें</string>
     <string name="date_separator_visible">तिथि विभाजक दिखाएं</string>
     <string name="font_size">फ़ॉन्ट आकार</string>
@@ -31,4 +32,5 @@
     <string name="prefs_title_appearance">दिखावट</string>
     <string name="active_widgets">"विजेट कॉन्फ़िगरेशन "</string>
     <string name="default_configuration">डिफ़ॉल्ट कॉन्फ़िगरेशन</string>
+    <string name="agenda_widget_updated">एजेंडा विजेट अपडेट किया गया</string>
 </resources>

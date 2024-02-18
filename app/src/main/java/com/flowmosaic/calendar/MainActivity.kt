@@ -96,12 +96,12 @@ private fun RequestPermissionsScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(horizontal = 16.dp),
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = stringResource(id = R.string.calendar_access_info),
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 Button(
                     onClick = {
                         calendarPermissionsState.launchMultiplePermissionRequest()
