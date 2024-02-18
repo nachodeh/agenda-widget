@@ -144,17 +144,6 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         widgetId: Int
     ) {
-        val views = RemoteViews(context.packageName, R.layout.agenda_widget)
-        val intent = Intent(context, EventsWidgetService::class.java)
-        intent.putExtra(EventsWidgetService.KEY_WIDGET_ID, widgetId.toString())
-        views.setRemoteAdapter(R.id.events_list_view, intent)
-
-        // Set the widget background color
-        val backgroundColor = 0x000000
-        val opacity = AgendaWidgetPrefs.getOpacity(context, widgetId.toString())
-        val color = ColorUtils.setAlphaComponent(backgroundColor, (opacity * 255).toInt())
-        views.setInt(R.id.main_view, "setBackgroundColor", color)
-
         val toastPendingIntent: PendingIntent = Intent(
             context,
             AgendaWidget::class.java
@@ -166,7 +155,21 @@ class AgendaWidget : AppWidgetProvider() {
             val flags = PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             PendingIntent.getBroadcast(context, 0, this, flags)
         }
-        views.setPendingIntentTemplate(R.id.events_list_view, toastPendingIntent)
+//        val views = RemoteViews(context.packageName, R.layout.agenda_widget)
+        val intent = Intent(context, EventsWidgetService::class.java).apply {
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+            data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
+        }
+
+        val views = RemoteViews(context.packageName, R.layout.agenda_widget).apply {
+            setRemoteAdapter(R.id.events_list_view, intent)
+            val backgroundColor = 0x000000
+            val opacity = AgendaWidgetPrefs.getOpacity(context, widgetId.toString())
+            val color = ColorUtils.setAlphaComponent(backgroundColor, (opacity * 255).toInt())
+            setInt(R.id.main_view, "setBackgroundColor", color)
+            setPendingIntentTemplate(R.id.events_list_view, toastPendingIntent)
+//            setEmptyView(R.id.stack_view, R.id.empty_view)
+        }
 
         appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.events_list_view)
         appWidgetManager.updateAppWidget(widgetId, views)
