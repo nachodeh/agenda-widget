@@ -1,5 +1,6 @@
 package com.flowmosaic.calendar.remoteviews
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -19,11 +20,22 @@ import com.flowmosaic.calendar.data.CalendarViewItem
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import java.util.Locale
 
-class EventsRemoteViewsFactory(private val context: Context, private val widgetId: String) :
+class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     RemoteViewsService.RemoteViewsFactory {
+
+    init {
+        if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
+            widgetId = intent.getIntExtra(
+                AppWidgetManager.EXTRA_APPWIDGET_ID,
+                AppWidgetManager.INVALID_APPWIDGET_ID
+            ).toString()!!
+        }
+    }
 
     private val calendarFetcher = CalendarFetcher()
     private val events: MutableList<CalendarViewItem> = mutableListOf()
+
+    private var widgetId = ""
 
     override fun onCreate() {
         events.addAll(getEvents())

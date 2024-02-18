@@ -63,6 +63,14 @@ object AgendaWidgetPrefs {
         return key
     }
 
+    fun getKeyWithWidgetIdSave(context: Context, key: String, widgetId: String): String {
+        if (widgetId.isEmpty()) {
+            return key
+        }
+
+        return key.plus("_").plus(widgetId)
+    }
+
     fun getSelectedCalendars(
         context: Context,
         allCalendars: List<CalendarData>?,
@@ -83,7 +91,7 @@ object AgendaWidgetPrefs {
     }
 
     fun setSelectedCalendars(context: Context, selectedCalendarIds: Set<String>, widgetId: String,) {
-        val prefsKey = getKeyWithWidgetId(context, PREF_SELECTED_CALENDARS, widgetId)
+        val prefsKey = getKeyWithWidgetIdSave(context, PREF_SELECTED_CALENDARS, widgetId)
         getPreferences(context).edit()
             .putStringSet(prefsKey, selectedCalendarIds)
             .apply()
@@ -95,7 +103,7 @@ object AgendaWidgetPrefs {
     }
 
     fun setShowEndTime(context: Context, showEndTime: Boolean, widgetId: String,) {
-        val prefsKey = getKeyWithWidgetId(context, PREF_SHOW_END_TIME, widgetId)
+        val prefsKey = getKeyWithWidgetIdSave(context, PREF_SHOW_END_TIME, widgetId)
         getPreferences(context).edit().putBoolean(prefsKey, showEndTime).apply()
     }
 
@@ -105,7 +113,7 @@ object AgendaWidgetPrefs {
     }
 
     fun setNumberOfDays(context: Context, numberOfDays: Int, widgetId: String,) {
-        val prefsKey = getKeyWithWidgetId(context, PREF_NUMBER_OF_DAYS, widgetId)
+        val prefsKey = getKeyWithWidgetIdSave(context, PREF_NUMBER_OF_DAYS, widgetId)
         getPreferences(context).edit().putInt(prefsKey, numberOfDays).apply()
     }
 
@@ -118,7 +126,7 @@ object AgendaWidgetPrefs {
 
     fun setTextColor(context: Context, textColor: Color, widgetId: String,) {
         val colorInt = textColor.toArgb()
-        val prefsKey = getKeyWithWidgetId(context, PREF_TEXT_COLOR, widgetId)
+        val prefsKey = getKeyWithWidgetIdSave(context, PREF_TEXT_COLOR, widgetId)
         getPreferences(context).edit().putInt(prefsKey, colorInt).apply()
     }
 
@@ -130,7 +138,7 @@ object AgendaWidgetPrefs {
     }
 
     fun setFontSize(context: Context, fontSize: FontSize, widgetId: String,) {
-        val prefsKey = getKeyWithWidgetId(context, PREF_FONT_SIZE, widgetId)
+        val prefsKey = getKeyWithWidgetIdSave(context, PREF_FONT_SIZE, widgetId)
         getPreferences(context).edit().putString(prefsKey, fontSize.name).apply()
     }
 
@@ -142,7 +150,7 @@ object AgendaWidgetPrefs {
     }
 
     fun setTextAlignment(context: Context, textAlignment: TextAlignment, widgetId: String,) {
-        val prefsKey = getKeyWithWidgetId(context, PREF_TEXT_ALIGNMENT, widgetId)
+        val prefsKey = getKeyWithWidgetIdSave(context, PREF_TEXT_ALIGNMENT, widgetId)
         getPreferences(context).edit().putString(prefsKey, textAlignment.name).apply()
     }
 
@@ -152,7 +160,7 @@ object AgendaWidgetPrefs {
     }
 
     fun setOpacity(context: Context, opacity: Float, widgetId: String,) {
-        val prefsKey = getKeyWithWidgetId(context, PREF_OPACITY, widgetId)
+        val prefsKey = getKeyWithWidgetIdSave(context, PREF_OPACITY, widgetId)
         getPreferences(context).edit().putFloat(prefsKey, opacity).apply()
     }
 
@@ -162,12 +170,12 @@ object AgendaWidgetPrefs {
     }
 
     fun setHourFormat12(context: Context, use12HourFormat: Boolean, widgetId: String,) {
-        val prefsKey = getKeyWithWidgetId(context, PREF_HOUR_FORMAT_12, widgetId)
+        val prefsKey = getKeyWithWidgetIdSave(context, PREF_HOUR_FORMAT_12, widgetId)
         getPreferences(context).edit().putBoolean(prefsKey, use12HourFormat).apply()
     }
 
     fun setSeparatorVisible(context: Context, visible: Boolean, widgetId: String,) {
-        val prefsKey = getKeyWithWidgetId(context, PREF_SEPARATOR_VISIBLE, widgetId)
+        val prefsKey = getKeyWithWidgetIdSave(context, PREF_SEPARATOR_VISIBLE, widgetId)
         getPreferences(context).edit().putBoolean(prefsKey, visible).apply()
     }
 

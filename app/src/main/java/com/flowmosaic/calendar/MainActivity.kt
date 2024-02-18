@@ -1,6 +1,7 @@
 package com.flowmosaic.calendar
 
 import android.Manifest
+import android.appwidget.AppWidgetManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -40,7 +41,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    RequestPermissionsScreen()
+                    val appWidgetId = intent?.extras?.getInt(
+                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        AppWidgetManager.INVALID_APPWIDGET_ID
+                    ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+                    RequestPermissionsScreen(appWidgetId)
                 }
             }
         }
@@ -57,7 +62,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-private fun RequestPermissionsScreen() {
+private fun RequestPermissionsScreen(appWidgetId: Int) {
     val context = LocalContext.current
     val calendarPermissionsState = rememberMultiplePermissionsState(
         listOf(
@@ -71,7 +76,7 @@ private fun RequestPermissionsScreen() {
             context,
             FirebaseLogger.ScreenName.PREFS,
         )
-        PreferencesScreen()
+        PreferencesScreen(appWidgetId)
     } else {
         FirebaseLogger.logScreenShownEvent(
             context,
