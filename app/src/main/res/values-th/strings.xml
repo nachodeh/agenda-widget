@@ -30,5 +30,6 @@
     <string name="prefs_title_general">ทั่วไป</string>
     <string name="prefs_title_date_time">วันที่และเวลา</string>
     <string name="prefs_title_appearance">"ลักษณะ "</string>
-    <string name="active_widgets">วิดเจ็ตที่ใช้งาน</string>
+    <string name="active_widgets">การกำหนดค่าวิดเจ็ต</string>
+    <string name="default_configuration">ค่ากำหนดเริ่มต้น</string>
 </resources>
