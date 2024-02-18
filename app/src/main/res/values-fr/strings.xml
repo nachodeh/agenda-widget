@@ -29,5 +29,6 @@
     <string name="prefs_title_general">Général</string>
     <string name="prefs_title_date_time">Date et heure</string>
     <string name="prefs_title_appearance">Apparence</string>
-    <string name="active_widgets">Widgets actifs</string>
+    <string name="active_widgets">Configuration du widget</string>
+    <string name="default_configuration">Configuration par défaut</string>
 </resources>

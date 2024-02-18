@@ -29,7 +29,8 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
 
-    <string name="active_widgets">Active Widgets</string>
+    <string name="active_widgets">Widget configuration</string>
+    <string name="default_configuration">Default configuration</string>
 
     <string name="date_placeholder">Date placeholder</string>
     <string name="event_placeholder">Event placeholder</string>

@@ -29,5 +29,6 @@
     <string name="prefs_title_general">सामान्य</string>
     <string name="prefs_title_date_time">तारीख और समय</string>
     <string name="prefs_title_appearance">दिखावट</string>
-    <string name="active_widgets">सक्रिय विजेट्स</string>
+    <string name="active_widgets">"विजेट कॉन्फ़िगरेशन "</string>
+    <string name="default_configuration">डिफ़ॉल्ट कॉन्फ़िगरेशन</string>
 </resources>

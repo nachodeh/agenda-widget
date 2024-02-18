@@ -30,5 +30,6 @@
     <string name="prefs_title_general">Ogólne</string>
     <string name="prefs_title_date_time">Data i czas</string>
     <string name="prefs_title_appearance">Wygląd</string>
-    <string name="active_widgets">Aktywne widżety</string>
+    <string name="active_widgets">Konfiguracja widżetu</string>
+    <string name="default_configuration">Domyślna konfiguracja</string>
 </resources>

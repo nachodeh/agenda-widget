@@ -161,7 +161,7 @@ private fun WidgetsListView() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 12.dp)
             ) {
                 Text(
                     text = context.getString(R.string.active_widgets),
@@ -170,31 +170,40 @@ private fun WidgetsListView() {
                     fontWeight = FontWeight.Medium,
                 )
             }
-            widgetIds.value.forEach { id ->
-                Button(
-                    onClick = {
-                        val intent = Intent(context, PreferencesActivity::class.java)
-                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
-                        context.startActivity(intent)
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                    ),
-                    modifier = Modifier.padding(8.dp)
 
-                ) {
-                    Text(
-                        text = "Widget ID: $id", // TODO string
-                        style = MaterialTheme.typography.labelMedium,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp, horizontal = 8.dp)
-                    )
-                }
+            widgetIds.value.forEachIndexed { index, id ->
+                val idx = index + 1;
+                LaunchWidgetConfigButton(id = id, text = "Widget $idx")
             }
+            LaunchWidgetConfigButton(id = 0, text = context.getString(R.string.default_configuration))
         }
+    }
+}
+
+@Composable
+private fun LaunchWidgetConfigButton(id: Int, text: String) {
+    val context = LocalContext.current
+    Button(
+        onClick = {
+            val intent = Intent(context, PreferencesActivity::class.java)
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
+            context.startActivity(intent)
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+        ),
+        modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp)
+
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelLarge,
+            textAlign = TextAlign.Start,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp, horizontal = 8.dp)
+        )
     }
 }
 
