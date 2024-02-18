@@ -43,10 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import com.flowmosaic.calendar.R
-import com.flowmosaic.calendar.WidgetUtil
 import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
@@ -100,7 +97,8 @@ fun PreferencesScreen(appWidgetId: Int) {
         AgendaWidgetPrefs.setTextAlignment(context, newValue, widgetId)
     }
 
-    val opacityState = remember { mutableFloatStateOf(AgendaWidgetPrefs.getOpacity(context, widgetId)) }
+    val opacityState =
+        remember { mutableFloatStateOf(AgendaWidgetPrefs.getOpacity(context, widgetId)) }
 
     val use12HourFormat = remember {
         mutableStateOf(AgendaWidgetPrefs.getHourFormat12(context, widgetId))
