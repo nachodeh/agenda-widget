@@ -23,6 +23,8 @@ import java.util.Locale
 class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     RemoteViewsService.RemoteViewsFactory {
 
+    private var widgetId = ""
+
     init {
         if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
             widgetId = intent.getIntExtra(
@@ -34,8 +36,6 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
 
     private val calendarFetcher = CalendarFetcher()
     private val events: MutableList<CalendarViewItem> = mutableListOf()
-
-    private var widgetId = ""
 
     override fun onCreate() {
         events.addAll(getEvents())
