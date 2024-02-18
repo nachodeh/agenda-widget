@@ -104,4 +104,8 @@ dependencies {
     implementation 'com.google.android.play:review:2.0.1'
     implementation 'com.google.android.play:review-ktx:2.0.1'
 
+    // Navigation
+    def nav_version = "2.7.7"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+
 }

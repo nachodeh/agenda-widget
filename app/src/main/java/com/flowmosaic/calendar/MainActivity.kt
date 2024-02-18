@@ -2,28 +2,44 @@ package com.flowmosaic.calendar
 
 import android.Manifest
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.internal.composableLambda
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.PreferencesScreen
@@ -41,11 +57,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val appWidgetId = intent?.extras?.getInt(
-                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID
-                    ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
-                    RequestPermissionsScreen(appWidgetId)
+                    RequestPermissionsScreen()
                 }
             }
         }
@@ -62,7 +74,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-private fun RequestPermissionsScreen(appWidgetId: Int) {
+private fun RequestPermissionsScreen() {
     val context = LocalContext.current
     val calendarPermissionsState = rememberMultiplePermissionsState(
         listOf(
@@ -76,7 +88,7 @@ private fun RequestPermissionsScreen(appWidgetId: Int) {
             context,
             FirebaseLogger.ScreenName.PREFS,
         )
-        PreferencesScreen(appWidgetId)
+        WidgetsListView()
     } else {
         FirebaseLogger.logScreenShownEvent(
             context,
@@ -123,3 +135,55 @@ private fun RequestPermissionsScreen(appWidgetId: Int) {
         }
     }
 }
+
+@Composable
+private fun WidgetsListView() {
+    val context = LocalContext.current
+    val widgetIds = AppWidgetManager.getInstance(context)
+        .getAppWidgetIds(ComponentName(context, AgendaWidget::class.java))
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Header()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+        ) {
+            Text(
+                text = if (widgetIds.isEmpty()) "Ready to add widgets on the home screen." else "Active Widgets",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.Medium,
+            )
+        }
+        widgetIds.forEach { id ->
+            Button(
+                onClick = {
+                    val intent = Intent(context, PreferencesActivity::class.java)
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
+                    context.startActivity(intent)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                ),
+                modifier = Modifier.padding(8.dp)
+
+            ) {
+                Text(
+                    text = "Widget ID: $id",
+                    style = MaterialTheme.typography.labelMedium,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                )
+            }
+        }
+    }
+}
+
