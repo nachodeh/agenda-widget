@@ -42,7 +42,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.analytics.FirebaseLogger
@@ -61,6 +60,13 @@ fun PreferencesScreen(appWidgetId: Int) {
     val selectedCalendars = remember { mutableStateOf(setOf<String>()) }
     val showCalendarSelectionDialog = rememberSaveable {
         mutableStateOf(false)
+    }
+    val showActionButtons = remember {
+        mutableStateOf(AgendaWidgetPrefs.getShowActionButtons(context, widgetId))
+    }
+    val setShowActionButtons: (Boolean) -> Unit = { newValue ->
+        showActionButtons.value = newValue
+        AgendaWidgetPrefs.setShowActionButtons(context, newValue, widgetId)
     }
     val showEndTime = remember {
         mutableStateOf(AgendaWidgetPrefs.getShowEndTime(context, widgetId))
@@ -155,6 +161,12 @@ fun PreferencesScreen(appWidgetId: Int) {
                 displayText = context.getString(R.string.number_of_days_to_display),
                 numberValue = numberOfDays,
                 saveNumberValue = setNumberOfDays
+            )
+            CheckboxRow(
+                displayText = context.getString(R.string.show_action_buttons),
+                loggingItem = FirebaseLogger.PrefsScreenItemName.SHOW_END_TIME,
+                checkboxValue = showActionButtons,
+                saveCheckboxValue = setShowActionButtons
             )
             TitleWithDivider(
                 title = context.getString(R.string.prefs_title_date_time),

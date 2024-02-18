@@ -5,6 +5,7 @@
     <string name="select_calendars">選擇日曆</string>
     <string name="number_of_days_to_display">展示的天數</string>
     <string name="show_end_time">展示結束時間</string>
+    <string name="show_action_buttons">显示操作按钮</string>
     <string name="use_12_hour_format">使用12小时制</string>
     <string name="date_separator_visible">显示日期分隔符</string>
     <string name="font_size">字体大小</string>
@@ -31,4 +32,5 @@
     <string name="prefs_title_appearance">外观</string>
     <string name="active_widgets">小部件配置</string>
     <string name="default_configuration">" 默认配置"</string>
+    <string name="agenda_widget_updated">日程小部件已更新</string>
 </resources>

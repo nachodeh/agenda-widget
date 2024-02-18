@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit
 object AgendaWidgetPrefs {
 
     private const val PREF_SELECTED_CALENDARS = "selected_calendars"
+    private const val PREF_SHOW_ACTION_BUTTONS = "key_show_action_buttons"
     private const val PREF_SHOW_END_TIME = "key_show_end_time"
     private const val PREF_NUMBER_OF_DAYS = "key_number_of_days"
     private const val PREF_TEXT_COLOR = "key_text_color"
@@ -108,6 +109,20 @@ object AgendaWidgetPrefs {
         getPreferences(context).edit()
             .putStringSet(prefsKey, selectedCalendarIds)
             .apply()
+    }
+
+    fun getShowActionButtons(context: Context, widgetId: String): Boolean {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(context, PREF_SHOW_ACTION_BUTTONS, widgetId)
+        val result = getPreferences(context).getBoolean(prefsKey, true)
+        if (!prefExists) {
+            setShowActionButtons(context, result, widgetId)
+        }
+        return result
+    }
+
+    fun setShowActionButtons(context: Context, showActionButtons: Boolean, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_ACTION_BUTTONS, widgetId)
+        getPreferences(context).edit().putBoolean(prefsKey, showActionButtons).apply()
     }
 
     fun getShowEndTime(context: Context, widgetId: String): Boolean {

@@ -10,9 +10,14 @@ import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.provider.CalendarContract
+import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
+import android.widget.Toast
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.flowmosaic.calendar.analytics.FirebaseLogger
@@ -21,6 +26,7 @@ import com.flowmosaic.calendar.remoteviews.EventsWidgetService
 
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
+const val CREATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_CREATE_EVENT"
 const val CLICK_ACTION = "com.flowmosaic.calendar.CLICK_ACTION"
 const val EXTRA_START_TIME = "com.flowmosaic.calendar.START_TIME"
 const val EXTRA_END_TIME = "com.flowmosaic.calendar.END_TIME"
@@ -53,6 +59,7 @@ class AgendaWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             UPDATE_ACTION -> {
+
                 val widgetId = intent.getIntExtra(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID
@@ -60,7 +67,16 @@ class AgendaWidget : AppWidgetProvider() {
 
                 if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
                     updateWidget(context, AppWidgetManager.getInstance(context), widgetId)
+                    Toast.makeText(context, R.string.agenda_widget_updated, Toast.LENGTH_SHORT).show()
                 }
+            }
+
+            CREATE_ACTION -> {
+                val intent = Intent(Intent.ACTION_INSERT).apply {
+                    data = CalendarContract.Events.CONTENT_URI
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
             }
 
             CLICK_ACTION -> {
@@ -161,6 +177,24 @@ class AgendaWidget : AppWidgetProvider() {
             data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
         }
 
+        val refreshIntent: PendingIntent = Intent(context, AgendaWidget::class.java).run {
+            action = UPDATE_ACTION
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+            data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
+
+            val flags = PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.getBroadcast(context, 0, this, flags)
+        }
+
+        val addEventIntent: PendingIntent = Intent(context, AgendaWidget::class.java).run {
+            action = CREATE_ACTION
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+            data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
+
+            val flags = PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.getBroadcast(context, 0, this, flags)
+        }
+
         val views = RemoteViews(context.packageName, R.layout.agenda_widget).apply {
             setRemoteAdapter(R.id.events_list_view, intent)
             val backgroundColor = 0x000000
@@ -168,6 +202,15 @@ class AgendaWidget : AppWidgetProvider() {
             val color = ColorUtils.setAlphaComponent(backgroundColor, (opacity * 255).toInt())
             setInt(R.id.main_view, "setBackgroundColor", color)
             setPendingIntentTemplate(R.id.events_list_view, toastPendingIntent)
+
+            val actionButtonsVisible = if (AgendaWidgetPrefs.getShowActionButtons(context, widgetId.toString())) View.VISIBLE else View.GONE
+            setViewVisibility(R.id.widget_action_buttons, actionButtonsVisible)
+
+            setInt(R.id.refresh_button, "setColorFilter", AgendaWidgetPrefs.getTextColor(context, widgetId.toString()).toArgb())
+            setInt(R.id.add_button, "setColorFilter", AgendaWidgetPrefs.getTextColor(context, widgetId.toString()).toArgb())
+
+            setOnClickPendingIntent(R.id.refresh_button, refreshIntent)
+            setOnClickPendingIntent(R.id.add_button, addEventIntent)
 //            setEmptyView(R.id.stack_view, R.id.empty_view)
         }
 

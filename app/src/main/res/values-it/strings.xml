@@ -5,6 +5,7 @@
     <string name="select_calendars">Seleziona calendari</string>
     <string name="number_of_days_to_display">Numero di giorni da visualizzare</string>
     <string name="show_end_time">Mostra orario di fine</string>
+    <string name="show_action_buttons">Mostra pulsanti di azione</string>
     <string name="use_12_hour_format">Usa il formato a 12 ore</string>
     <string name="date_separator_visible">Mostra separatore data</string>
     <string name="font_size">Dimensione del carattere</string>
@@ -31,4 +32,5 @@
     <string name="prefs_title_appearance">Aspetto</string>
     <string name="active_widgets">Configurazione del widget</string>
     <string name="default_configuration">Configurazione predefinita</string>
+    <string name="agenda_widget_updated">Widget Agenda Aggiornato</string>
 </resources>
