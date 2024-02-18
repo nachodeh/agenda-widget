@@ -3,6 +3,7 @@
     <string name="app_widget_description">Agenda widget to display your upcoming events in a simple format</string>
 
     <string name="tap_to_set_up">Tap to set up %1$s</string>
+    <string name="prefs_title_editing_default_config">Editing default configuration</string>
     <string name="prefs_title_general">General</string>
     <string name="prefs_title_date_time">Date and Time</string>
     <string name="prefs_title_appearance">Appearance</string>
@@ -27,6 +28,8 @@
     <string name="calendar_access_info">Agenda Widget needs access to your calendar to display events. Please grant the calendar permissions to use the widget.</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
+
+    <string name="active_widgets">Active Widgets</string>
 
     <string name="date_placeholder">Date placeholder</string>
     <string name="event_placeholder">Event placeholder</string>

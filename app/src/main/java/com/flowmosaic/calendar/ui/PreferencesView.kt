@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.analytics.FirebaseLogger
@@ -53,7 +54,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun PreferencesScreen(appWidgetId: Int) {
     val context = LocalContext.current
-    var widgetId = if (appWidgetId != 0) appWidgetId.toString() else ""
+    val widgetId = if (appWidgetId != 0) appWidgetId.toString() else ""
 
     val calendarFetcher = CalendarFetcher()
     val calendarList = remember { mutableStateOf(listOf<CalendarData>()) }
@@ -72,7 +73,7 @@ fun PreferencesScreen(appWidgetId: Int) {
         mutableIntStateOf(AgendaWidgetPrefs.getNumberOfDays(context, widgetId))
     }
     val setNumberOfDays: (Int) -> Unit = { newValue ->
-        numberOfDays.value = newValue
+        numberOfDays.intValue = newValue
         AgendaWidgetPrefs.setNumberOfDays(context, newValue, widgetId)
     }
     val colorState = remember { mutableStateOf(AgendaWidgetPrefs.getTextColor(context, widgetId)) }
@@ -134,11 +135,17 @@ fun PreferencesScreen(appWidgetId: Int) {
 
     Column {
         Header()
+        if (appWidgetId == 0) {
+            DefaultConfigTitle(title = context.getString(R.string.prefs_title_editing_default_config))
+        }
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
         ) {
-            TitleWithDivider(title = "General")
+            TitleWithDivider(
+                title = context.getString(R.string.prefs_title_general),
+                showDivider = false
+            )
             ButtonRow(
                 displayText = context.getString(R.string.select_calendars),
                 enableAction = showCalendarSelectionDialog
@@ -148,7 +155,10 @@ fun PreferencesScreen(appWidgetId: Int) {
                 numberValue = numberOfDays,
                 saveNumberValue = setNumberOfDays
             )
-            TitleWithDivider(title = "Date and Time", spaceOnTop = true)
+            TitleWithDivider(
+                title = context.getString(R.string.prefs_title_date_time),
+                spaceOnTop = true
+            )
             CheckboxRow(
                 displayText = context.getString(R.string.show_end_time),
                 loggingItem = FirebaseLogger.PrefsScreenItemName.SHOW_END_TIME,
@@ -161,7 +171,10 @@ fun PreferencesScreen(appWidgetId: Int) {
                 checkboxValue = use12HourFormat,
                 saveCheckboxValue = setUse12HourFormat
             )
-            TitleWithDivider(title = "Appearance", spaceOnTop = true)
+            TitleWithDivider(
+                title = context.getString(R.string.prefs_title_appearance),
+                spaceOnTop = true
+            )
             FontSizeSelectorRow(
                 displayText = context.getString(R.string.font_size),
                 fontSizeValue = fontSize,
@@ -516,11 +529,13 @@ fun OpacitySelectorRow(
 }
 
 @Composable
-fun TitleWithDivider(title: String, spaceOnTop: Boolean = false) {
+fun TitleWithDivider(title: String, spaceOnTop: Boolean = false, showDivider: Boolean = true) {
     if (spaceOnTop) {
         Spacer(modifier = Modifier.height(16.dp))
     }
-    Divider(color = MaterialTheme.colorScheme.secondary, thickness = .5.dp)
+    if (showDivider) {
+        Divider(color = MaterialTheme.colorScheme.secondary, thickness = .5.dp)
+    }
     Spacer(modifier = Modifier.height(8.dp))
     Column(
         modifier = Modifier
@@ -539,6 +554,38 @@ fun TitleWithDivider(title: String, spaceOnTop: Boolean = false) {
             fontWeight = FontWeight.Bold,
         )
     }
+}
+
+@Composable
+fun DefaultConfigTitle(title: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+//            .padding(
+//                start = 16.dp,
+//                top = 16.dp,
+//                end = 16.dp,
+//                bottom = 16.dp
+//            ) // Adjust padding as needed
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Medium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = 16.dp,
+                    top = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                )
+        )
+        Divider(color = MaterialTheme.colorScheme.secondary, thickness = .5.dp)
+    }
+
 }
 
 
