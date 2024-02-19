@@ -24,7 +24,7 @@
         android:gravity="left"
         android:textColor="#ffffff"
         android:paddingTop="8dp"
-        android:paddingHorizontal="0dp"
+        android:paddingLeft="8dp"
         android:text="@string/no_upcoming_events"
         android:shadowColor="#80000000"
         android:shadowDx="1"
