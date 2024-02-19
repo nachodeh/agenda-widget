@@ -31,6 +31,7 @@
     <string name="prefs_title_general">ทั่วไป</string>
     <string name="prefs_title_date_time">วันที่และเวลา</string>
     <string name="prefs_title_appearance">"ลักษณะ "</string>
+    <string name="no_upcoming_events">ไม่มีกิจกรรมที่จะเกิดขึ้น</string>
     <string name="active_widgets">การกำหนดค่าวิดเจ็ต</string>
     <string name="default_configuration">ค่ากำหนดเริ่มต้น</string>
     <string name="agenda_widget_updated">อัปเดตวิดเจ็ตกำหนดการ</string>

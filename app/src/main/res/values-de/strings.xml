@@ -31,6 +31,7 @@
     <string name="prefs_title_general">Allgemein</string>
     <string name="prefs_title_date_time">Datum und Uhrzeit</string>
     <string name="prefs_title_appearance">Erscheinungsbild</string>
+    <string name="no_upcoming_events">Keine anstehenden Ereignisse</string>
     <string name="active_widgets">Widget-Konfiguration</string>
     <string name="default_configuration">Standardkonfiguration</string>
     <string name="agenda_widget_updated">Agenda Widget aktualisiert</string>

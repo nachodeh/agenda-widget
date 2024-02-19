@@ -17,6 +17,21 @@
         android:dividerHeight="0dp"
         android:scrollbars="none"/>
 
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:textColor="#ffffff"
+        android:paddingTop="8dp"
+        android:paddingHorizontal="0dp"
+        android:text="@string/no_upcoming_events"
+        android:shadowColor="#80000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="4"
+        android:textSize="16sp" />
+
     <LinearLayout
         android:id="@+id/widget_action_buttons"
         android:layout_width="wrap_content"

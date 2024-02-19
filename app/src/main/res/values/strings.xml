@@ -29,6 +29,7 @@
     <string name="calendar_access_info">Agenda Widget needs access to your calendar to display events. Please grant the calendar permissions to use the widget.</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
+    <string name="no_upcoming_events">No upcoming events</string>
 
     <string name="active_widgets">Widget configuration</string>
     <string name="default_configuration">Default configuration</string>

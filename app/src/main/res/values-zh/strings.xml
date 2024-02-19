@@ -30,6 +30,7 @@
     <string name="prefs_title_general">通用</string>
     <string name="prefs_title_date_time">日期和时间</string>
     <string name="prefs_title_appearance">外观</string>
+    <string name="no_upcoming_events">暂无即将到来的事件</string>
     <string name="active_widgets">小部件配置</string>
     <string name="default_configuration">" 默认配置"</string>
     <string name="agenda_widget_updated">日程小部件已更新</string>
