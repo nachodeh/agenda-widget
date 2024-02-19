@@ -30,6 +30,7 @@
     <string name="prefs_title_general">Generale</string>
     <string name="prefs_title_date_time">Data e ora</string>
     <string name="prefs_title_appearance">Aspetto</string>
+    <string name="no_upcoming_events">Nessun evento in arrivo</string>
     <string name="active_widgets">Configurazione del widget</string>
     <string name="default_configuration">Configurazione predefinita</string>
     <string name="agenda_widget_updated">Widget Agenda Aggiornato</string>

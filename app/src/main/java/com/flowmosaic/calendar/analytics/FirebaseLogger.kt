@@ -15,6 +15,11 @@ import java.util.concurrent.TimeUnit
 
 object FirebaseLogger {
 
+    enum class ActionButton(val buttonName: String) {
+        REFRESH("refresh"),
+        ADD_EVENT("add_event"),
+    }
+
     enum class WidgetStatus(val status: String) {
         ACTIVE("active"),
         ENABLED("enabled"),
@@ -62,6 +67,24 @@ object FirebaseLogger {
 
     private fun getMixpanelInstance(context: Context): MixpanelAPI {
         return MixpanelAPI.getInstance(context, "30601539929e247063f85a5d72a925e3", true)
+    }
+
+    fun logActionButtonEvent(context: Context, actionButton: ActionButton) {
+        val bundle = Bundle().apply {
+            putString(FirebaseAnalytics.Param.SCREEN_NAME, ScreenName.WIDGET.screenName)
+        }
+        FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
+
+        // Mixpanel log
+        val properties = JSONObject()
+        properties.put(FirebaseAnalytics.Param.SCREEN_NAME, ScreenName.WIDGET.screenName)
+        properties.put(FirebaseAnalytics.Param.ITEM_NAME, actionButton.buttonName)
+        val propertiesMap = mutableMapOf<String, Any?>(
+            FirebaseAnalytics.Param.SCREEN_NAME to ScreenName.WIDGET.screenName,
+            FirebaseAnalytics.Param.ITEM_NAME to actionButton.buttonName,
+        )
+        getMixpanelInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, properties)
+        getAmplitudeInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, propertiesMap)
     }
 
     fun logScreenShownEvent(context: Context, screenName: ScreenName) {

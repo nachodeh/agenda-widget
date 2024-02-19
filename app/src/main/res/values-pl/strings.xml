@@ -31,6 +31,7 @@
     <string name="prefs_title_general">Ogólne</string>
     <string name="prefs_title_date_time">Data i czas</string>
     <string name="prefs_title_appearance">Wygląd</string>
+    <string name="no_upcoming_events">Brak nadchodzących wydarzeń</string>
     <string name="active_widgets">Konfiguracja widżetu</string>
     <string name="default_configuration">Domyślna konfiguracja</string>
     <string name="agenda_widget_updated">Widget kalendarza zaktualizowany</string>

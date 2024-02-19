@@ -23,6 +23,7 @@ import androidx.core.graphics.ColorUtils
 import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.remoteviews.EventsWidgetService
+import com.google.firebase.ktx.Firebase
 
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
@@ -69,6 +70,8 @@ class AgendaWidget : AppWidgetProvider() {
                     updateWidget(context, AppWidgetManager.getInstance(context), widgetId)
                     Toast.makeText(context, R.string.agenda_widget_updated, Toast.LENGTH_SHORT).show()
                 }
+
+                FirebaseLogger.logActionButtonEvent(context, FirebaseLogger.ActionButton.REFRESH)
             }
 
             CREATE_ACTION -> {
@@ -77,6 +80,8 @@ class AgendaWidget : AppWidgetProvider() {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
                 context.startActivity(intent)
+
+                FirebaseLogger.logActionButtonEvent(context, FirebaseLogger.ActionButton.ADD_EVENT)
             }
 
             CLICK_ACTION -> {
@@ -206,12 +211,16 @@ class AgendaWidget : AppWidgetProvider() {
             val actionButtonsVisible = if (AgendaWidgetPrefs.getShowActionButtons(context, widgetId.toString())) View.VISIBLE else View.GONE
             setViewVisibility(R.id.widget_action_buttons, actionButtonsVisible)
 
-            setInt(R.id.refresh_button, "setColorFilter", AgendaWidgetPrefs.getTextColor(context, widgetId.toString()).toArgb())
-            setInt(R.id.add_button, "setColorFilter", AgendaWidgetPrefs.getTextColor(context, widgetId.toString()).toArgb())
+            val textColor = AgendaWidgetPrefs.getTextColor(context, widgetId.toString()).toArgb();
+
+            setInt(R.id.refresh_button, "setColorFilter", textColor)
+            setInt(R.id.add_button, "setColorFilter", textColor)
 
             setOnClickPendingIntent(R.id.refresh_button, refreshIntent)
             setOnClickPendingIntent(R.id.add_button, addEventIntent)
-//            setEmptyView(R.id.stack_view, R.id.empty_view)
+
+            setTextColor(R.id.empty_view, textColor)
+            setEmptyView(R.id.events_list_view, R.id.empty_view)
         }
 
         appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.events_list_view)
