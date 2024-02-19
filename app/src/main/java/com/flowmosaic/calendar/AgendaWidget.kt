@@ -10,8 +10,12 @@ import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
@@ -24,6 +28,7 @@ import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.remoteviews.EventsWidgetService
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.delay
 
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
@@ -67,8 +72,11 @@ class AgendaWidget : AppWidgetProvider() {
                 )
 
                 if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                    updateWidget(context, AppWidgetManager.getInstance(context), widgetId)
-                    Toast.makeText(context, R.string.agenda_widget_updated, Toast.LENGTH_SHORT).show()
+                    updateWidget(context, AppWidgetManager.getInstance(context), widgetId, showProgress = true)
+                    val delayMillis = 300L
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        updateWidget(context, AppWidgetManager.getInstance(context), widgetId, showProgress = false)
+                    }, delayMillis)
                 }
 
                 FirebaseLogger.logActionButtonEvent(context, FirebaseLogger.ActionButton.REFRESH)
@@ -144,9 +152,9 @@ class AgendaWidget : AppWidgetProvider() {
         FirebaseLogger.logWidgetLifecycleEvent(context, FirebaseLogger.WidgetStatus.DELETED)
     }
 
-    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int) {
+    private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int, showProgress: Boolean = false) {
         if (hasCalendarPermission(context)) {
-            renderCalendarWidget(context, appWidgetManager, widgetId)
+            renderCalendarWidget(context, appWidgetManager, widgetId, showProgress)
         } else {
             showPermissionRequestView(context, appWidgetManager, widgetId)
         }
@@ -163,8 +171,10 @@ class AgendaWidget : AppWidgetProvider() {
     private fun renderCalendarWidget(
         context: Context,
         appWidgetManager: AppWidgetManager,
-        widgetId: Int
+        widgetId: Int,
+        showProgress: Boolean = false
     ) {
+        Log.d("nachodehlog", "renderCalendarWidget $showProgress")
         val toastPendingIntent: PendingIntent = Intent(
             context,
             AgendaWidget::class.java
@@ -176,7 +186,6 @@ class AgendaWidget : AppWidgetProvider() {
             val flags = PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             PendingIntent.getBroadcast(context, 0, this, flags)
         }
-//        val views = RemoteViews(context.packageName, R.layout.agenda_widget)
         val intent = Intent(context, EventsWidgetService::class.java).apply {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
             data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
@@ -215,12 +224,32 @@ class AgendaWidget : AppWidgetProvider() {
 
             setInt(R.id.refresh_button, "setColorFilter", textColor)
             setInt(R.id.add_button, "setColorFilter", textColor)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                setColorStateList(
+                    R.id.refresh_spinner, "setIndeterminateTintList",
+                    ColorStateList(
+                        arrayOf(
+                            intArrayOf(attr.state_enabled),
+                        ), intArrayOf(
+                            textColor,
+                        )
+                    )
+                )
+            }
 
             setOnClickPendingIntent(R.id.refresh_button, refreshIntent)
             setOnClickPendingIntent(R.id.add_button, addEventIntent)
 
             setTextColor(R.id.empty_view, textColor)
             setEmptyView(R.id.events_list_view, R.id.empty_view)
+
+            if (showProgress) {
+                setViewVisibility(R.id.refresh_button, View.GONE)
+                setViewVisibility(R.id.refresh_spinner, View.VISIBLE)
+            } else {
+                setViewVisibility(R.id.refresh_button, View.VISIBLE)
+                setViewVisibility(R.id.refresh_spinner, View.GONE)
+            }
         }
 
         appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.events_list_view)
