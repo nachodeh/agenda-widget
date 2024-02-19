@@ -11,4 +11,6 @@
     android:shadowDx="1"
     android:shadowDy="1"
     android:shadowRadius="4"
+    android:maxLines="1"
+    android:ellipsize="end"
     />
