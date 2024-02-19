@@ -201,7 +201,16 @@ class AgendaWidget : AppWidgetProvider() {
         }
 
         val addEventIntent: PendingIntent = Intent(context, AgendaWidget::class.java).run {
-            action = CREATE_ACTION
+            action = CLICK_ACTION
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+            data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
+
+            val flags = PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.getBroadcast(context, 0, this, flags)
+        }
+
+        val openCalIntent: PendingIntent = Intent(context, AgendaWidget::class.java).run {
+            action = CLICK_ACTION
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
             data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
 
@@ -239,6 +248,7 @@ class AgendaWidget : AppWidgetProvider() {
 
             setOnClickPendingIntent(R.id.refresh_button, refreshIntent)
             setOnClickPendingIntent(R.id.add_button, addEventIntent)
+            setOnClickPendingIntent(R.id.empty_view, openCalIntent)
 
             setTextColor(R.id.empty_view, textColor)
             setEmptyView(R.id.events_list_view, R.id.empty_view)
