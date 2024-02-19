@@ -40,17 +40,39 @@
         android:orientation="horizontal"
         >
 
-        <ImageButton
-            android:id="@+id/refresh_button"
+
+
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/baseline_refresh_24"
-            android:background="@color/transparent"
-            android:paddingRight="4dp"
-            android:paddingLeft="8dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:clickable="true"/>
+
+            >
+            <ImageButton
+                android:id="@+id/refresh_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_refresh_24"
+                android:background="@color/transparent"
+                android:paddingRight="4dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:clickable="true"
+                android:visibility="visible"/>
+            <ProgressBar
+                android:id="@+id/refresh_spinner"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:paddingRight="4dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="8dp"
+                android:progressTint="@color/white"
+                android:indeterminateTint="@color/white"
+                android:visibility="gone"
+                />
+        </FrameLayout>
+
 
         <ImageButton
             android:id="@+id/add_button"
