@@ -6,6 +6,7 @@
     android:textSize="14sp"
     android:textColor="@color/white"
     android:paddingVertical="6dp"
+    android:paddingLeft="8dp"
     android:text="@string/event_placeholder"
     android:shadowColor="#80ffffff"
     android:shadowDx="1"

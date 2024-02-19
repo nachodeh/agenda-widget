@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:textSize="14sp"
     android:textColor="@color/white"
+    android:paddingLeft="8dp"
     android:paddingVertical="6dp"
     android:text="@string/event_placeholder"
     android:shadowColor="#80000000"

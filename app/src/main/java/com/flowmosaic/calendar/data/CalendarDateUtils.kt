@@ -21,8 +21,8 @@ object CalendarDateUtils {
             isSameDay(eventCalendar, currentDate) -> context.getString(R.string.today)
             isSameDay(eventCalendar, tomorrowDate) -> context.getString(R.string.tomorrow)
             eventCalendar.after(weekLaterDate) -> {
-//                val sdf = SimpleDateFormat("EEEE, d MMMM", Locale.getDefault())
-                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val sdf = SimpleDateFormat("EE, d MMM", Locale.getDefault())
+//                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 sdf.format(eventCalendar.time)
             }
             else -> {
