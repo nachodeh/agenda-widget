@@ -43,7 +43,7 @@ fun ColorDialog(
         content = {
             Surface(
                 shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                color = MaterialTheme.colorScheme.surface,
                 modifier = Modifier
                     .wrapContentSize()
                     .padding(16.dp)
