@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
+import com.flowmosaic.calendar.ui.theme.OnPrimary
+import com.flowmosaic.calendar.ui.theme.Primary
 
 @Composable
 fun Header(subtitle: String = "") {
@@ -25,22 +27,20 @@ fun Header(subtitle: String = "") {
     Column (
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.inversePrimary)
             .padding(horizontal = 16.dp)
             .padding(top = 16.dp, bottom = 20.dp),
-//        verticalAlignment = Alignment.CenterVertically,
-//        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = context.getString(R.string.app_name),
             style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.primary
         )
         if (subtitle.isNotEmpty()) {
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Light,
                 textAlign = TextAlign.Start,
                 modifier = Modifier
