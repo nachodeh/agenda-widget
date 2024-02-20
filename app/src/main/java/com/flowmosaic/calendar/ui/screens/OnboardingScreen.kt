@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -49,6 +51,9 @@ fun OnboardingScreen(
     onFinish: () -> Unit
 ) {
 
+    val primary = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.primary
+    val onPrimary = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
+
     val pagerState = rememberPagerState(
         pageCount = {
             pages.size
@@ -58,7 +63,7 @@ fun OnboardingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.inversePrimary)
+            .background(primary)
     ) {
         HorizontalPager(
             state = pagerState,
@@ -66,7 +71,7 @@ fun OnboardingScreen(
                 .weight(1f)
                 .fillMaxHeight()
         ) { page ->
-            OnboardingPageContent(page = pages[page])
+            OnboardingPageContent(page = pages[page], secondaryColor = onPrimary)
         }
 
         Column(
@@ -75,9 +80,10 @@ fun OnboardingScreen(
             PageIndicator(
                 pageCount = pages.size,
                 currentPage = pagerState.currentPage,
+                secondaryColor = onPrimary
             )
 
-            OnboardingNavigationButtons(pagerState = pagerState, pages = pages, onFinish = onFinish)
+            OnboardingNavigationButtons(pagerState = pagerState, pages = pages, onFinish = onFinish, primaryColor = primary, secondaryColor = onPrimary)
         }
 
     }
@@ -86,6 +92,8 @@ fun OnboardingScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingNavigationButtons(
+    primaryColor: Color,
+    secondaryColor: Color,
     pagerState: PagerState,
     pages: List<OnboardingPage>,
     onFinish: () -> Unit
@@ -94,13 +102,13 @@ fun OnboardingNavigationButtons(
     val coroutineScope = rememberCoroutineScope()
 
     val skipButtonColors = ButtonDefaults.buttonColors(
-        containerColor = MaterialTheme.colorScheme.inversePrimary,
-        contentColor = MaterialTheme.colorScheme.primary
+        containerColor = primaryColor,
+        contentColor = secondaryColor
     )
 
     val buttonColors = ButtonDefaults.buttonColors(
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.inversePrimary
+        containerColor = secondaryColor,
+        contentColor = primaryColor
     )
 
     Row(
@@ -137,7 +145,7 @@ fun OnboardingNavigationButtons(
 }
 
 @Composable
-fun PageIndicator(pageCount: Int, currentPage: Int) {
+fun PageIndicator(pageCount: Int, currentPage: Int, secondaryColor: Color) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -146,14 +154,14 @@ fun PageIndicator(pageCount: Int, currentPage: Int) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         repeat(pageCount) {
-            IndicatorSingleDot(isSelected = it == currentPage)
+            IndicatorSingleDot(isSelected = it == currentPage, secondaryColor = secondaryColor)
         }
     }
 }
 
 @Composable
-fun IndicatorSingleDot(isSelected: Boolean) {
-    val color = animateColorAsState(targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline)
+fun IndicatorSingleDot(isSelected: Boolean, secondaryColor: Color) {
+    val color = animateColorAsState(targetValue = if (isSelected) secondaryColor else MaterialTheme.colorScheme.outline)
 
     val width = animateDpAsState(targetValue = if (isSelected) 35.dp else 15.dp, label = "")
     Box(
@@ -167,7 +175,7 @@ fun IndicatorSingleDot(isSelected: Boolean) {
 }
 
 @Composable
-fun OnboardingPageContent(page: OnboardingPage) {
+fun OnboardingPageContent(page: OnboardingPage, secondaryColor: Color) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -184,17 +192,17 @@ fun OnboardingPageContent(page: OnboardingPage) {
         Spacer(modifier = Modifier.height(32.dp))
         Column(
             Modifier
-                .background(
-                    MaterialTheme.colorScheme.inversePrimary,
-                    shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
-                )
+//                .background(
+//                    MaterialTheme.colorScheme.inversePrimary,
+//                    shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+//                )
                 .fillMaxWidth(),
         ) {
             Text(
                 text = page.text,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary,
+                color = secondaryColor,
                 modifier = Modifier
                     .padding(horizontal = 32.dp)
                     .padding(vertical = 32.dp)

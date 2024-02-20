@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -53,7 +54,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val defaultNavBarColor = MaterialTheme.colorScheme.background.toArgb()
-                    val onboardBgColor = MaterialTheme.colorScheme.inversePrimary.toArgb()
+                    val onboardBgColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary.toArgb() else MaterialTheme.colorScheme.primary.toArgb()
                     val navController = rememberNavController()
                     val headerSubtitle = remember { mutableStateOf("") }
                     val navBarColor = remember { mutableIntStateOf(defaultNavBarColor) }
