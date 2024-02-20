@@ -1,4 +1,4 @@
-package com.flowmosaic.calendar.ui
+package com.flowmosaic.calendar.ui.screens
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -48,6 +48,9 @@ import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
+import com.flowmosaic.calendar.ui.ColorDialog
+import com.flowmosaic.calendar.ui.Header
+import com.flowmosaic.calendar.ui.ShowCalendarDialog
 import kotlinx.coroutines.launch
 
 @Composable
