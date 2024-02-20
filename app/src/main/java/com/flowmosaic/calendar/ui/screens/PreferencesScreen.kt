@@ -1,5 +1,6 @@
 package com.flowmosaic.calendar.ui.screens
 
+import android.Manifest
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -50,13 +51,22 @@ import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.dialog.ColorDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarDialog
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PreferencesScreen(appWidgetId: Int) {
     val context = LocalContext.current
     val widgetId = if (appWidgetId != 0) appWidgetId.toString() else ""
 
+    val calendarPermissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.READ_CALENDAR,
+        )
+    )
     val calendarFetcher = CalendarFetcher()
     val calendarList = remember { mutableStateOf(listOf<CalendarData>()) }
     val selectedCalendars = remember { mutableStateOf(setOf<String>()) }
@@ -135,9 +145,11 @@ fun PreferencesScreen(appWidgetId: Int) {
     }
 
     LaunchedEffect(key1 = Unit) {
-        calendarList.value = calendarFetcher.queryCalendarData(context)
-        selectedCalendars.value =
-            AgendaWidgetPrefs.getSelectedCalendars(context, calendarList.value, widgetId)
+        if (calendarPermissionsState.allPermissionsGranted) {
+            calendarList.value = calendarFetcher.queryCalendarData(context)
+            selectedCalendars.value =
+                AgendaWidgetPrefs.getSelectedCalendars(context, calendarList.value, widgetId)
+        }
     }
 
     Column {
@@ -149,10 +161,12 @@ fun PreferencesScreen(appWidgetId: Int) {
                 title = context.getString(R.string.prefs_title_general),
                 showDivider = false
             )
-            ButtonRow(
-                displayText = context.getString(R.string.select_calendars),
-                enableAction = showCalendarSelectionDialog
-            )
+            if (calendarPermissionsState.allPermissionsGranted) {
+                ButtonRow(
+                    displayText = context.getString(R.string.select_calendars),
+                    enableAction = showCalendarSelectionDialog
+                )
+            }
             NumberSelectorRow(
                 displayText = context.getString(R.string.number_of_days_to_display),
                 numberValue = numberOfDays,

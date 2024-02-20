@@ -53,7 +53,8 @@
         </activity>
         <activity
             android:name=".activity.PreferencesActivity"
-            android:theme="@style/Theme.CalendarWidget" />
+            android:theme="@style/Theme.CalendarWidget"
+            android:autoRemoveFromRecents="true"/>
         <activity
             android:name=".activity.PermissionsActivity"
             android:launchMode="singleTop"

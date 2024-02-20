@@ -41,7 +41,7 @@ fun RequestPermissionsScreen(navHostController: NavHostController) {
             context,
             AgendaWidgetLogger.ScreenName.PREFS,
         )
-        WidgetsListView(navHostController)
+//        WidgetsListView(navHostController)
     } else {
         AgendaWidgetLogger.logScreenShownEvent(
             context,
