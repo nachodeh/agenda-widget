@@ -6,12 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.screens.PreferencesScreen
 import com.flowmosaic.calendar.ui.theme.CalendarWidgetTheme
 
@@ -33,7 +35,10 @@ class PreferencesActivity : ComponentActivity() {
                         AppWidgetManager.EXTRA_APPWIDGET_ID,
                         AppWidgetManager.INVALID_APPWIDGET_ID
                     ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
-                    PreferencesScreen(appWidgetId)
+                    Column {
+                        Header()
+                        PreferencesScreen(appWidgetId)
+                    }
                 }
             }
         }

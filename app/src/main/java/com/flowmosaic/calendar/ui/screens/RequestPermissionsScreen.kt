@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.ui.Header
@@ -26,7 +27,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun RequestPermissionsScreen() {
+fun RequestPermissionsScreen(navHostController: NavHostController) {
     val context = LocalContext.current
     val calendarPermissionsState = rememberMultiplePermissionsState(
         listOf(
@@ -40,7 +41,7 @@ fun RequestPermissionsScreen() {
             context,
             FirebaseLogger.ScreenName.PREFS,
         )
-        WidgetsListView()
+        WidgetsListView(navHostController)
     } else {
         FirebaseLogger.logScreenShownEvent(
             context,

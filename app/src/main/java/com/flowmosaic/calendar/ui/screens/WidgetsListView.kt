@@ -15,12 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.navigation.NavHostController
 import com.flowmosaic.calendar.AgendaWidget
 import com.flowmosaic.calendar.R
-import com.flowmosaic.calendar.ui.Header
 
 @Composable
-fun WidgetsListView() {
+fun WidgetsListView(navHostController: NavHostController) {
     val context = LocalContext.current
 
     val widgetIds = remember {
@@ -46,13 +46,13 @@ fun WidgetsListView() {
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
-            Header(subtitle = context.getString(R.string.active_widgets))
             Spacer(modifier = Modifier.height(8.dp))
             widgetIds.value.forEachIndexed { index, id ->
                 val idx = index + 1;
-                LaunchWidgetConfigButton(id = id, text = "Widget $idx")
+                LaunchWidgetConfigButton(navHostController, id = id, text = "Widget $idx")
             }
             LaunchWidgetConfigButton(
+                navHostController,
                 id = 0,
                 text = context.getString(R.string.default_configuration)
             )

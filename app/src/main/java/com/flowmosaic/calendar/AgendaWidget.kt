@@ -11,26 +11,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.CalendarContract
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
-import android.widget.Toast
 import androidx.compose.ui.graphics.toArgb
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.remoteviews.EventsWidgetService
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.delay
 
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
@@ -177,7 +170,6 @@ class AgendaWidget : AppWidgetProvider() {
         widgetId: Int,
         showProgress: Boolean = false
     ) {
-        Log.d("nachodehlog", "renderCalendarWidget $showProgress")
         val toastPendingIntent: PendingIntent = Intent(
             context,
             AgendaWidget::class.java
