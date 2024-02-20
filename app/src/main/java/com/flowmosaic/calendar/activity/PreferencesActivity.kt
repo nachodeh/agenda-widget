@@ -1,7 +1,8 @@
-package com.flowmosaic.calendar
+package com.flowmosaic.calendar.activity
 
 import android.appwidget.AppWidgetManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -13,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import com.flowmosaic.calendar.widget.AgendaWidget
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.screens.PreferencesScreen
 import com.flowmosaic.calendar.ui.theme.CalendarWidgetTheme
@@ -23,12 +25,16 @@ class PreferencesActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CalendarWidgetTheme {
-                enableEdgeToEdge(navigationBarStyle = SystemBarStyle.light(
-                    MaterialTheme.colorScheme.background.toArgb(),
-                    MaterialTheme.colorScheme.background.toArgb()
-                ))
+                enableEdgeToEdge(
+                    navigationBarStyle = SystemBarStyle.light(
+                        MaterialTheme.colorScheme.background.toArgb(),
+                        MaterialTheme.colorScheme.background.toArgb()
+                    )
+                )
                 Surface(
-                    modifier = Modifier.fillMaxSize().safeDrawingPadding(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .safeDrawingPadding(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val appWidgetId = intent?.extras?.getInt(

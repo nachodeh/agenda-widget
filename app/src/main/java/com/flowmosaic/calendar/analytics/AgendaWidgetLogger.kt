@@ -13,7 +13,7 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 
-object FirebaseLogger {
+object AgendaWidgetLogger {
 
     enum class ActionButton(val buttonName: String) {
         REFRESH("refresh"),

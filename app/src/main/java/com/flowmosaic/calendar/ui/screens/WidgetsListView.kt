@@ -16,8 +16,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.navigation.NavHostController
-import com.flowmosaic.calendar.AgendaWidget
 import com.flowmosaic.calendar.R
+import com.flowmosaic.calendar.widget.AgendaWidget
 
 @Composable
 fun WidgetsListView(navHostController: NavHostController) {
@@ -37,25 +37,20 @@ fun WidgetsListView(navHostController: NavHostController) {
         onPauseOrDispose {}
     }
 
-    if (widgetIds.value.isEmpty()) {
-        PreferencesScreen(appWidgetId = 0)
-    } else {
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-        ) {
-            Spacer(modifier = Modifier.height(8.dp))
-            widgetIds.value.forEachIndexed { index, id ->
-                val idx = index + 1;
-                LaunchWidgetConfigButton(navHostController, id = id, text = "Widget $idx")
-            }
-            LaunchWidgetConfigButton(
-                navHostController,
-                id = 0,
-                text = context.getString(R.string.default_configuration)
-            )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
+        widgetIds.value.forEachIndexed { index, id ->
+            val idx = index + 1;
+            LaunchWidgetConfigButton(navHostController, id = id, text = "Widget $idx")
         }
+        LaunchWidgetConfigButton(
+            navHostController,
+            id = 0,
+            text = context.getString(R.string.default_configuration)
+        )
     }
 }

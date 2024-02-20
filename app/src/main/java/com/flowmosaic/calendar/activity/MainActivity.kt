@@ -1,6 +1,7 @@
-package com.flowmosaic.calendar
+package com.flowmosaic.calendar.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -20,6 +21,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.flowmosaic.calendar.widget.AgendaWidget
+import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.screens.PreferencesScreen
 import com.flowmosaic.calendar.ui.screens.WidgetsListView
@@ -62,6 +65,7 @@ class MainActivity : ComponentActivity() {
                         Header(subtitle = headerSubtitle.value)
                         NavHost(navController = navController, startDestination = "Home") {
                             composable("Home") {
+                                Log.d("nachodehlog", "render widgets list view")
                                 WidgetsListView(navController)
                             }
                             composable(

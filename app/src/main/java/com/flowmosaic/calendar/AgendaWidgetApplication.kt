@@ -1,12 +1,12 @@
 package com.flowmosaic.calendar
 
 import android.app.Application
-import com.flowmosaic.calendar.analytics.FirebaseLogger
+import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 
 class AgendaWidgetApplication: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        FirebaseLogger.getAmplitudeInstance(applicationContext)
+        AgendaWidgetLogger.getAmplitudeInstance(applicationContext)
     }
 }

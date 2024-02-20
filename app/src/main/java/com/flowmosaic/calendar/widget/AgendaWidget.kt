@@ -1,4 +1,4 @@
-package com.flowmosaic.calendar
+package com.flowmosaic.calendar.widget
 
 import android.Manifest
 import android.R.attr
@@ -21,14 +21,16 @@ import android.widget.RemoteViews
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
-import com.flowmosaic.calendar.analytics.FirebaseLogger
+import com.flowmosaic.calendar.R
+import com.flowmosaic.calendar.activity.PermissionsActivity
+import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.remoteviews.EventsWidgetService
 
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
 const val CREATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_CREATE_EVENT"
-const val CLICK_ACTION = "com.flowmosaic.calendar.CLICK_ACTION"
+const val CLICK_ACTION = "com.flowmosaic.calendar.widget.CLICK_ACTION"
 
 const val EXTRA_START_TIME = "com.flowmosaic.calendar.START_TIME"
 const val EXTRA_END_TIME = "com.flowmosaic.calendar.END_TIME"
@@ -45,13 +47,13 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         if (AgendaWidgetPrefs.getShouldLogWidgetActivityEvent(context)) {
-            FirebaseLogger.logWidgetLifecycleEvent(
-                context, FirebaseLogger.WidgetStatus.ACTIVE, mapOf(
+            AgendaWidgetLogger.logWidgetLifecycleEvent(
+                context, AgendaWidgetLogger.WidgetStatus.ACTIVE, mapOf(
                     "number_of_widgets" to appWidgetIds.size.toString(),
                 )
             )
             AgendaWidgetPrefs.setWidgetActivityEventLastLoggedTimestamp(context)
-            FirebaseLogger.flushMixpanelEvents(context)
+            AgendaWidgetLogger.flushMixpanelEvents(context)
         }
         for (appWidgetId in appWidgetIds) {
             updateWidget(context, appWidgetManager, appWidgetId)
@@ -75,7 +77,7 @@ class AgendaWidget : AppWidgetProvider() {
                     }, delayMillis)
                 }
 
-                FirebaseLogger.logActionButtonEvent(context, FirebaseLogger.ActionButton.REFRESH)
+                AgendaWidgetLogger.logActionButtonEvent(context, AgendaWidgetLogger.ActionButton.REFRESH)
             }
 
             CREATE_ACTION -> {
@@ -85,7 +87,7 @@ class AgendaWidget : AppWidgetProvider() {
                 }
                 context.startActivity(intent)
 
-                FirebaseLogger.logActionButtonEvent(context, FirebaseLogger.ActionButton.ADD_EVENT)
+                AgendaWidgetLogger.logActionButtonEvent(context, AgendaWidgetLogger.ActionButton.ADD_EVENT)
             }
 
             CLICK_ACTION -> {
@@ -96,20 +98,20 @@ class AgendaWidget : AppWidgetProvider() {
 
                 when {
                     eventId > 0 -> {
-                        FirebaseLogger.logSelectItemEvent(
+                        AgendaWidgetLogger.logSelectItemEvent(
                             context,
-                            FirebaseLogger.ScreenName.WIDGET,
-                            FirebaseLogger.WidgetItemName.EVENT.itemName
+                            AgendaWidgetLogger.ScreenName.WIDGET,
+                            AgendaWidgetLogger.WidgetItemName.EVENT.itemName
                         )
                         builder.appendPath("events")
                         ContentUris.appendId(builder, eventId)
                     }
 
                     startTime > 0 -> {
-                        FirebaseLogger.logSelectItemEvent(
+                        AgendaWidgetLogger.logSelectItemEvent(
                             context,
-                            FirebaseLogger.ScreenName.WIDGET,
-                            FirebaseLogger.WidgetItemName.DATE.itemName
+                            AgendaWidgetLogger.ScreenName.WIDGET,
+                            AgendaWidgetLogger.WidgetItemName.DATE.itemName
                         )
                         builder.appendPath("time")
                         ContentUris.appendId(builder, startTime)
@@ -136,16 +138,16 @@ class AgendaWidget : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
-        FirebaseLogger.logWidgetLifecycleEvent(context, FirebaseLogger.WidgetStatus.ENABLED)
+        AgendaWidgetLogger.logWidgetLifecycleEvent(context, AgendaWidgetLogger.WidgetStatus.ENABLED)
     }
 
     override fun onDisabled(context: Context) {
         // Enter relevant functionality for when the last widget is disabled
-        FirebaseLogger.logWidgetLifecycleEvent(context, FirebaseLogger.WidgetStatus.DISABLED)
+        AgendaWidgetLogger.logWidgetLifecycleEvent(context, AgendaWidgetLogger.WidgetStatus.DISABLED)
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        FirebaseLogger.logWidgetLifecycleEvent(context, FirebaseLogger.WidgetStatus.DELETED)
+        AgendaWidgetLogger.logWidgetLifecycleEvent(context, AgendaWidgetLogger.WidgetStatus.DELETED)
     }
 
     private fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int, showProgress: Boolean = false) {

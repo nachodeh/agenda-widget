@@ -1,4 +1,4 @@
-package com.flowmosaic.calendar
+package com.flowmosaic.calendar.activity
 
 import android.Manifest
 import android.os.Bundle
@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import com.flowmosaic.calendar.widget.AgendaWidget
 
 class PermissionsActivity : ComponentActivity() {
     private val requestPermissionLauncher =
