@@ -2,11 +2,11 @@ package com.flowmosaic.calendar.activity
 
 import android.appwidget.AppWidgetManager
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -14,22 +14,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import com.flowmosaic.calendar.widget.AgendaWidget
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.screens.PreferencesScreen
 import com.flowmosaic.calendar.ui.theme.CalendarWidgetTheme
+import com.flowmosaic.calendar.widget.AgendaWidget
 
 class PreferencesActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
             CalendarWidgetTheme {
+                val statusBarColor =
+                    if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary.toArgb() else MaterialTheme.colorScheme.primary.toArgb()
                 enableEdgeToEdge(
                     navigationBarStyle = SystemBarStyle.light(
                         MaterialTheme.colorScheme.background.toArgb(),
                         MaterialTheme.colorScheme.background.toArgb()
-                    )
+                    ),
+                    statusBarStyle = SystemBarStyle.light(statusBarColor, statusBarColor)
                 )
                 Surface(
                     modifier = Modifier
