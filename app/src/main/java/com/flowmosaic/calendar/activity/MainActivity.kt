@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -41,10 +42,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
-
-
         setContent {
             CalendarWidgetTheme {
                 Surface(
@@ -54,29 +51,31 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val defaultNavBarColor = MaterialTheme.colorScheme.background.toArgb()
-                    val onboardBgColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary.toArgb() else MaterialTheme.colorScheme.primary.toArgb()
+                    val onboardBgColor =
+                        if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary.toArgb() else MaterialTheme.colorScheme.primary.toArgb()
                     val navController = rememberNavController()
                     val headerSubtitle = remember { mutableStateOf("") }
                     val navBarColor = remember { mutableIntStateOf(defaultNavBarColor) }
-                    val renderHeader = remember { mutableStateOf( false )}
-
-
+                    val renderHeader = remember { mutableStateOf(false) }
 
                     LaunchedEffect(navController) {
                         navController.currentBackStackEntryFlow.collect { backStackEntry ->
                             val widgetId = backStackEntry.arguments?.getInt("widgetId")
                             headerSubtitle.value = when (backStackEntry.destination.route) {
-                                "Home" -> getString(R.string.active_widgets)
-                                "Widgets/{widgetId}" -> if (widgetId == 0) getString(R.string.prefs_title_editing_default_config) else ""
+                                "widgets_list" -> getString(R.string.active_widgets)
+                                "widget_config/{widgetId}" -> if (widgetId == 0) getString(R.string.prefs_title_editing_default_config) else ""
                                 else -> ""
                             }
-                            navBarColor.intValue = when (backStackEntry.destination.route) {
-                                "Onboard" -> onboardBgColor
-                                else -> defaultNavBarColor
-                            }
-                            renderHeader.value = when (backStackEntry.destination.route) {
-                                "Onboard" -> false
-                                else -> true
+                            when (backStackEntry.destination.route) {
+                                "onboard" -> {
+                                    navBarColor.intValue = onboardBgColor
+                                    renderHeader.value = false
+                                }
+
+                                else -> {
+                                    navBarColor.intValue = defaultNavBarColor
+                                    renderHeader.value = true
+                                }
                             }
                         }
                     }
@@ -91,42 +90,35 @@ class MainActivity : ComponentActivity() {
                         onboardBgColor
                     )
 
-                    enableEdgeToEdge(navigationBarStyle = navBarStyle, statusBarStyle = statusBarStyle)
+                    enableEdgeToEdge(
+                        navigationBarStyle = navBarStyle,
+                        statusBarStyle = statusBarStyle
+                    )
 
-                    val startPage = if (showOnboarding()) "Onboard" else "Home"
+                    val startPage = if (showOnboarding()) "onboard" else "widgets_list"
 
                     Column {
                         if (renderHeader.value) {
                             Header(subtitle = headerSubtitle.value)
                         }
                         NavHost(navController = navController, startDestination = startPage) {
-                            composable("Onboard") {
-                                val onboardingPages = listOf(
-                                    OnboardingPage(
-                                        imageRes = R.drawable.onboard_1, // Replace with actual drawable resource IDs
-                                        text = applicationContext.getString(R.string.onboarding_1)
-                                    ),
-                                    OnboardingPage(
-                                        imageRes = R.drawable.onboard_2,
-                                        text = applicationContext.getString(R.string.onboarding_2)
-                                    ),
-                                    OnboardingPage(
-                                        imageRes = R.drawable.onboard_3,
-                                        text = applicationContext.getString(R.string.onboarding_3)
-                                    )
-                                )
-                                OnboardingScreen(onboardingPages, onFinish = {
+                            composable("onboard") {
+                                OnboardingScreen(onboardingPages(), onFinish = {
                                     AgendaWidgetPrefs.setOnboardingDone(applicationContext, true)
                                     navController.popBackStack()
-                                    navController.navigate("Home")
+                                    navController.navigate("widgets_list")
                                 })
                             }
-                            composable("Home") {
-                                WidgetsListView(navController)
+                            composable("widgets_list") {
+                                WidgetsListView(onNavigate = { widgetId ->
+                                    navController.navigate("widget_config/$widgetId")
+                                })
                             }
                             composable(
-                                "Widgets/{widgetId}",
-                                arguments = listOf(navArgument("widgetId") { type = NavType.IntType })
+                                "widget_config/{widgetId}",
+                                arguments = listOf(navArgument("widgetId") {
+                                    type = NavType.IntType
+                                })
                             ) { backStackEntry ->
                                 PreferencesScreen(appWidgetId = backStackEntry.arguments?.getInt("widgetId")!!)
                             }
@@ -137,10 +129,30 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @Composable
+    private fun onboardingPages(): List<OnboardingPage> {
+        val onboardingPages = listOf(
+            OnboardingPage(
+                imageRes = R.drawable.onboard_1,
+                text = applicationContext.getString(R.string.onboarding_1)
+            ),
+            OnboardingPage(
+                imageRes = R.drawable.onboard_2,
+                text = applicationContext.getString(R.string.onboarding_2)
+            ),
+            OnboardingPage(
+                imageRes = R.drawable.onboard_3,
+                text = applicationContext.getString(R.string.onboarding_3)
+            )
+        )
+        return onboardingPages
+    }
+
     private fun showOnboarding(): Boolean {
         val widgetIds = AppWidgetManager.getInstance(applicationContext)
             .getAppWidgetIds(
-                ComponentName(applicationContext, AgendaWidget::class.java))
+                ComponentName(applicationContext, AgendaWidget::class.java)
+            )
         return !(widgetIds.isNotEmpty() || AgendaWidgetPrefs.getOnboardingDone(applicationContext))
     }
 

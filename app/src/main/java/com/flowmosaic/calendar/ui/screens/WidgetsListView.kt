@@ -20,7 +20,7 @@ import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.widget.AgendaWidget
 
 @Composable
-fun WidgetsListView(navHostController: NavHostController) {
+fun WidgetsListView(onNavigate: (widgetId: Int) -> Unit) {
     val context = LocalContext.current
 
     val widgetIds = remember {
@@ -45,12 +45,12 @@ fun WidgetsListView(navHostController: NavHostController) {
         Spacer(modifier = Modifier.height(8.dp))
         widgetIds.value.forEachIndexed { index, id ->
             val idx = index + 1;
-            LaunchWidgetConfigButton(navHostController, id = id, text = "Widget $idx")
+            LaunchWidgetConfigButton(id = id, text = "Widget $idx", onNavigate = onNavigate)
         }
         LaunchWidgetConfigButton(
-            navHostController,
             id = 0,
-            text = context.getString(R.string.default_configuration)
+            text = context.getString(R.string.default_configuration),
+            onNavigate = onNavigate
         )
     }
 }
