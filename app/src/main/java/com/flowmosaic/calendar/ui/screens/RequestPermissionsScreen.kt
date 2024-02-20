@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.flowmosaic.calendar.R
-import com.flowmosaic.calendar.analytics.FirebaseLogger
+import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.ui.Header
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -37,15 +37,15 @@ fun RequestPermissionsScreen(navHostController: NavHostController) {
     )
 
     if (calendarPermissionsState.allPermissionsGranted) {
-        FirebaseLogger.logScreenShownEvent(
+        AgendaWidgetLogger.logScreenShownEvent(
             context,
-            FirebaseLogger.ScreenName.PREFS,
+            AgendaWidgetLogger.ScreenName.PREFS,
         )
         WidgetsListView(navHostController)
     } else {
-        FirebaseLogger.logScreenShownEvent(
+        AgendaWidgetLogger.logScreenShownEvent(
             context,
-            FirebaseLogger.ScreenName.REQUEST_PERMISSIONS,
+            AgendaWidgetLogger.ScreenName.REQUEST_PERMISSIONS,
         )
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -64,10 +64,10 @@ fun RequestPermissionsScreen(navHostController: NavHostController) {
                 Button(
                     onClick = {
                         calendarPermissionsState.launchMultiplePermissionRequest()
-                        FirebaseLogger.logSelectItemEvent(
+                        AgendaWidgetLogger.logSelectItemEvent(
                             context,
-                            FirebaseLogger.ScreenName.REQUEST_PERMISSIONS,
-                            FirebaseLogger.RequestPermissionsItemName.REQUEST_PERMISSIONS_BUTTON.itemName
+                            AgendaWidgetLogger.ScreenName.REQUEST_PERMISSIONS,
+                            AgendaWidgetLogger.RequestPermissionsItemName.REQUEST_PERMISSIONS_BUTTON.itemName
                         )
                     },
                     modifier = Modifier

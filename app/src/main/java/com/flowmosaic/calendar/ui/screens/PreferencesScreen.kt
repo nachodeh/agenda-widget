@@ -44,12 +44,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
-import com.flowmosaic.calendar.analytics.FirebaseLogger
+import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
-import com.flowmosaic.calendar.ui.ColorDialog
-import com.flowmosaic.calendar.ui.ShowCalendarDialog
+import com.flowmosaic.calendar.ui.dialog.ColorDialog
+import com.flowmosaic.calendar.ui.dialog.ShowCalendarDialog
 import kotlinx.coroutines.launch
 
 @Composable
@@ -127,10 +127,10 @@ fun PreferencesScreen(appWidgetId: Int) {
 
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog, widgetId)
-        FirebaseLogger.logSelectItemEvent(
+        AgendaWidgetLogger.logSelectItemEvent(
             context,
-            FirebaseLogger.ScreenName.PREFS,
-            FirebaseLogger.PrefsScreenItemName.SELECT_CALENDARS.itemName
+            AgendaWidgetLogger.ScreenName.PREFS,
+            AgendaWidgetLogger.PrefsScreenItemName.SELECT_CALENDARS.itemName
         )
     }
 
@@ -160,7 +160,7 @@ fun PreferencesScreen(appWidgetId: Int) {
             )
             CheckboxRow(
                 displayText = context.getString(R.string.show_action_buttons),
-                loggingItem = FirebaseLogger.PrefsScreenItemName.SHOW_END_TIME,
+                loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_END_TIME,
                 checkboxValue = showActionButtons,
                 saveCheckboxValue = setShowActionButtons
             )
@@ -170,13 +170,13 @@ fun PreferencesScreen(appWidgetId: Int) {
             )
             CheckboxRow(
                 displayText = context.getString(R.string.show_end_time),
-                loggingItem = FirebaseLogger.PrefsScreenItemName.SHOW_END_TIME,
+                loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_END_TIME,
                 checkboxValue = showEndTime,
                 saveCheckboxValue = setShowEndTime
             )
             CheckboxRow(
                 displayText = context.getString(R.string.use_12_hour_format),
-                loggingItem = FirebaseLogger.PrefsScreenItemName.USE_12_HOUR,
+                loggingItem = AgendaWidgetLogger.PrefsScreenItemName.USE_12_HOUR,
                 checkboxValue = use12HourFormat,
                 saveCheckboxValue = setUse12HourFormat
             )
@@ -208,7 +208,7 @@ fun PreferencesScreen(appWidgetId: Int) {
             )
             CheckboxRow(
                 displayText = context.getString(R.string.date_separator_visible),
-                loggingItem = FirebaseLogger.PrefsScreenItemName.DATE_SEPARATOR,
+                loggingItem = AgendaWidgetLogger.PrefsScreenItemName.DATE_SEPARATOR,
                 checkboxValue = showDateSeparator,
                 saveCheckboxValue = setShowDateSeparator
             )
@@ -243,7 +243,7 @@ fun ButtonRow(displayText: String, enableAction: MutableState<Boolean>) {
 @Composable
 fun CheckboxRow(
     displayText: String,
-    loggingItem: FirebaseLogger.PrefsScreenItemName,
+    loggingItem: AgendaWidgetLogger.PrefsScreenItemName,
     checkboxValue: MutableState<Boolean>,
     saveCheckboxValue: (Boolean) -> Unit
 ) {
@@ -253,9 +253,9 @@ fun CheckboxRow(
         .clickable {
             checkboxValue.value = !checkboxValue.value
             saveCheckboxValue(checkboxValue.value)
-            FirebaseLogger.logSelectItemEvent(
+            AgendaWidgetLogger.logSelectItemEvent(
                 context,
-                FirebaseLogger.ScreenName.PREFS,
+                AgendaWidgetLogger.ScreenName.PREFS,
                 loggingItem.itemName,
             )
         }
@@ -283,10 +283,10 @@ fun NumberSelectorRow(
             .fillMaxWidth()
             .clickable {
                 expanded.value = true
-                FirebaseLogger.logSelectItemEvent(
+                AgendaWidgetLogger.logSelectItemEvent(
                     context,
-                    FirebaseLogger.ScreenName.PREFS,
-                    FirebaseLogger.PrefsScreenItemName.NUMBER_DAYS.itemName
+                    AgendaWidgetLogger.ScreenName.PREFS,
+                    AgendaWidgetLogger.PrefsScreenItemName.NUMBER_DAYS.itemName
                 )
             }
             .padding(16.dp),
@@ -367,10 +367,10 @@ fun FontSizeSelectorRow(
                             fontSizeValue.value = option
                             saveFontSizeValue(option)
                             expanded.value = false
-                            FirebaseLogger.logSelectItemEvent(
+                            AgendaWidgetLogger.logSelectItemEvent(
                                 context,
-                                FirebaseLogger.ScreenName.PREFS,
-                                FirebaseLogger.PrefsScreenItemName.FONT_SIZE.itemName
+                                AgendaWidgetLogger.ScreenName.PREFS,
+                                AgendaWidgetLogger.PrefsScreenItemName.FONT_SIZE.itemName
                             )
                         }, text = { Text(option.getDisplayText(context)) })
                 }
@@ -423,10 +423,10 @@ fun TextAlignmentSelectorRow(
                             textAlignmentValue.value = option
                             saveTextAlignmentValue(option)
                             expanded.value = false
-                            FirebaseLogger.logSelectItemEvent(
+                            AgendaWidgetLogger.logSelectItemEvent(
                                 context,
-                                FirebaseLogger.ScreenName.PREFS,
-                                FirebaseLogger.PrefsScreenItemName.TEXT_ALIGNMENT.itemName
+                                AgendaWidgetLogger.ScreenName.PREFS,
+                                AgendaWidgetLogger.PrefsScreenItemName.TEXT_ALIGNMENT.itemName
                             )
                         }, text = { Text(option.getDisplayText(context)) })
                 }
@@ -451,10 +451,10 @@ fun ColorSelectorRow(
             .fillMaxWidth()
             .clickable {
                 showDialog.value = true
-                FirebaseLogger.logSelectItemEvent(
+                AgendaWidgetLogger.logSelectItemEvent(
                     context,
-                    FirebaseLogger.ScreenName.PREFS,
-                    FirebaseLogger.PrefsScreenItemName.TEXT_COLOR.itemName
+                    AgendaWidgetLogger.ScreenName.PREFS,
+                    AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR.itemName
                 )
             }
             .padding(16.dp),
@@ -524,10 +524,10 @@ fun OpacitySelectorRow(
                 saveOpacityValue(newValue)
             },
             onValueChangeFinished = {
-                FirebaseLogger.logSelectItemEvent(
+                AgendaWidgetLogger.logSelectItemEvent(
                     context,
-                    FirebaseLogger.ScreenName.PREFS,
-                    FirebaseLogger.PrefsScreenItemName.OPACITY.itemName
+                    AgendaWidgetLogger.ScreenName.PREFS,
+                    AgendaWidgetLogger.PrefsScreenItemName.OPACITY.itemName
                 )
             },
             valueRange = 0f..1f,

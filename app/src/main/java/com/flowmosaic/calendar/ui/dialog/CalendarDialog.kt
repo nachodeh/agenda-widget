@@ -1,4 +1,4 @@
-package com.flowmosaic.calendar.ui
+package com.flowmosaic.calendar.ui.dialog
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
