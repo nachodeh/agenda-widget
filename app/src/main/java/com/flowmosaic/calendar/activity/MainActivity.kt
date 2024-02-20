@@ -3,12 +3,10 @@ package com.flowmosaic.calendar.activity
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -35,7 +33,7 @@ import com.flowmosaic.calendar.ui.screens.OnboardingScreen
 import com.flowmosaic.calendar.ui.screens.PreferencesScreen
 import com.flowmosaic.calendar.ui.screens.WidgetsListView
 import com.flowmosaic.calendar.ui.theme.CalendarWidgetTheme
-import com.flowmosaic.calendar.ui.theme.Primary
+import com.flowmosaic.calendar.ui.theme.getPrimaryColor
 import com.flowmosaic.calendar.widget.AgendaWidget
 
 class MainActivity : ComponentActivity() {
@@ -52,8 +50,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val defaultNavBarColor = MaterialTheme.colorScheme.background.toArgb()
-                    val onboardBgColor =
-                        if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary.toArgb() else MaterialTheme.colorScheme.primary.toArgb()
+                    val primaryColor = getPrimaryColor()
                     val navBarColor = remember { mutableIntStateOf(defaultNavBarColor) }
                     val renderHeader = remember { mutableStateOf(false) }
                     val headerSubtitle = remember { mutableStateOf("") }
@@ -69,7 +66,7 @@ class MainActivity : ComponentActivity() {
                             }
                             when (backStackEntry.destination.route) {
                                 "onboard" -> {
-                                    navBarColor.intValue = onboardBgColor
+                                    navBarColor.intValue = primaryColor.toArgb()
                                     renderHeader.value = false
                                 }
 
@@ -85,7 +82,10 @@ class MainActivity : ComponentActivity() {
                         navigationBarStyle = SystemBarStyle.light(
                             navBarColor.intValue, navBarColor.intValue
                         ),
-                        statusBarStyle = SystemBarStyle.light(onboardBgColor, onboardBgColor)
+                        statusBarStyle = SystemBarStyle.light(
+                            primaryColor.toArgb(),
+                            primaryColor.toArgb()
+                        )
                     )
 
                     Column {
@@ -125,7 +125,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun onboardingPages(): List<OnboardingPage> {
-        val onboardingPages = listOf(
+        return listOf(
             OnboardingPage(
                 imageRes = R.drawable.onboard_0,
                 text = applicationContext.getString(R.string.onboarding_0)
@@ -143,7 +143,6 @@ class MainActivity : ComponentActivity() {
                 text = applicationContext.getString(R.string.onboarding_3)
             )
         )
-        return onboardingPages
     }
 
     private fun showOnboarding(): Boolean {

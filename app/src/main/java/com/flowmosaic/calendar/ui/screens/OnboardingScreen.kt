@@ -6,7 +6,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,12 +31,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
+import com.flowmosaic.calendar.ui.theme.getOnPrimaryColor
+import com.flowmosaic.calendar.ui.theme.getPrimaryColor
 import kotlinx.coroutines.launch
 
 data class OnboardingPage(
@@ -51,10 +51,6 @@ fun OnboardingScreen(
     pages: List<OnboardingPage>,
     onFinish: () -> Unit
 ) {
-
-    val primary = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.primary
-    val onPrimary = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inverseSurface else MaterialTheme.colorScheme.onPrimary
-
     val pagerState = rememberPagerState(
         pageCount = {
             pages.size
@@ -64,7 +60,7 @@ fun OnboardingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(primary)
+            .background(getPrimaryColor())
     ) {
         HorizontalPager(
             state = pagerState,
@@ -72,7 +68,7 @@ fun OnboardingScreen(
                 .weight(1f)
                 .fillMaxHeight()
         ) { page ->
-            OnboardingPageContent(index = page, page = pages[page], secondaryColor = onPrimary)
+            OnboardingPageContent(index = page, page = pages[page])
         }
 
         Column(
@@ -81,10 +77,9 @@ fun OnboardingScreen(
             PageIndicator(
                 pageCount = pages.size,
                 currentPage = pagerState.currentPage,
-                secondaryColor = onPrimary
             )
 
-            OnboardingNavigationButtons(pagerState = pagerState, pages = pages, onFinish = onFinish, primaryColor = primary, secondaryColor = onPrimary)
+            OnboardingNavigationButtons(pagerState = pagerState, pages = pages, onFinish = onFinish)
         }
 
     }
@@ -93,8 +88,6 @@ fun OnboardingScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnboardingNavigationButtons(
-    primaryColor: Color,
-    secondaryColor: Color,
     pagerState: PagerState,
     pages: List<OnboardingPage>,
     onFinish: () -> Unit
@@ -103,13 +96,13 @@ fun OnboardingNavigationButtons(
     val coroutineScope = rememberCoroutineScope()
 
     val skipButtonColors = ButtonDefaults.buttonColors(
-        containerColor = primaryColor,
-        contentColor = secondaryColor
+        containerColor = getPrimaryColor(),
+        contentColor = getOnPrimaryColor()
     )
 
     val buttonColors = ButtonDefaults.buttonColors(
-        containerColor = secondaryColor,
-        contentColor = primaryColor
+        containerColor = getOnPrimaryColor(),
+        contentColor = getPrimaryColor()
     )
 
     Row(
@@ -146,7 +139,7 @@ fun OnboardingNavigationButtons(
 }
 
 @Composable
-fun PageIndicator(pageCount: Int, currentPage: Int, secondaryColor: Color) {
+fun PageIndicator(pageCount: Int, currentPage: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -155,14 +148,15 @@ fun PageIndicator(pageCount: Int, currentPage: Int, secondaryColor: Color) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         repeat(pageCount) {
-            IndicatorSingleDot(isSelected = it == currentPage, secondaryColor = secondaryColor)
+            IndicatorSingleDot(isSelected = it == currentPage)
         }
     }
 }
 
 @Composable
-fun IndicatorSingleDot(isSelected: Boolean, secondaryColor: Color) {
-    val color = animateColorAsState(targetValue = if (isSelected) secondaryColor else MaterialTheme.colorScheme.outline)
+fun IndicatorSingleDot(isSelected: Boolean) {
+    val color =
+        animateColorAsState(targetValue = if (isSelected) getOnPrimaryColor() else MaterialTheme.colorScheme.outline)
 
     val width = animateDpAsState(targetValue = if (isSelected) 35.dp else 15.dp, label = "")
     Box(
@@ -176,7 +170,7 @@ fun IndicatorSingleDot(isSelected: Boolean, secondaryColor: Color) {
 }
 
 @Composable
-fun OnboardingPageContent(index: Int, page: OnboardingPage, secondaryColor: Color) {
+fun OnboardingPageContent(index: Int, page: OnboardingPage) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -203,13 +197,13 @@ fun OnboardingPageContent(index: Int, page: OnboardingPage, secondaryColor: Colo
                         .padding(horizontal = 32.dp)
                         .padding(top = 24.dp, bottom = 24.dp)
                         .size(60.dp)
-                        .border(2.dp, color = secondaryColor, shape = CircleShape)
+                        .border(2.dp, color = getOnPrimaryColor(), shape = CircleShape)
                 ) {
                     Text(
                         text = "$index",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.headlineSmall,
-                        color = secondaryColor,
+                        color = getOnPrimaryColor(),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
                     )
                 }
@@ -217,7 +211,7 @@ fun OnboardingPageContent(index: Int, page: OnboardingPage, secondaryColor: Colo
                     text = page.text,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = secondaryColor,
+                    color = getOnPrimaryColor(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp)
@@ -228,7 +222,7 @@ fun OnboardingPageContent(index: Int, page: OnboardingPage, secondaryColor: Colo
                     text = page.text,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge,
-                    color = secondaryColor,
+                    color = getOnPrimaryColor(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp)
