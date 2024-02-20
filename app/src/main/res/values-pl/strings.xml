@@ -35,4 +35,7 @@
     <string name="active_widgets">Konfiguracja widżetu</string>
     <string name="default_configuration">Domyślna konfiguracja</string>
     <string name="agenda_widget_updated">Widget kalendarza zaktualizowany</string>
+    <string name="preview_item_1">11:15 - 12:00 | Spotkanie Projektu X</string>
+    <string name="preview_item_2">17:00 - 18:00 | Piłka nożna</string>
+    <string name="preview_item_3">Urodziny Jacka</string>
 </resources>

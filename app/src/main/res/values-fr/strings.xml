@@ -34,4 +34,7 @@
     <string name="active_widgets">Configuration du widget</string>
     <string name="default_configuration">Configuration par défaut</string>
     <string name="agenda_widget_updated">Widget Agenda Mis à Jour</string>
+    <string name="preview_item_1">11h15 - 12h00 | Réunion du projet X</string>
+    <string name="preview_item_2">17h00 - 18h00 | Football</string>
+    <string name="preview_item_3">Anniversaire de Jack</string>
 </resources>

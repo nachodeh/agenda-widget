@@ -34,4 +34,7 @@
     <string name="active_widgets">小部件配置</string>
     <string name="default_configuration">" 默认配置"</string>
     <string name="agenda_widget_updated">日程小部件已更新</string>
+    <string name="preview_item_1">11:15 - 12:00 | X 项目会议</string>
+    <string name="preview_item_2">17:00 - 18:00 | 足球</string>
+    <string name="preview_item_3">杰克的生日</string>
 </resources>
