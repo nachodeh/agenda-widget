@@ -103,7 +103,7 @@ private fun CalendarDialogContent(
             .heightIn(min = 100.dp, max = 500.dp)
             .widthIn(min = 100.dp, max = 500.dp),
         shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.secondaryContainer,
+        color = MaterialTheme.colorScheme.surface,
     ) {
         Box(modifier = Modifier.padding(16.dp)) {
             LazyColumn(
