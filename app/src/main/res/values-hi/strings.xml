@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_widget_description">अपने आगामी इवेंट्स को एक सरल प्रारूप में प्रदर्शित करने के लिए एजेंडा विजेट</string>
-    <string name="tap_to_set_up">%1$s सेट करने के लिए टैप करें</string>
+    <string name="tap_to_set_up">%1$s को आपके कैलेंडर तक पहुँचने की आवश्यकता है ताकि आपके इवेंट्स दिखाए जा सकें। \\n\\n यहाँ टैप करें और पहुँच दें।</string>
     <string name="select_calendars">कैलेंडर का चयन करें</string>
     <string name="number_of_days_to_display">प्रदर्शित करने के लिए दिनों की संख्या</string>
     <string name="show_end_time">समाप्ति समय दिखाएं</string>

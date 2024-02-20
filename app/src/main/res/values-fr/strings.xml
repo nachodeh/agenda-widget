@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_widget_description">Widget d\'agenda pour afficher vos prochains événements dans un format simple</string>
-    <string name="tap_to_set_up">Appuyez pour configurer %1$s</string>
+    <string name="tap_to_set_up">%1$s a besoin d\'accéder à votre calendrier pour afficher vos événements. \\n\\n Appuyez ici et accordez l\'accès.</string>
     <string name="select_calendars">Sélectionner des calendriers</string>
     <string name="number_of_days_to_display">Nombre de jours à afficher</string>
     <string name="show_end_time">Afficher l\'heure de fin</string>

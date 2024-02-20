@@ -1,7 +1,7 @@
 <resources>
     <string name="app_widget_description">Widget de agenda para exibir seus próximos eventos em um formato simples</string>
 
-    <string name="tap_to_set_up">Toque para configurar %1$s</string>
+    <string name="tap_to_set_up">%1$s precisa de acesso ao seu calendário para mostrar seus eventos. \\n\\n Toque aqui e conceda acesso.</string>
     <string name="select_calendars">Selecionar calendários</string>
     <string name="number_of_days_to_display">Número de dias para exibir</string>
     <string name="show_end_time">Mostrar hora de término</string>

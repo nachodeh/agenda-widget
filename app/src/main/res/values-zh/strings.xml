@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_widget_description">日程小工具以簡單格式展示您的接下來的活動</string>
-    <string name="tap_to_set_up">點擊設置 %1$s</string>
+    <string name="tap_to_set_up">%1$s 需要访问您的日历以显示您的事件。\\n\\n点击此处并授予访问权限。</string>
     <string name="select_calendars">選擇日曆</string>
     <string name="number_of_days_to_display">展示的天數</string>
     <string name="show_end_time">展示結束時間</string>

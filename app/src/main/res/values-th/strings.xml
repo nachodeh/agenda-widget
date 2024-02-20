@@ -1,7 +1,7 @@
 <resources>
     <string name="app_widget_description">วิดเจ็ตวางกำหนดการเพื่อแสดงกิจกรรมที่จะเกิดขึ้นในรูปแบบที่เรียบง่าย</string>
 
-    <string name="tap_to_set_up">แตะเพื่อตั้งค่า %1$s</string>
+    <string name="tap_to_set_up">%1$s ต้องการเข้าถึงปฏิทินของคุณเพื่อแสดงกิจกรรมของคุณ \\n\\n แตะที่นี่และให้สิทธิ์การเข้าถึง</string>
     <string name="select_calendars">เลือกปฏิทิน</string>
     <string name="number_of_days_to_display">จำนวนวันที่ต้องการแสดง</string>
     <string name="show_end_time">แสดงเวลาที่สิ้นสุด</string>
