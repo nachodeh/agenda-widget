@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        installSplashScreen()
         setContent {
             CalendarWidgetTheme {
                 Surface(
@@ -125,6 +126,10 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun onboardingPages(): List<OnboardingPage> {
         val onboardingPages = listOf(
+            OnboardingPage(
+                imageRes = R.drawable.onboard_0,
+                text = applicationContext.getString(R.string.onboarding_0)
+            ),
             OnboardingPage(
                 imageRes = R.drawable.onboard_1,
                 text = applicationContext.getString(R.string.onboarding_1)

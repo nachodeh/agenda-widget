@@ -35,9 +35,9 @@
     <string name="active_widgets">Konfiguracja widżetu</string>
     <string name="default_configuration">Domyślna konfiguracja</string>
     <string name="agenda_widget_updated">Widget kalendarza zaktualizowany</string>
-    <string name="onboarding_1">1. Aby dodać widżet kalendarza, przytrzymaj dłużej ekran główny</string>
-    <string name="onboarding_2">2. Wybierz widżety z menu opcji ekranu głównego</string>
-    <string name="onboarding_3">3. Przeciągnij widżet kalendarza na ekran główny. Gotowe!</string>
+    <string name="onboarding_1">Aby dodać widżet kalendarza, przytrzymaj dłużej ekran główny</string>
+    <string name="onboarding_2">Wybierz widżety z menu opcji ekranu głównego</string>
+    <string name="onboarding_3">Przeciągnij widżet kalendarza na ekran główny. Gotowe!</string>
     <string name="onboarding_skip">Pomiń</string>
     <string name="onboarding_next">Następny</string>
     <string name="preview_item_1">11:15 - 12:00 | Spotkanie Projektu X</string>

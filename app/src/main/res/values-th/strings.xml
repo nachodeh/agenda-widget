@@ -35,9 +35,9 @@
     <string name="active_widgets">การกำหนดค่าวิดเจ็ต</string>
     <string name="default_configuration">ค่ากำหนดเริ่มต้น</string>
     <string name="agenda_widget_updated">อัปเดตวิดเจ็ตกำหนดการ</string>
-    <string name="onboarding_1">1. ในการเพิ่มวิดเจ็ตกำหนดการ กดค้างที่หน้าจอหลัก</string>
-    <string name="onboarding_2">2. เลือกวิดเจ็ตจากเมนูตัวเลือกหน้าจอหลัก</string>
-    <string name="onboarding_3">"3. ลากริปสว็อกเกตกลับไปยังหน้าจอหลักของคุณ เสร็จสิ้น! "</string>
+    <string name="onboarding_1">ในการเพิ่มวิดเจ็ตกำหนดการ กดค้างที่หน้าจอหลัก</string>
+    <string name="onboarding_2">เลือกวิดเจ็ตจากเมนูตัวเลือกหน้าจอหลัก</string>
+    <string name="onboarding_3">ลากริปสว็อกเกตกลับไปยังหน้าจอหลักของคุณ เสร็จสิ้น!</string>
     <string name="onboarding_skip">ข้าม</string>
     <string name="onboarding_next">ถัดไป</string>
     <string name="preview_item_1">11:15 - 12:00 | การประชุมโปรเจค X</string>

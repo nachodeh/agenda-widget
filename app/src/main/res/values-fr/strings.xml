@@ -34,9 +34,9 @@
     <string name="active_widgets">Configuration du widget</string>
     <string name="default_configuration">Configuration par défaut</string>
     <string name="agenda_widget_updated">Widget Agenda Mis à Jour</string>
-    <string name="onboarding_1">1. Pour ajouter le widget Agenda, maintenez enfoncé sur l\'écran d\'accueil</string>
-    <string name="onboarding_2">2. Sélectionnez Widgets dans le menu des options de l\'écran d\'accueil</string>
-    <string name="onboarding_3">3. Faites glisser le widget Agenda sur votre écran d\'accueil. Vous êtes prêt(e) !</string>
+    <string name="onboarding_1">Pour ajouter le widget Agenda, maintenez enfoncé sur l\'écran d\'accueil</string>
+    <string name="onboarding_2">Sélectionnez Widgets dans le menu des options de l\'écran d\'accueil</string>
+    <string name="onboarding_3">Faites glisser le widget Agenda sur votre écran d\'accueil. Vous êtes prêt(e) !</string>
     <string name="onboarding_skip">Passer</string>
     <string name="onboarding_next">Suivant</string>
     <string name="preview_item_1">11h15 - 12h00 | Réunion du projet X</string>
