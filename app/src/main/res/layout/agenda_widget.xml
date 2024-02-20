@@ -30,7 +30,8 @@
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowRadius="4"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/widget_action_buttons"
