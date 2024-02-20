@@ -43,6 +43,11 @@ fun getPrimaryColor(): Color {
 }
 
 @Composable
+fun getOnPrimaryColor(): Color {
+    return if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary
+}
+
+@Composable
 fun CalendarWidgetTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.toArgb
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.screens.PreferencesScreen
 import com.flowmosaic.calendar.ui.theme.CalendarWidgetTheme
+import com.flowmosaic.calendar.ui.theme.getPrimaryColor
 import com.flowmosaic.calendar.widget.AgendaWidget
 
 class PreferencesActivity : ComponentActivity() {
@@ -26,8 +27,7 @@ class PreferencesActivity : ComponentActivity() {
         setContent {
 
             CalendarWidgetTheme {
-                val statusBarColor =
-                    if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary.toArgb() else MaterialTheme.colorScheme.primary.toArgb()
+                val statusBarColor = getPrimaryColor().toArgb()
                 enableEdgeToEdge(
                     navigationBarStyle = SystemBarStyle.light(
                         MaterialTheme.colorScheme.background.toArgb(),
