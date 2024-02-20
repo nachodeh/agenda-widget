@@ -39,6 +39,15 @@
 
     <string name="agenda_widget_updated">Agenda Widget Updated</string>
 
+    <string name="onboarding_1">1. To add Agenda Widget, long press on the home screen</string>
+    <string name="onboarding_2">2. Select Widgets from the home screen options menu</string>
+    <string name="onboarding_3">3. Drag Agenda Widget to your home screen. You\'re all set!</string>
+
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_got_it">Got it</string>
+
+
     <string name="preview_item_1">11:15 – 12:00 | Project X meeting</string>
     <string name="preview_item_2">17:00 – 18:00 | Football</string>
     <string name="preview_item_3">Jack\'s birthday</string>

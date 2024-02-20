@@ -30,12 +30,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.flowmosaic.calendar.ui.theme.OnPrimary
-import com.flowmosaic.calendar.ui.theme.OnPrimaryLight
-import com.flowmosaic.calendar.ui.theme.Primary
+import com.flowmosaic.calendar.R
 import kotlinx.coroutines.launch
 
 data class OnboardingPage(
@@ -91,6 +90,7 @@ fun OnboardingNavigationButtons(
     pages: List<OnboardingPage>,
     onFinish: () -> Unit
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     val skipButtonColors = ButtonDefaults.buttonColors(
@@ -112,7 +112,7 @@ fun OnboardingNavigationButtons(
     ) {
         if (pagerState.currentPage < pages.size - 1) {
             Button(onClick = onFinish, colors = skipButtonColors) {
-                Text("Skip")
+                Text(context.getString(R.string.onboarding_skip))
             }
         } else {
             Spacer(modifier = Modifier.width(0.dp)) // Empty spacer for alignment
@@ -125,11 +125,11 @@ fun OnboardingNavigationButtons(
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                     }
                 }, colors = buttonColors) {
-                    Text("Next")
+                    Text(context.getString(R.string.onboarding_next))
                 }
             } else {
                 Button(onClick = onFinish, colors = buttonColors) {
-                    Text("Got it")
+                    Text(context.getString(R.string.onboarding_got_it))
                 }
             }
         }
