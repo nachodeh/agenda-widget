@@ -1,7 +1,7 @@
 <resources>
     <string name="app_widget_description">Widżet agendy do wyświetlania nadchodzących wydarzeń w prostym formacie</string>
 
-    <string name="tap_to_set_up">Dotknij, aby skonfigurować %1$s</string>
+    <string name="tap_to_set_up">%1$s potrzebuje dostępu do twojego kalendarza, aby pokazać twoje wydarzenia. \\n\\n Dotknij tutaj i udziel dostępu.</string>
     <string name="select_calendars">Wybierz kalendarze</string>
     <string name="number_of_days_to_display">Liczba dni do wyświetlenia</string>
     <string name="show_end_time">Pokaż godzinę zakończenia</string>

@@ -17,7 +17,7 @@
         android:focusable="true"
         android:text="@string/tap_to_set_up"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:shadowColor="#80000000"
         android:shadowDx="1"
         android:shadowDy="1"

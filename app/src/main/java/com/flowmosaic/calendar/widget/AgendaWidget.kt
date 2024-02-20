@@ -275,8 +275,6 @@ class AgendaWidget : AppWidgetProvider() {
         views.setTextViewText(R.id.permission_request_text, tapToSetupString)
 
         val intent = Intent(context, PermissionsActivity::class.java).apply {
-            // Clear any existing activities and start a new task
-
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 

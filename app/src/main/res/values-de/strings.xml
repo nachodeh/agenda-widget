@@ -1,7 +1,7 @@
 <resources>
     <string name="app_widget_description">Agenda-Widget zur Anzeige Ihrer bevorstehenden Ereignisse in einem einfachen Format</string>
 
-    <string name="tap_to_set_up">Tippen Sie, um %1$s einzurichten</string>
+    <string name="tap_to_set_up">%1$s benötigt Zugriff auf Ihren Kalender, um Ihre Ereignisse anzuzeigen. \\n\\n Tippen Sie hier und gewähren Sie Zugriff.</string>
     <string name="select_calendars">Kalender auswählen</string>
     <string name="number_of_days_to_display">Anzahl der anzuzeigenden Tage</string>
     <string name="show_end_time">Endzeit anzeigen</string>
