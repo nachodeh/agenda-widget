@@ -1,6 +1,5 @@
 package com.flowmosaic.calendar.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,7 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -234,7 +233,7 @@ fun ButtonRow(displayText: String, enableAction: MutableState<Boolean>) {
     ) {
         Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
         Icon(
-            imageVector = Icons.Default.ArrowForward,
+            imageVector = Icons.Default.DateRange,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary
         )
