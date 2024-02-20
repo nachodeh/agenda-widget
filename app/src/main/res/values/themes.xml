@@ -23,4 +23,10 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">?android:attr/colorAccent</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_vector</item>
+        <item name="postSplashScreenTheme">@style/Theme.CalendarWidget</item>
+    </style>
 </resources>

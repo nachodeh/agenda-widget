@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,12 +17,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -52,7 +53,7 @@ fun OnboardingScreen(
 ) {
 
     val primary = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.primary
-    val onPrimary = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
+    val onPrimary = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inverseSurface else MaterialTheme.colorScheme.onPrimary
 
     val pagerState = rememberPagerState(
         pageCount = {
@@ -71,7 +72,7 @@ fun OnboardingScreen(
                 .weight(1f)
                 .fillMaxHeight()
         ) { page ->
-            OnboardingPageContent(page = pages[page], secondaryColor = onPrimary)
+            OnboardingPageContent(index = page, page = pages[page], secondaryColor = onPrimary)
         }
 
         Column(
@@ -118,7 +119,7 @@ fun OnboardingNavigationButtons(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        if (pagerState.currentPage < pages.size - 1) {
+        if (pagerState.currentPage < pages.size - 1 && pagerState.currentPage > 0) {
             Button(onClick = onFinish, colors = skipButtonColors) {
                 Text(context.getString(R.string.onboarding_skip))
             }
@@ -175,7 +176,7 @@ fun IndicatorSingleDot(isSelected: Boolean, secondaryColor: Color) {
 }
 
 @Composable
-fun OnboardingPageContent(page: OnboardingPage, secondaryColor: Color) {
+fun OnboardingPageContent(index: Int, page: OnboardingPage, secondaryColor: Color) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -192,21 +193,48 @@ fun OnboardingPageContent(page: OnboardingPage, secondaryColor: Color) {
         Spacer(modifier = Modifier.height(32.dp))
         Column(
             Modifier
-//                .background(
-//                    MaterialTheme.colorScheme.inversePrimary,
-//                    shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
-//                )
                 .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = page.text,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium,
-                color = secondaryColor,
-                modifier = Modifier
-                    .padding(horizontal = 32.dp)
-                    .padding(vertical = 32.dp)
-            )
+            if (index > 0) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .padding(horizontal = 32.dp)
+                        .padding(top = 24.dp, bottom = 24.dp)
+                        .size(60.dp)
+                        .border(2.dp, color = secondaryColor, shape = CircleShape)
+                ) {
+                    Text(
+                        text = "$index",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = secondaryColor,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+                    )
+                }
+                Text(
+                    text = page.text,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = secondaryColor,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+                        .padding(bottom = 32.dp)
+                )
+            } else {
+                Text(
+                    text = page.text,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = secondaryColor,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+                        .padding(bottom = 32.dp)
+                )
+            }
         }
     }
 }

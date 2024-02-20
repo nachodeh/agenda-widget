@@ -35,9 +35,9 @@
     <string name="active_widgets">Widget-Konfiguration</string>
     <string name="default_configuration">Standardkonfiguration</string>
     <string name="agenda_widget_updated">Agenda Widget aktualisiert</string>
-    <string name="onboarding_1">1. Um das Agenda-Widget hinzuzufügen, lange auf den Startbildschirm drücken</string>
-    <string name="onboarding_2">2. Wählen Sie Widgets aus dem Startbildschirm-Optionsmenü aus</string>
-    <string name="onboarding_3">3. Ziehen Sie das Agenda-Widget auf Ihren Startbildschirm. Sie sind fertig!</string>
+    <string name="onboarding_1">Um das Agenda-Widget hinzuzufügen, lange auf den Startbildschirm drücken</string>
+    <string name="onboarding_2">Wählen Sie Widgets aus dem Startbildschirm-Optionsmenü aus</string>
+    <string name="onboarding_3">Ziehen Sie das Agenda-Widget auf Ihren Startbildschirm. Sie sind fertig!</string>
     <string name="onboarding_skip">Überspringen</string>
     <string name="onboarding_next">Nächster</string>
     <string name="preview_item_1">11:15 - 12:00 | Projekt X Besprechung</string>

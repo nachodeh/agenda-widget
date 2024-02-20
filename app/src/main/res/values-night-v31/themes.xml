@@ -7,4 +7,10 @@
         <item name="appWidgetRadius">@android:dimen/system_app_widget_background_radius</item>
         <item name="appWidgetInnerRadius">@android:dimen/system_app_widget_inner_radius</item>
     </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">?android:attr/colorPrimaryDark</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_vector</item>
+        <item name="postSplashScreenTheme">@style/Theme.CalendarWidget</item>
+    </style>
 </resources>
