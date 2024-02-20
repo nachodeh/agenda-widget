@@ -22,6 +22,7 @@ object AgendaWidgetPrefs {
     private const val PREF_HOUR_FORMAT_12 = "key_hour_format_12"
     private const val PREF_LAST_REVIEW_PROMPT = "key_last_review_prompt"
     private const val PREF_SEPARATOR_VISIBLE = "key_separator_visible"
+    private const val PREF_ONBOARDING_DONE = "key_onboarding_done"
 
     enum class FontSize(private val displayResId: Int) {
         SMALL(R.string.font_size_small),
@@ -249,6 +250,14 @@ object AgendaWidgetPrefs {
 
     fun setLastReviewPrompt(context: Context, lastReviewPrompt: Long) {
         getPreferences(context).edit().putLong(PREF_LAST_REVIEW_PROMPT, lastReviewPrompt).apply()
+    }
+
+    fun getOnboardingDone(context: Context): Boolean {
+        return getPreferences(context).getBoolean(PREF_ONBOARDING_DONE, false)
+    }
+
+    fun setOnboardingDone(context: Context, onboardingDone: Boolean) {
+        getPreferences(context).edit().putBoolean(PREF_ONBOARDING_DONE, onboardingDone).apply()
     }
 
     private fun getPreferences(context: Context): SharedPreferences {
