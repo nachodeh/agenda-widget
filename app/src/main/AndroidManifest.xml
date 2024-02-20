@@ -55,6 +55,11 @@
             android:name=".PreferencesActivity"
             android:theme="@style/Theme.CalendarWidget"
             />
+        <activity
+            android:name=".PermissionsActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Transparent"
+            />
     </application>
 
 </manifest>

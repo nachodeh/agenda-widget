@@ -1,0 +1,56 @@
+package com.flowmosaic.calendar
+
+import android.Manifest
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+
+class PermissionsActivity : ComponentActivity() {
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            val allPermissionsGranted = permissions.entries.all { it.value }
+            updateWidgets()
+            finish()
+        }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requestCalendarPermissions()
+
+        setContent {
+            enableEdgeToEdge()
+        }
+    }
+
+    private fun requestCalendarPermissions() {
+        // Check if permissions are already granted
+        val writeCalendarPermission = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_CALENDAR
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        val readCalendarPermission = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_CALENDAR
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+
+        if (!writeCalendarPermission || !readCalendarPermission) {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.WRITE_CALENDAR,
+                    Manifest.permission.READ_CALENDAR
+                )
+            )
+        } else {
+            finish()
+        }
+    }
+
+    private fun updateWidgets() {
+        val agendaWidgetProvider = AgendaWidget()
+        agendaWidgetProvider.forceWidgetUpdate(applicationContext)
+    }
+}

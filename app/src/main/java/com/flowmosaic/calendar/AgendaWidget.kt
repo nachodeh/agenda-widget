@@ -22,11 +22,13 @@ import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.flowmosaic.calendar.analytics.FirebaseLogger
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.remoteviews.EventsWidgetService
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 
@@ -34,6 +36,7 @@ import kotlinx.coroutines.delay
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
 const val CREATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_CREATE_EVENT"
 const val CLICK_ACTION = "com.flowmosaic.calendar.CLICK_ACTION"
+
 const val EXTRA_START_TIME = "com.flowmosaic.calendar.START_TIME"
 const val EXTRA_END_TIME = "com.flowmosaic.calendar.END_TIME"
 const val EXTRA_EVENT_ID = "com.flowmosaic.calendar.EVENT_ID"
@@ -277,9 +280,14 @@ class AgendaWidget : AppWidgetProvider() {
         val tapToSetupString = context.getString(R.string.tap_to_set_up, appName)
         views.setTextViewText(R.id.permission_request_text, tapToSetupString)
 
-        val intent = Intent(context, MainActivity::class.java)
-        val flags = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, flags)
+        val intent = Intent(context, PermissionsActivity::class.java).apply {
+            // Clear any existing activities and start a new task
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val pendingIntentFlags = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, pendingIntentFlags)
         views.setOnClickPendingIntent(R.id.permission_request_text, pendingIntent)
 
         appWidgetManager.updateAppWidget(widgetId, views)

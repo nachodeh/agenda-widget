@@ -12,7 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import com.flowmosaic.calendar.ui.PreferencesScreen
+import com.flowmosaic.calendar.ui.screens.PreferencesScreen
 import com.flowmosaic.calendar.ui.theme.CalendarWidgetTheme
 
 class PreferencesActivity : ComponentActivity() {
