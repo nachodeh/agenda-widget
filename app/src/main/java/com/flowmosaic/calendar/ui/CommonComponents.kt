@@ -13,7 +13,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
-import com.flowmosaic.calendar.ui.theme.OnPrimary
 import com.flowmosaic.calendar.ui.theme.getOnPrimaryColor
 import com.flowmosaic.calendar.ui.theme.getPrimaryColor
 
@@ -36,7 +35,7 @@ fun Header(subtitle: String = "") {
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.titleSmall,
-                color = OnPrimary,
+                color = getOnPrimaryColor(),
                 fontWeight = FontWeight.Light,
                 textAlign = TextAlign.Start,
                 modifier = Modifier
