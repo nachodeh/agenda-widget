@@ -53,11 +53,11 @@ class MainActivity : ComponentActivity() {
                     val defaultNavBarColor = MaterialTheme.colorScheme.background.toArgb()
                     val onboardBgColor =
                         if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary.toArgb() else MaterialTheme.colorScheme.primary.toArgb()
-                    val navController = rememberNavController()
-                    val headerSubtitle = remember { mutableStateOf("") }
                     val navBarColor = remember { mutableIntStateOf(defaultNavBarColor) }
                     val renderHeader = remember { mutableStateOf(false) }
+                    val headerSubtitle = remember { mutableStateOf("") }
 
+                    val navController = rememberNavController()
                     LaunchedEffect(navController) {
                         navController.currentBackStackEntryFlow.collect { backStackEntry ->
                             val widgetId = backStackEntry.arguments?.getInt("widgetId")
@@ -80,28 +80,21 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    val navBarStyle = SystemBarStyle.light(
-                        navBarColor.intValue,
-                        navBarColor.intValue
-
-                    )
-                    val statusBarStyle = SystemBarStyle.light(
-                        onboardBgColor,
-                        onboardBgColor
-                    )
-
                     enableEdgeToEdge(
-                        navigationBarStyle = navBarStyle,
-                        statusBarStyle = statusBarStyle
+                        navigationBarStyle = SystemBarStyle.light(
+                            navBarColor.intValue, navBarColor.intValue
+                        ),
+                        statusBarStyle = SystemBarStyle.light(onboardBgColor, onboardBgColor)
                     )
-
-                    val startPage = if (showOnboarding()) "onboard" else "widgets_list"
 
                     Column {
                         if (renderHeader.value) {
                             Header(subtitle = headerSubtitle.value)
                         }
-                        NavHost(navController = navController, startDestination = startPage) {
+                        NavHost(
+                            navController = navController,
+                            startDestination = if (showOnboarding()) "onboard" else "widgets_list"
+                        ) {
                             composable("onboard") {
                                 OnboardingScreen(onboardingPages(), onFinish = {
                                     AgendaWidgetPrefs.setOnboardingDone(applicationContext, true)
