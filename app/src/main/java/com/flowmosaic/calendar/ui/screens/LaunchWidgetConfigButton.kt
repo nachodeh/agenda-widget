@@ -1,7 +1,5 @@
 package com.flowmosaic.calendar.ui.screens
 
-import android.appwidget.AppWidgetManager
-import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -13,16 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.flowmosaic.calendar.PreferencesActivity
+import androidx.navigation.NavHostController
 
 @Composable
-fun LaunchWidgetConfigButton(id: Int, text: String) {
+fun LaunchWidgetConfigButton(navHostController: NavHostController, id: Int, text: String) {
     val context = LocalContext.current
     Button(
         onClick = {
-            val intent = Intent(context, PreferencesActivity::class.java)
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
-            context.startActivity(intent)
+            navHostController.navigate("Widgets/$id")
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,

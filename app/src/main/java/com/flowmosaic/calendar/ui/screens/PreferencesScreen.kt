@@ -49,7 +49,6 @@ import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.ColorDialog
-import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.ShowCalendarDialog
 import kotlinx.coroutines.launch
 
@@ -142,12 +141,6 @@ fun PreferencesScreen(appWidgetId: Int) {
     }
 
     Column {
-        if (appWidgetId == 0) {
-            Header(subtitle = context.getString(R.string.prefs_title_editing_default_config))
-        }
-        else {
-            Header()
-        }
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
