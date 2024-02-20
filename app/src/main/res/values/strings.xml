@@ -39,4 +39,9 @@
 
     <string name="agenda_widget_updated">Agenda Widget Updated</string>
 
+    <string name="preview_item_1">11:15 – 12:00 | Project X meeting</string>
+    <string name="preview_item_2">17:00 – 18:00 | Football</string>
+    <string name="preview_item_3">Jack\'s birthday</string>
+
+
 </resources>
