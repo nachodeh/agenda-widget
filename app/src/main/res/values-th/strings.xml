@@ -35,4 +35,7 @@
     <string name="active_widgets">การกำหนดค่าวิดเจ็ต</string>
     <string name="default_configuration">ค่ากำหนดเริ่มต้น</string>
     <string name="agenda_widget_updated">อัปเดตวิดเจ็ตกำหนดการ</string>
+    <string name="preview_item_1">11:15 - 12:00 | การประชุมโปรเจค X</string>
+    <string name="preview_item_2">17:00 - 18:00 | ฟุตบอล</string>
+    <string name="preview_item_3">วันเกิดของแจ็ค</string>
 </resources>

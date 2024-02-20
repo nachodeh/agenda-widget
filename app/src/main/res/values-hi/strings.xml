@@ -34,4 +34,7 @@
     <string name="active_widgets">"विजेट कॉन्फ़िगरेशन "</string>
     <string name="default_configuration">डिफ़ॉल्ट कॉन्फ़िगरेशन</string>
     <string name="agenda_widget_updated">एजेंडा विजेट अपडेट किया गया</string>
+    <string name="preview_item_1">11:15 - 12:00 | प्रोजेक्ट X मीटिंग</string>
+    <string name="preview_item_2">"17:00 - 18:00 | फ़ुटबॉल "</string>
+    <string name="preview_item_3">जैक का जन्मदिन</string>
 </resources>
