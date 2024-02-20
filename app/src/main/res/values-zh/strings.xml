@@ -34,7 +34,13 @@
     <string name="active_widgets">小部件配置</string>
     <string name="default_configuration">" 默认配置"</string>
     <string name="agenda_widget_updated">日程小部件已更新</string>
+    <string name="onboarding_1">" 1. 要添加日程小部件，请在主屏幕上长按"</string>
+    <string name="onboarding_2">2. 从主屏幕选项菜单中选择小部件</string>
+    <string name="onboarding_3">3. 将日程小部件拖动到您的主屏幕上。设置完成！</string>
+    <string name="onboarding_skip">跳过</string>
+    <string name="onboarding_next">下一个</string>
     <string name="preview_item_1">11:15 - 12:00 | X 项目会议</string>
     <string name="preview_item_2">17:00 - 18:00 | 足球</string>
     <string name="preview_item_3">杰克的生日</string>
+    <string name="onboarding_got_it">明白了</string>
 </resources>

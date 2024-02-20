@@ -103,15 +103,15 @@ class MainActivity : ComponentActivity() {
                                 val onboardingPages = listOf(
                                     OnboardingPage(
                                         imageRes = R.drawable.onboard_1, // Replace with actual drawable resource IDs
-                                        text = "1. To add Agenda Widget, long press on the home screen"
+                                        text = applicationContext.getString(R.string.onboarding_1)
                                     ),
                                     OnboardingPage(
                                         imageRes = R.drawable.onboard_2,
-                                        text = "2. Select Widgets from the home screen options menu"
+                                        text = applicationContext.getString(R.string.onboarding_2)
                                     ),
                                     OnboardingPage(
                                         imageRes = R.drawable.onboard_3,
-                                        text = "3. Drag Agenda Widget to your home screen. You're all set!"
+                                        text = applicationContext.getString(R.string.onboarding_3)
                                     )
                                 )
                                 OnboardingScreen(onboardingPages, onFinish = {

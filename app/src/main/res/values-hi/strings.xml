@@ -34,7 +34,13 @@
     <string name="active_widgets">"विजेट कॉन्फ़िगरेशन "</string>
     <string name="default_configuration">डिफ़ॉल्ट कॉन्फ़िगरेशन</string>
     <string name="agenda_widget_updated">एजेंडा विजेट अपडेट किया गया</string>
+    <string name="onboarding_1">एजेंडा विजेट जोड़ने के लिए, होम स्क्रीन पर लंबे समय तक दबाएं</string>
+    <string name="onboarding_2">2. होम स्क्रीन विकल्प मेनू से विजेट चुनें</string>
+    <string name="onboarding_3">3. अपने होम स्क्रीन पर एजेंडा विजेट को खींचें। सेटिंग के लिए तैयार हैं</string>
+    <string name="onboarding_skip">छोड़ें</string>
+    <string name="onboarding_next">अगला</string>
     <string name="preview_item_1">11:15 - 12:00 | प्रोजेक्ट X मीटिंग</string>
     <string name="preview_item_2">"17:00 - 18:00 | फ़ुटबॉल "</string>
     <string name="preview_item_3">जैक का जन्मदिन</string>
+    <string name="onboarding_got_it">समझ गया</string>
 </resources>

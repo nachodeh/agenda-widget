@@ -35,8 +35,14 @@
     <string name="active_widgets">Configuração do widget</string>
     <string name="default_configuration">Configuração padrão</string>
     <string name="agenda_widget_updated">Widget de Agenda Atualizado</string>
+    <string name="onboarding_1">1. Para adicionar o widget de Agenda, pressione e segure na tela inicial</string>
+    <string name="onboarding_2">2. Selecione Widgets no menu de opções da tela inicial</string>
+    <string name="onboarding_3">3. Arraste o widget de Agenda para a sua tela inicial. Está pronto!</string>
+    <string name="onboarding_skip">Pular</string>
+    <string name="onboarding_next">Próximo</string>
     <string name="preview_item_1">11:15 - 12:00 | Reunião do Projeto X</string>
     <string name="preview_item_2">17:00 - 18:00 | Futebol</string>
     <string name="preview_item_3">Aniversário do Jack</string>
+    <string name="onboarding_got_it">Entendi</string>
 
 </resources>
