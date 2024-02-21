@@ -85,10 +85,7 @@ class MainActivity : ComponentActivity() {
                         navigationBarStyle = SystemBarStyle.light(
                             navBarColor.intValue, navBarColor.intValue
                         ),
-                        statusBarStyle = SystemBarStyle.light(
-                            primaryColor.toArgb(),
-                            primaryColor.toArgb()
-                        )
+                        statusBarStyle = SystemBarStyle.dark(primaryColor.toArgb())
                     )
 
                     Column {
