@@ -245,6 +245,13 @@ class AgendaWidget : AppWidgetProvider() {
             setOnClickPendingIntent(R.id.add_button, addEventIntent)
             setOnClickPendingIntent(R.id.empty_view, openCalIntent)
 
+            val noUpcomingEventsText = if (AgendaWidgetPrefs.getShowNoUpcomingEventsText(
+                    context,
+                    widgetId.toString()
+                )
+            ) context.getString(R.string.no_upcoming_events) else ""
+            setTextViewText(R.id.empty_view, noUpcomingEventsText)
+
             setTextColor(R.id.empty_view, textColor)
             setEmptyView(R.id.events_list_view, R.id.empty_view)
 

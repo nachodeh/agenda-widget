@@ -11,6 +11,7 @@
     <string name="number_of_days_to_display">Number of days to display</string>
     <string name="show_end_time">Show end time</string>
     <string name="show_action_buttons">Show action buttons</string>
+    <string name="show_no_upcoming_events">Show no upcoming events text</string>
     <string name="use_12_hour_format">Use 12 hour format</string>
     <string name="date_separator_visible">Show date separator</string>
     <string name="font_size">Font size</string>

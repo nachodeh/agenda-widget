@@ -6,6 +6,7 @@
     <string name="number_of_days_to_display">展示的天數</string>
     <string name="show_end_time">展示結束時間</string>
     <string name="show_action_buttons">显示操作按钮</string>
+    <string name="show_no_upcoming_events">显示没有即将到来的事件文本</string>
     <string name="use_12_hour_format">使用12小时制</string>
     <string name="date_separator_visible">显示日期分隔符</string>
     <string name="font_size">字体大小</string>
@@ -34,6 +35,7 @@
     <string name="active_widgets">小部件配置</string>
     <string name="default_configuration">" 默认配置"</string>
     <string name="agenda_widget_updated">日程小部件已更新</string>
+    <string name="onboarding_0">欢迎使用日程小部件！请按照以下说明将其添加到您的主屏幕。</string>
     <string name="onboarding_1">要添加日程小部件，请在主屏幕上长按</string>
     <string name="onboarding_2">从主屏幕选项菜单中选择小部件</string>
     <string name="onboarding_3">将日程小部件拖动到您的主屏幕上。设置完成！</string>

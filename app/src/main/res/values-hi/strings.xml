@@ -6,6 +6,7 @@
     <string name="number_of_days_to_display">प्रदर्शित करने के लिए दिनों की संख्या</string>
     <string name="show_end_time">समाप्ति समय दिखाएं</string>
     <string name="show_action_buttons">क्रिया बटन दिखाएं</string>
+    <string name="show_no_upcoming_events">\"कोई आगामी घटनाओं का पाठ नहीं दिखाएं\" टेक्स्ट दिखाएं</string>
     <string name="use_12_hour_format">12 घंटे का प्रारूप उपयोग करें</string>
     <string name="date_separator_visible">तिथि विभाजक दिखाएं</string>
     <string name="font_size">फ़ॉन्ट आकार</string>
@@ -34,6 +35,7 @@
     <string name="active_widgets">"विजेट कॉन्फ़िगरेशन "</string>
     <string name="default_configuration">डिफ़ॉल्ट कॉन्फ़िगरेशन</string>
     <string name="agenda_widget_updated">एजेंडा विजेट अपडेट किया गया</string>
+    <string name="onboarding_0">Agenda Widget में आपका स्वागत है! इसे अपने होम स्क्रीन पर जोड़ने के लिए इन निर्देशों का पालन करें।</string>
     <string name="onboarding_1">एजेंडा विजेट जोड़ने के लिए, होम स्क्रीन पर लंबे समय तक दबाएं</string>
     <string name="onboarding_2">होम स्क्रीन विकल्प मेनू से विजेट चुनें</string>
     <string name="onboarding_3">अपने होम स्क्रीन पर एजेंडा विजेट को खींचें। सेटिंग के लिए तैयार हैं</string>

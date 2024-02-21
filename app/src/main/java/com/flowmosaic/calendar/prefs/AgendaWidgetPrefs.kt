@@ -12,6 +12,7 @@ object AgendaWidgetPrefs {
 
     private const val PREF_SELECTED_CALENDARS = "selected_calendars"
     private const val PREF_SHOW_ACTION_BUTTONS = "key_show_action_buttons"
+    private const val PREF_SHOW_NO_UPCOMING_EVENTS = "key_show_no_upcoming_events"
     private const val PREF_SHOW_END_TIME = "key_show_end_time"
     private const val PREF_NUMBER_OF_DAYS = "key_number_of_days"
     private const val PREF_TEXT_COLOR = "key_text_color"
@@ -126,6 +127,21 @@ object AgendaWidgetPrefs {
         getPreferences(context).edit().putBoolean(prefsKey, showActionButtons).apply()
     }
 
+    fun getShowNoUpcomingEventsText(context: Context, widgetId: String): Boolean {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(context, PREF_SHOW_NO_UPCOMING_EVENTS, widgetId)
+        val result = getPreferences(context).getBoolean(prefsKey, true)
+        if (!prefExists) {
+            setShowNoUpcomingEventsText(context, result, widgetId)
+        }
+        return result
+    }
+
+    // TODO
+    fun setShowNoUpcomingEventsText(context: Context, showNoUpcomingEvents: Boolean, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_NO_UPCOMING_EVENTS, widgetId)
+        getPreferences(context).edit().putBoolean(prefsKey, showNoUpcomingEvents).apply()
+    }
+
     fun getShowEndTime(context: Context, widgetId: String): Boolean {
         val (prefsKey, prefExists) = getKeyWithWidgetId(context, PREF_SHOW_END_TIME, widgetId)
         val result = getPreferences(context).getBoolean(prefsKey, false)
@@ -204,7 +220,7 @@ object AgendaWidgetPrefs {
 
     fun getOpacity(context: Context, widgetId: String): Float {
         val (prefsKey, prefExists) = getKeyWithWidgetId(context, PREF_OPACITY, widgetId)
-        val opacity = getPreferences(context).getFloat(prefsKey, 0f)
+        val opacity = getPreferences(context).getFloat(prefsKey, 0.0f)
         if (!prefExists) {
             setOpacity(context, opacity, widgetId)
         }

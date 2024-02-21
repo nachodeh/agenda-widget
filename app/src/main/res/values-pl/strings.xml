@@ -6,6 +6,7 @@
     <string name="number_of_days_to_display">Liczba dni do wyświetlenia</string>
     <string name="show_end_time">Pokaż godzinę zakończenia</string>
     <string name="show_action_buttons">Pokaż przyciski akcji</string>
+    <string name="show_no_upcoming_events">Pokaż tekst \"Brak nadchodzących wydarzeń\"</string>
     <string name="use_12_hour_format">Używaj formatu 12-godzinnego</string>
     <string name="date_separator_visible">Pokaż separator daty</string>
     <string name="font_size">Rozmiar czcionki</string>
@@ -35,6 +36,7 @@
     <string name="active_widgets">Konfiguracja widżetu</string>
     <string name="default_configuration">Domyślna konfiguracja</string>
     <string name="agenda_widget_updated">Widget kalendarza zaktualizowany</string>
+    <string name="onboarding_0">Witaj w widżecie kalendarza! Postępuj zgodnie z tymi instrukcjami, aby dodać go do ekranu głównego.</string>
     <string name="onboarding_1">Aby dodać widżet kalendarza, przytrzymaj dłużej ekran główny</string>
     <string name="onboarding_2">Wybierz widżety z menu opcji ekranu głównego</string>
     <string name="onboarding_3">Przeciągnij widżet kalendarza na ekran główny. Gotowe!</string>

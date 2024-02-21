@@ -80,6 +80,15 @@ fun PreferencesScreen(appWidgetId: Int) {
         showActionButtons.value = newValue
         AgendaWidgetPrefs.setShowActionButtons(context, newValue, widgetId)
     }
+
+    val showNoUpcomingEvents = remember {
+        mutableStateOf(AgendaWidgetPrefs.getShowNoUpcomingEventsText(context, widgetId))
+    }
+    val setShowNoUpcomingEvents: (Boolean) -> Unit = { newValue ->
+        showNoUpcomingEvents.value = newValue
+        AgendaWidgetPrefs.setShowNoUpcomingEventsText(context, newValue, widgetId)
+    }
+
     val showEndTime = remember {
         mutableStateOf(AgendaWidgetPrefs.getShowEndTime(context, widgetId))
     }
@@ -176,6 +185,12 @@ fun PreferencesScreen(appWidgetId: Int) {
                 loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_ACTION_BUTTONS,
                 checkboxValue = showActionButtons,
                 saveCheckboxValue = setShowActionButtons
+            )
+            CheckboxRow(
+                displayText = context.getString(R.string.show_no_upcoming_events),
+                loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_NO_EVENTS_TEXT,
+                checkboxValue = showNoUpcomingEvents,
+                saveCheckboxValue = setShowNoUpcomingEvents
             )
             TitleWithDivider(
                 title = context.getString(R.string.prefs_title_date_time),
