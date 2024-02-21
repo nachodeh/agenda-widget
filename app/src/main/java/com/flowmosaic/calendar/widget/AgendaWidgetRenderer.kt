@@ -46,12 +46,6 @@ object AgendaWidgetRenderer {
         widgetId: Int,
         showProgress: Boolean = false
     ) {
-        val widgetItemClickIntentTemplate =
-            createWidgetActionPendingIntent(context, CLICK_ACTION, widgetId)
-        val refreshIntent = createWidgetActionPendingIntent(context, UPDATE_ACTION, widgetId)
-        val addEventIntent = createWidgetActionPendingIntent(context, CREATE_ACTION, widgetId)
-        val openCalIntent = createWidgetActionPendingIntent(context, CLICK_ACTION, widgetId)
-
         val intent = Intent(context, EventsWidgetService::class.java).apply {
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
             data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
@@ -61,11 +55,22 @@ object AgendaWidgetRenderer {
             setRemoteAdapter(R.id.events_list_view, intent)
             setEmptyView(R.id.events_list_view, R.id.empty_view)
 
-            setPendingIntentTemplate(R.id.events_list_view, widgetItemClickIntentTemplate)
-
-            setOnClickPendingIntent(R.id.refresh_button, refreshIntent)
-            setOnClickPendingIntent(R.id.add_button, addEventIntent)
-            setOnClickPendingIntent(R.id.empty_view, openCalIntent)
+            setPendingIntentTemplate(
+                R.id.events_list_view,
+                createWidgetActionPendingIntent(context, CLICK_ACTION, widgetId)
+            )
+            setOnClickPendingIntent(
+                R.id.refresh_button,
+                createWidgetActionPendingIntent(context, UPDATE_ACTION, widgetId)
+            )
+            setOnClickPendingIntent(
+                R.id.add_button,
+                createWidgetActionPendingIntent(context, CREATE_ACTION, widgetId)
+            )
+            setOnClickPendingIntent(
+                R.id.empty_view,
+                createWidgetActionPendingIntent(context, CLICK_ACTION, widgetId)
+            )
 
             setupEmptyView(context, widgetId)
             setWidgetBackground(context, widgetId)
