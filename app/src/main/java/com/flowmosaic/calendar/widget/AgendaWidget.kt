@@ -53,7 +53,7 @@ class AgendaWidget : AppWidgetProvider() {
                 )
             )
             AgendaWidgetPrefs.setWidgetActivityEventLastLoggedTimestamp(context)
-            AgendaWidgetLogger.flushMixpanelEvents(context)
+            AgendaWidgetLogger.flushEvents(context)
         }
         for (appWidgetId in appWidgetIds) {
             updateWidget(context, appWidgetManager, appWidgetId)

@@ -8,10 +8,7 @@ import com.amplitude.android.DefaultTrackingOptions
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.mixpanel.android.mpmetrics.MixpanelAPI
-import org.json.JSONObject
 import java.util.concurrent.TimeUnit
-
 
 object AgendaWidgetLogger {
 
@@ -65,25 +62,16 @@ object AgendaWidgetLogger {
         )
     }
 
-    private fun getMixpanelInstance(context: Context): MixpanelAPI {
-        return MixpanelAPI.getInstance(context, "30601539929e247063f85a5d72a925e3", true)
-    }
-
     fun logActionButtonEvent(context: Context, actionButton: ActionButton) {
         val bundle = Bundle().apply {
             putString(FirebaseAnalytics.Param.SCREEN_NAME, ScreenName.WIDGET.screenName)
         }
         FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
 
-        // Mixpanel log
-        val properties = JSONObject()
-        properties.put(FirebaseAnalytics.Param.SCREEN_NAME, ScreenName.WIDGET.screenName)
-        properties.put(FirebaseAnalytics.Param.ITEM_NAME, actionButton.buttonName)
         val propertiesMap = mutableMapOf<String, Any?>(
             FirebaseAnalytics.Param.SCREEN_NAME to ScreenName.WIDGET.screenName,
             FirebaseAnalytics.Param.ITEM_NAME to actionButton.buttonName,
         )
-        getMixpanelInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, properties)
         getAmplitudeInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, propertiesMap)
     }
 
@@ -93,13 +81,9 @@ object AgendaWidgetLogger {
         }
         FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
 
-        // Mixpanel log
-        val properties = JSONObject()
-        properties.put(FirebaseAnalytics.Param.SCREEN_NAME, screenName.screenName)
         val propertiesMap = mutableMapOf<String, Any?>(
             FirebaseAnalytics.Param.SCREEN_NAME to screenName.screenName,
         )
-        getMixpanelInstance(context).track(FirebaseAnalytics.Event.SCREEN_VIEW, properties)
         getAmplitudeInstance(context).track(FirebaseAnalytics.Event.SCREEN_VIEW, propertiesMap)
     }
 
@@ -116,22 +100,12 @@ object AgendaWidgetLogger {
         }
         FirebaseAnalytics.getInstance(context).logEvent("widget_lifecycle_event", bundle)
 
-        // Mixpanel log
-        val properties = JSONObject().apply {
-            put("type", widgetStatus.status)
-            additionalParams?.let { params ->
-                for ((key, value) in params) {
-                    put(key, value)
-                }
-            }
-        }
         val propertiesMap = mutableMapOf<String, Any?>(
             "type" to widgetStatus.status
         )
         additionalParams?.let { params ->
             propertiesMap.putAll(params)
         }
-        getMixpanelInstance(context).track("widget_lifecycle_event", properties)
         getAmplitudeInstance(context).track("widget_lifecycle_event", propertiesMap)
     }
 
@@ -142,16 +116,10 @@ object AgendaWidgetLogger {
         }
         FirebaseAnalytics.getInstance(context).logEvent(FirebaseAnalytics.Event.SELECT_ITEM, bundle)
 
-        // Mixpanel log
-        val properties = JSONObject().apply {
-            put(FirebaseAnalytics.Param.SCREEN_NAME, screenName.screenName)
-            put(FirebaseAnalytics.Param.ITEM_NAME, name)
-        }
         val propertiesMap = mutableMapOf<String, Any?>(
             FirebaseAnalytics.Param.SCREEN_NAME to screenName.screenName,
             FirebaseAnalytics.Param.ITEM_NAME to name,
         )
-        getMixpanelInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, properties)
         getAmplitudeInstance(context).track(FirebaseAnalytics.Event.SELECT_ITEM, propertiesMap)
 
         launchInAppReview(context)
@@ -182,8 +150,7 @@ object AgendaWidgetLogger {
         }
     }
 
-    fun flushMixpanelEvents(context: Context) {
-        getMixpanelInstance(context).flush()
+    fun flushEvents(context: Context) {
         getAmplitudeInstance(context).flush()
     }
 
