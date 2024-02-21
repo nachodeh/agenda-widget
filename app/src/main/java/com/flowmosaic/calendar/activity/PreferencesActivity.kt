@@ -32,7 +32,7 @@ class PreferencesActivity : ComponentActivity() {
                         MaterialTheme.colorScheme.background.toArgb(),
                         MaterialTheme.colorScheme.background.toArgb()
                     ),
-                    statusBarStyle = SystemBarStyle.light(statusBarColor, statusBarColor)
+                    statusBarStyle = SystemBarStyle.dark(statusBarColor)
                 )
                 Surface(
                     modifier = Modifier
