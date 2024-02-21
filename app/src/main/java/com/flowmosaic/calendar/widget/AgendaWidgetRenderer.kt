@@ -1,5 +1,6 @@
 package com.flowmosaic.calendar.widget
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -104,6 +105,7 @@ object AgendaWidgetRenderer {
         setInt(R.id.main_view, "setBackgroundColor", color)
     }
 
+    @SuppressLint("RtlHardcoded")
     private fun RemoteViews.setActionButtonsVisibility(context: Context, widgetId: Int) {
         val actionButtonsVisible = if (AgendaWidgetPrefs.getShowActionButtons(
                 context,
@@ -112,7 +114,15 @@ object AgendaWidgetRenderer {
         ) View.VISIBLE else View.GONE
         setViewVisibility(R.id.widget_action_buttons, actionButtonsVisible)
 
-        val textColor = AgendaWidgetPrefs.getTextColor(context, widgetId.toString()).toArgb();
+        val buttonsAlignment =
+            when (AgendaWidgetPrefs.getTextAlignment(context, widgetId.toString())) {
+                AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.RIGHT
+                AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.RIGHT
+                AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.LEFT
+            }
+        setInt(R.id.widget_action_buttons, "setGravity", buttonsAlignment)
+
+        val textColor = AgendaWidgetPrefs.getTextColor(context, widgetId.toString()).toArgb()
         setInt(R.id.refresh_button, "setColorFilter", textColor)
         setInt(R.id.add_button, "setColorFilter", textColor)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -137,9 +147,9 @@ object AgendaWidgetRenderer {
         ) context.getString(R.string.no_upcoming_events) else ""
         val textAlignment =
             when (AgendaWidgetPrefs.getTextAlignment(context, widgetId.toString())) {
-                AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.LEFT
+                AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.START
                 AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
-                AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.RIGHT
+                AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.END
             }
         setTextViewText(R.id.empty_view, noUpcomingEventsText)
         setInt(R.id.empty_view, "setGravity", textAlignment)
