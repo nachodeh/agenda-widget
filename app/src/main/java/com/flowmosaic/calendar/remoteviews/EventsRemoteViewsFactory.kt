@@ -89,7 +89,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                     context,
                     item.date.time
                 )
-                    .capitalize(Locale.getDefault())
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
                 is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(
                     item.event,
@@ -103,9 +103,9 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                 AgendaWidgetPrefs.FontSize.LARGE -> 2f
             }
             val textAlignment = when (AgendaWidgetPrefs.getTextAlignment(context, widgetId)) {
-                AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.LEFT
+                AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.START
                 AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
-                AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.RIGHT
+                AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.END
             }
             val separatorVisibility =
                 if (AgendaWidgetPrefs.getSeparatorVisible(

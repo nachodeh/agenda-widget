@@ -1,13 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Widget.CalendarWidget.AppWidget.Container"
     android:id="@+id/main_view"
+    style="@style/Widget.CalendarWidget.AppWidget.Container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.CalendarWidget.AppWidgetContainer"
+    android:background="@color/transparent"
     android:paddingStart="8dp"
     android:paddingEnd="8dp"
-    android:background="@color/transparent"
-    >
+    android:theme="@style/Theme.CalendarWidget.AppWidgetContainer">
 
     <ListView
         android:id="@+id/events_list_view"
@@ -15,63 +14,61 @@
         android:layout_height="wrap_content"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
-        android:scrollbars="none"/>
+        android:scrollbars="none" />
 
     <TextView
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="left"
-        android:textColor="#ffffff"
+        android:gravity="start"
+        android:paddingStart="8dp"
+        android:paddingEnd="0dp"
         android:paddingTop="8dp"
-        android:paddingLeft="8dp"
-        android:text="@string/no_upcoming_events"
         android:shadowColor="#80000000"
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowRadius="4"
+        android:text="@string/no_upcoming_events"
+        android:textColor="#ffffff"
         android:textSize="16sp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/widget_action_buttons"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:orientation="horizontal"
-        >
-
-
+        android:gravity="left">
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             >
+
             <ImageButton
                 android:id="@+id/refresh_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_refresh_24"
                 android:background="@color/transparent"
-                android:paddingRight="4dp"
-                android:paddingLeft="8dp"
+                android:paddingStart="8dp"
                 android:paddingTop="8dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="8dp"
-                android:clickable="true"
-                android:visibility="visible"/>
+                android:src="@drawable/baseline_refresh_24"
+                android:visibility="visible" />
+
             <ProgressBar
                 android:id="@+id/refresh_spinner"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:paddingRight="4dp"
-                android:paddingLeft="8dp"
+                android:indeterminateTint="@color/white"
+                android:paddingStart="8dp"
                 android:paddingTop="10dp"
+                android:paddingEnd="4dp"
                 android:paddingBottom="8dp"
                 android:progressTint="@color/white"
-                android:indeterminateTint="@color/white"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
         </FrameLayout>
 
 
@@ -79,16 +76,14 @@
             android:id="@+id/add_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/baseline_add_24"
             android:background="@color/transparent"
-            android:paddingRight="4dp"
-            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
             android:paddingTop="8dp"
+            android:paddingEnd="4dp"
             android:paddingBottom="8dp"
-            android:clickable="true"/>
+            android:src="@drawable/baseline_add_24" />
 
     </LinearLayout>
-
 
 
 </RelativeLayout>
