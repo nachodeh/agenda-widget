@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
-import androidx.navigation.NavHostController
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.widget.AgendaWidget
 

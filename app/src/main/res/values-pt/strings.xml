@@ -6,6 +6,7 @@
     <string name="number_of_days_to_display">Número de dias para exibir</string>
     <string name="show_end_time">Mostrar hora de término</string>
     <string name="show_action_buttons">Mostrar botões de ação</string>
+    <string name="show_no_upcoming_events">Mostrar texto \"Nenhum evento futuro\"</string>
     <string name="use_12_hour_format">Usar formato de 12 horas</string>
     <string name="date_separator_visible">Mostrar separador de data</string>
     <string name="font_size">Tamanho da fonte</string>
@@ -35,6 +36,7 @@
     <string name="active_widgets">Configuração do widget</string>
     <string name="default_configuration">Configuração padrão</string>
     <string name="agenda_widget_updated">Widget de Agenda Atualizado</string>
+    <string name="onboarding_0">Bem-vindo ao Widget de Agenda! Siga estas instruções para adicioná-lo à sua tela inicial.</string>
     <string name="onboarding_1">Para adicionar o widget de Agenda, pressione e segure na tela inicial</string>
     <string name="onboarding_2">Selecione Widgets no menu de opções da tela inicial</string>
     <string name="onboarding_3">Arraste o widget de Agenda para a sua tela inicial. Está pronto!</string>
