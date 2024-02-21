@@ -100,8 +100,7 @@ class AgendaWidget : AppWidgetProvider() {
                     eventId > 0 -> {
                         AgendaWidgetLogger.logSelectItemEvent(
                             context,
-                            AgendaWidgetLogger.ScreenName.WIDGET,
-                            AgendaWidgetLogger.WidgetItemName.EVENT.itemName
+                            AgendaWidgetLogger.WidgetItemName.EVENT
                         )
                         builder.appendPath("events")
                         ContentUris.appendId(builder, eventId)
@@ -110,8 +109,7 @@ class AgendaWidget : AppWidgetProvider() {
                     startTime > 0 -> {
                         AgendaWidgetLogger.logSelectItemEvent(
                             context,
-                            AgendaWidgetLogger.ScreenName.WIDGET,
-                            AgendaWidgetLogger.WidgetItemName.DATE.itemName
+                            AgendaWidgetLogger.WidgetItemName.DATE
                         )
                         builder.appendPath("time")
                         ContentUris.appendId(builder, startTime)

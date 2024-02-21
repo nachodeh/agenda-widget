@@ -3,6 +3,7 @@ package com.flowmosaic.calendar.activity
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -26,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.flowmosaic.calendar.R
+import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.screens.OnboardingPage
@@ -75,6 +77,7 @@ class MainActivity : ComponentActivity() {
                                     renderHeader.value = true
                                 }
                             }
+                            AgendaWidgetLogger.logNavigationEvent(applicationContext, backStackEntry.destination.route)
                         }
                     }
 
@@ -97,10 +100,11 @@ class MainActivity : ComponentActivity() {
                             startDestination = if (showOnboarding()) "onboard" else "widgets_list"
                         ) {
                             composable("onboard") {
-                                OnboardingScreen(onboardingPages(), onFinish = {
+                                OnboardingScreen(onboardingPages(), onFinish = { skipped ->
                                     AgendaWidgetPrefs.setOnboardingDone(applicationContext, true)
                                     navController.popBackStack()
                                     navController.navigate("widgets_list")
+                                    AgendaWidgetLogger.logOnboardingCompleteEvent(applicationContext, skipped)
                                 })
                             }
                             composable("widgets_list") {
@@ -121,6 +125,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        AgendaWidgetLogger.logActivityStartedEvent(
+            applicationContext,
+            AgendaWidgetLogger.Activity.MAIN_ACTIVITY
+        )
     }
 
     @Composable

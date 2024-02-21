@@ -49,7 +49,7 @@ data class OnboardingPage(
 @Composable
 fun OnboardingScreen(
     pages: List<OnboardingPage>,
-    onFinish: () -> Unit
+    onFinish: (skipped: Boolean) -> Unit
 ) {
     val pagerState = rememberPagerState(
         pageCount = {
@@ -90,7 +90,7 @@ fun OnboardingScreen(
 fun OnboardingNavigationButtons(
     pagerState: PagerState,
     pages: List<OnboardingPage>,
-    onFinish: () -> Unit
+    onFinish: (skipped: Boolean) -> Unit
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -113,7 +113,7 @@ fun OnboardingNavigationButtons(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         if (pagerState.currentPage < pages.size - 1 && pagerState.currentPage > 0) {
-            Button(onClick = onFinish, colors = skipButtonColors) {
+            Button(onClick = { onFinish(true) }, colors = skipButtonColors) {
                 Text(context.getString(R.string.onboarding_skip))
             }
         } else {
@@ -130,7 +130,7 @@ fun OnboardingNavigationButtons(
                     Text(context.getString(R.string.onboarding_next))
                 }
             } else {
-                Button(onClick = onFinish, colors = buttonColors) {
+                Button(onClick = { onFinish(false) }, colors = buttonColors) {
                     Text(context.getString(R.string.onboarding_got_it))
                 }
             }

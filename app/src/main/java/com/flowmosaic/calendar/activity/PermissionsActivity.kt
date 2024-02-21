@@ -7,13 +7,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.widget.AgendaWidget
-import kotlin.system.exitProcess
 
 class PermissionsActivity : ComponentActivity() {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val allPermissionsGranted = permissions.entries.all { it.value }
+            AgendaWidgetLogger.logPermissionsResultEvent(applicationContext, allPermissionsGranted)
             updateWidgets()
             finishAndRemoveTask()
         }
@@ -26,6 +27,11 @@ class PermissionsActivity : ComponentActivity() {
         setContent {
             enableEdgeToEdge()
         }
+
+        AgendaWidgetLogger.logActivityStartedEvent(
+            applicationContext,
+            AgendaWidgetLogger.Activity.PERMISSIONS_ACTIVITY
+        )
     }
 
     private fun requestCalendarPermissions() {
