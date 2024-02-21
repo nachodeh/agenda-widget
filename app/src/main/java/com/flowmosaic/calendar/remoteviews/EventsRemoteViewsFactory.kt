@@ -38,6 +38,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     private val events: MutableList<CalendarViewItem> = mutableListOf()
 
     override fun onCreate() {
+        events.clear()
         events.addAll(getEvents())
     }
 

@@ -174,7 +174,7 @@ fun PreferencesScreen(appWidgetId: Int) {
             )
             CheckboxRow(
                 displayText = context.getString(R.string.show_action_buttons),
-                loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_END_TIME,
+                loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_ACTION_BUTTONS,
                 checkboxValue = showActionButtons,
                 saveCheckboxValue = setShowActionButtons
             )
