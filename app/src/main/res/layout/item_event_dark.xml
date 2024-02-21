@@ -8,10 +8,6 @@
     android:paddingVertical="6dp"
     android:paddingLeft="8dp"
     android:text="@string/event_placeholder"
-    android:shadowColor="#80ffffff"
-    android:shadowDx="1"
-    android:shadowDy="1"
-    android:shadowRadius="4"
     android:maxLines="1"
     android:ellipsize="end"
     />
