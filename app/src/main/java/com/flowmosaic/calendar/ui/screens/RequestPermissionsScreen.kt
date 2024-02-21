@@ -28,63 +28,63 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RequestPermissionsScreen(navHostController: NavHostController) {
-    val context = LocalContext.current
-    val calendarPermissionsState = rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.WRITE_CALENDAR,
-            Manifest.permission.READ_CALENDAR,
-        )
-    )
-
-    if (calendarPermissionsState.allPermissionsGranted) {
-        AgendaWidgetLogger.logScreenShownEvent(
-            context,
-            AgendaWidgetLogger.ScreenName.PREFS,
-        )
-//        WidgetsListView(navHostController)
-    } else {
-        AgendaWidgetLogger.logScreenShownEvent(
-            context,
-            AgendaWidgetLogger.ScreenName.REQUEST_PERMISSIONS,
-        )
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Header()
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            ) {
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = stringResource(id = R.string.calendar_access_info),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Button(
-                    onClick = {
-                        calendarPermissionsState.launchMultiplePermissionRequest()
-                        AgendaWidgetLogger.logSelectItemEvent(
-                            context,
-                            AgendaWidgetLogger.ScreenName.REQUEST_PERMISSIONS,
-                            AgendaWidgetLogger.RequestPermissionsItemName.REQUEST_PERMISSIONS_BUTTON.itemName
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(0.6f)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(8.dp)
-                        ),
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.grant_permissions),
-                        style = MaterialTheme.typography.labelLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-        }
-    }
+//    val context = LocalContext.current
+//    val calendarPermissionsState = rememberMultiplePermissionsState(
+//        listOf(
+//            Manifest.permission.WRITE_CALENDAR,
+//            Manifest.permission.READ_CALENDAR,
+//        )
+//    )
+//
+//    if (calendarPermissionsState.allPermissionsGranted) {
+//        AgendaWidgetLogger.logScreenShownEvent(
+//            context,
+//            AgendaWidgetLogger.ScreenName.PREFS,
+//        )
+////        WidgetsListView(navHostController)
+//    } else {
+//        AgendaWidgetLogger.logScreenShownEvent(
+//            context,
+//            AgendaWidgetLogger.ScreenName.REQUEST_PERMISSIONS,
+//        )
+//        Column(
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            Header()
+//            Column(
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                modifier = Modifier.padding(horizontal = 16.dp),
+//            ) {
+//                Spacer(modifier = Modifier.height(24.dp))
+//                Text(
+//                    text = stringResource(id = R.string.calendar_access_info),
+//                    style = MaterialTheme.typography.bodyMedium
+//                )
+//                Spacer(modifier = Modifier.height(24.dp))
+//                Button(
+//                    onClick = {
+//                        calendarPermissionsState.launchMultiplePermissionRequest()
+//                        AgendaWidgetLogger.logSelectItemEvent(
+//                            context,
+//                            AgendaWidgetLogger.ScreenName.REQUEST_PERMISSIONS,
+//                            AgendaWidgetLogger.RequestPermissionsItemName.REQUEST_PERMISSIONS_BUTTON.itemName
+//                        )
+//                    },
+//                    modifier = Modifier
+//                        .fillMaxWidth(0.6f)
+//                        .background(
+//                            color = MaterialTheme.colorScheme.primary,
+//                            shape = RoundedCornerShape(8.dp)
+//                        ),
+//                ) {
+//                    Text(
+//                        text = stringResource(id = R.string.grant_permissions),
+//                        style = MaterialTheme.typography.labelLarge,
+//                        textAlign = TextAlign.Center,
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
+//                }
+//            }
+//        }
+//    }
 }

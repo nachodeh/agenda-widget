@@ -30,7 +30,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             widgetId = intent.getIntExtra(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID
-            ).toString()!!
+            ).toString()
         }
     }
 

@@ -137,10 +137,9 @@ fun PreferencesScreen(appWidgetId: Int) {
 
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog, widgetId)
-        AgendaWidgetLogger.logSelectItemEvent(
+        AgendaWidgetLogger.logUpdatePrefEvent(
             context,
-            AgendaWidgetLogger.ScreenName.PREFS,
-            AgendaWidgetLogger.PrefsScreenItemName.SELECT_CALENDARS.itemName
+            AgendaWidgetLogger.PrefsScreenItemName.SELECT_CALENDARS
         )
     }
 
@@ -267,10 +266,9 @@ fun CheckboxRow(
         .clickable {
             checkboxValue.value = !checkboxValue.value
             saveCheckboxValue(checkboxValue.value)
-            AgendaWidgetLogger.logSelectItemEvent(
+            AgendaWidgetLogger.logUpdatePrefEvent(
                 context,
-                AgendaWidgetLogger.ScreenName.PREFS,
-                loggingItem.itemName,
+                loggingItem,
             )
         }
         .padding(16.dp),
@@ -297,10 +295,9 @@ fun NumberSelectorRow(
             .fillMaxWidth()
             .clickable {
                 expanded.value = true
-                AgendaWidgetLogger.logSelectItemEvent(
+                AgendaWidgetLogger.logUpdatePrefEvent(
                     context,
-                    AgendaWidgetLogger.ScreenName.PREFS,
-                    AgendaWidgetLogger.PrefsScreenItemName.NUMBER_DAYS.itemName
+                    AgendaWidgetLogger.PrefsScreenItemName.NUMBER_DAYS
                 )
             }
             .padding(16.dp),
@@ -381,10 +378,9 @@ fun FontSizeSelectorRow(
                             fontSizeValue.value = option
                             saveFontSizeValue(option)
                             expanded.value = false
-                            AgendaWidgetLogger.logSelectItemEvent(
+                            AgendaWidgetLogger.logUpdatePrefEvent(
                                 context,
-                                AgendaWidgetLogger.ScreenName.PREFS,
-                                AgendaWidgetLogger.PrefsScreenItemName.FONT_SIZE.itemName
+                                AgendaWidgetLogger.PrefsScreenItemName.FONT_SIZE
                             )
                         }, text = { Text(option.getDisplayText(context)) })
                 }
@@ -437,10 +433,9 @@ fun TextAlignmentSelectorRow(
                             textAlignmentValue.value = option
                             saveTextAlignmentValue(option)
                             expanded.value = false
-                            AgendaWidgetLogger.logSelectItemEvent(
+                            AgendaWidgetLogger.logUpdatePrefEvent(
                                 context,
-                                AgendaWidgetLogger.ScreenName.PREFS,
-                                AgendaWidgetLogger.PrefsScreenItemName.TEXT_ALIGNMENT.itemName
+                                AgendaWidgetLogger.PrefsScreenItemName.TEXT_ALIGNMENT
                             )
                         }, text = { Text(option.getDisplayText(context)) })
                 }
@@ -465,10 +460,9 @@ fun ColorSelectorRow(
             .fillMaxWidth()
             .clickable {
                 showDialog.value = true
-                AgendaWidgetLogger.logSelectItemEvent(
+                AgendaWidgetLogger.logUpdatePrefEvent(
                     context,
-                    AgendaWidgetLogger.ScreenName.PREFS,
-                    AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR.itemName
+                    AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
                 )
             }
             .padding(16.dp),
@@ -540,10 +534,9 @@ fun OpacitySelectorRow(
                 saveOpacityValue(newValue)
             },
             onValueChangeFinished = {
-                AgendaWidgetLogger.logSelectItemEvent(
+                AgendaWidgetLogger.logUpdatePrefEvent(
                     context,
-                    AgendaWidgetLogger.ScreenName.PREFS,
-                    AgendaWidgetLogger.PrefsScreenItemName.OPACITY.itemName
+                    AgendaWidgetLogger.PrefsScreenItemName.OPACITY
                 )
             },
             valueRange = 0f..1f,

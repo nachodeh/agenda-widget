@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -14,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.screens.PreferencesScreen
 import com.flowmosaic.calendar.ui.theme.CalendarWidgetTheme
@@ -25,7 +25,6 @@ class PreferencesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
             CalendarWidgetTheme {
                 val statusBarColor = getPrimaryColor().toArgb()
                 enableEdgeToEdge(
@@ -52,6 +51,10 @@ class PreferencesActivity : ComponentActivity() {
                 }
             }
         }
+        AgendaWidgetLogger.logActivityStartedEvent(
+            applicationContext,
+            AgendaWidgetLogger.Activity.PREFERENCES_ACTIVITY
+        )
     }
 
     override fun onPause() {
