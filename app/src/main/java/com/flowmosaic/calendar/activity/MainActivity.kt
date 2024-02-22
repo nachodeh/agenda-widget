@@ -3,7 +3,6 @@ package com.flowmosaic.calendar.activity
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -21,6 +20,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,6 +38,23 @@ import com.flowmosaic.calendar.ui.screens.WidgetsListView
 import com.flowmosaic.calendar.ui.theme.CalendarWidgetTheme
 import com.flowmosaic.calendar.ui.theme.getPrimaryColor
 import com.flowmosaic.calendar.widget.AgendaWidget
+
+enum class Screen {
+    ONBOARD,
+    WIDGETS_LIST,
+    WIDGET_CONFIG,
+}
+
+enum class NavigationParams {
+    WIDGET_ID,
+    WIDGET_INDEX,
+}
+
+sealed class NavigationItem(val route: String) {
+    object Onboard : NavigationItem(Screen.ONBOARD.name)
+    object WidgetsList : NavigationItem(Screen.WIDGETS_LIST.name)
+    object WidgetConfig : NavigationItem(Screen.WIDGET_CONFIG.name)
+}
 
 class MainActivity : ComponentActivity() {
 
@@ -60,25 +78,19 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     LaunchedEffect(navController) {
                         navController.currentBackStackEntryFlow.collect { backStackEntry ->
-                            val widgetId = backStackEntry.arguments?.getInt("widgetId")
-                            val widgetIndex = backStackEntry.arguments?.getInt("widgetIndex")
-                            headerSubtitle.value = when (backStackEntry.destination.route) {
-                                "widgets_list" -> getString(R.string.active_widgets)
-                                "widget_config/{widgetId}/{widgetIndex}" -> if (widgetId == 0) getString(R.string.prefs_title_editing_default_config) else "Widget $widgetIndex"
-                                else -> ""
+                            headerSubtitle.value = getHeaderSubtitle(backStackEntry)
+                            renderHeader.value = when (backStackEntry.destination.route) {
+                                NavigationItem.Onboard.route -> false
+                                else -> true
                             }
-                            when (backStackEntry.destination.route) {
-                                "onboard" -> {
-                                    navBarColor.intValue = primaryColor.toArgb()
-                                    renderHeader.value = false
-                                }
-
-                                else -> {
-                                    navBarColor.intValue = defaultNavBarColor
-                                    renderHeader.value = true
-                                }
+                            navBarColor.intValue = when (backStackEntry.destination.route) {
+                                NavigationItem.Onboard.route -> primaryColor.toArgb()
+                                else -> defaultNavBarColor
                             }
-                            AgendaWidgetLogger.logNavigationEvent(applicationContext, backStackEntry.destination.route)
+                            AgendaWidgetLogger.logNavigationEvent(
+                                applicationContext,
+                                backStackEntry.destination.route
+                            )
                         }
                     }
 
@@ -93,35 +105,7 @@ class MainActivity : ComponentActivity() {
                         if (renderHeader.value) {
                             Header(subtitle = headerSubtitle.value)
                         }
-                        NavHost(
-                            navController = navController,
-                            startDestination = if (showOnboarding()) "onboard" else "widgets_list"
-                        ) {
-                            composable("onboard") {
-                                OnboardingScreen(onboardingPages(), onFinish = { skipped ->
-                                    AgendaWidgetPrefs.setOnboardingDone(applicationContext, true)
-                                    navController.popBackStack()
-                                    navController.navigate("widgets_list")
-                                    AgendaWidgetLogger.logOnboardingCompleteEvent(applicationContext, skipped)
-                                })
-                            }
-                            composable("widgets_list") {
-                                WidgetsListView(onNavigate = { widgetId, widgetIndex ->
-                                    navController.navigate("widget_config/$widgetId/$widgetIndex")
-                                })
-                            }
-                            composable(
-                                "widget_config/{widgetId}/{widgetIndex}",
-                                arguments = listOf(
-                                    navArgument("widgetId") {
-                                        type = NavType.IntType
-                                    }, navArgument("widgetIndex") {
-                                        type = NavType.IntType
-                                    })
-                            ) { backStackEntry ->
-                                PreferencesScreen(appWidgetId = backStackEntry.arguments?.getInt("widgetId")!!)
-                            }
-                        }
+                        AgendaWidgetNavHost(navController)
                     }
                 }
             }
@@ -132,8 +116,64 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    private fun getHeaderSubtitle(backStackEntry: NavBackStackEntry): String {
+        val widgetId = backStackEntry.arguments?.getInt(NavigationParams.WIDGET_ID.name)
+        val widgetIndex = backStackEntry.arguments?.getInt(NavigationParams.WIDGET_INDEX.name)
+        return when (backStackEntry.destination.route) {
+            NavigationItem.WidgetsList.route -> getString(R.string.active_widgets)
+            "${NavigationItem.WidgetConfig.route}/{${NavigationParams.WIDGET_ID.name}}/{${NavigationParams.WIDGET_INDEX.name}}" ->
+                if (widgetId == 0)
+                    getString(R.string.prefs_title_editing_default_config)
+                else "Widget $widgetIndex"
+
+            else -> ""
+        }
+    }
+
     @Composable
-    private fun onboardingPages(): List<OnboardingPage> {
+    fun AgendaWidgetNavHost(
+        navController: NavHostController,
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = if (showOnboard()) NavigationItem.Onboard.route else NavigationItem.WidgetsList.route
+        ) {
+            composable(NavigationItem.Onboard.route) {
+                OnboardingScreen(onboardPages(), onFinish = { skipped ->
+                    AgendaWidgetPrefs.setOnboardingDone(applicationContext, true)
+                    navController.popBackStack()
+                    navController.navigate(NavigationItem.WidgetsList.route)
+                    AgendaWidgetLogger.logOnboardingCompleteEvent(
+                        applicationContext,
+                        skipped
+                    )
+                })
+            }
+            composable(NavigationItem.WidgetsList.route) {
+                WidgetsListView(onNavigate = { widgetId, widgetIndex ->
+                    navController.navigate("${NavigationItem.WidgetConfig.route}/$widgetId/$widgetIndex")
+                })
+            }
+            composable(
+                "${NavigationItem.WidgetConfig.route}/{${NavigationParams.WIDGET_ID.name}}/{${NavigationParams.WIDGET_INDEX.name}}",
+                arguments = listOf(
+                    navArgument(NavigationParams.WIDGET_ID.name) {
+                        type = NavType.IntType
+                    }, navArgument(NavigationParams.WIDGET_INDEX.name) {
+                        type = NavType.IntType
+                    })
+            ) { backStackEntry ->
+                PreferencesScreen(
+                    appWidgetId = backStackEntry.arguments?.getInt(
+                        NavigationParams.WIDGET_ID.name
+                    )!!
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun onboardPages(): List<OnboardingPage> {
         return listOf(
             OnboardingPage(
                 imageRes = R.drawable.onboard_0,
@@ -154,7 +194,7 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    private fun showOnboarding(): Boolean {
+    private fun showOnboard(): Boolean {
         val widgetIds = AppWidgetManager.getInstance(applicationContext)
             .getAppWidgetIds(
                 ComponentName(applicationContext, AgendaWidget::class.java)
