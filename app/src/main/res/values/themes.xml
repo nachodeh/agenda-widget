@@ -26,7 +26,7 @@
 
     <!-- Splash screen docs: https://blair49.medium.com/creating-a-splash-screen-in-android-using-the-new-splash-screen-api-290870f9956c-->
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">?android:attr/colorAccent</item>
+        <item name="windowSplashScreenBackground">@color/brand_color</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo_vector</item>
         <item name="postSplashScreenTheme">@style/Theme.CalendarWidget</item>
     </style>
