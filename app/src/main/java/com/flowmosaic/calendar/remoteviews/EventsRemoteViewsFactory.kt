@@ -55,15 +55,6 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         return events.size
     }
 
-    private fun isColorLight(color: Int): Boolean {
-        val red = Color.red(color) / 255.0
-        val green = Color.green(color) / 255.0
-        val blue = Color.blue(color) / 255.0
-
-        val luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
-        return luminance > 0.5
-    }
-
     override fun getViewAt(position: Int): RemoteViews {
         val item = events[position]
 
@@ -76,10 +67,6 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         }
 
         return RemoteViews(context.packageName, layoutResId).apply {
-            val defaultTextSizeSp = when (item) {
-                is CalendarViewItem.Day -> 16f
-                is CalendarViewItem.Event -> 14f
-            }
             val textViewId = when (item) {
                 is CalendarViewItem.Day -> if (isColorLight) R.id.item_date_text_view else R.id.item_date_text_view_dark
                 is CalendarViewItem.Event -> if (isColorLight) R.id.item_event_text_view else R.id.item_event_text_view_dark
@@ -97,38 +84,56 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                     widgetId
                 )
             }
-            val fontSizeAdjustment = when (AgendaWidgetPrefs.getFontSize(context, widgetId)) {
-                AgendaWidgetPrefs.FontSize.SMALL -> -2f
-                AgendaWidgetPrefs.FontSize.MEDIUM -> 0f
-                AgendaWidgetPrefs.FontSize.LARGE -> 2f
-            }
-            val textAlignment = when (AgendaWidgetPrefs.getTextAlignment(context, widgetId)) {
-                AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.START
-                AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
-                AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.END
-            }
-            val separatorVisibility =
-                if (AgendaWidgetPrefs.getSeparatorVisible(
-                        context,
-                        widgetId
-                    )
-                ) View.VISIBLE else View.GONE
-            setViewVisibility(R.id.date_separator, separatorVisibility)
-            setInt(
-                R.id.date_separator,
-                "setBackgroundColor",
-                textColor
-            )
-            setTextViewText(textViewId, text)
+
             setTextColor(textViewId, textColor)
-            setTextViewTextSize(
-                textViewId,
-                TypedValue.COMPLEX_UNIT_SP,
-                defaultTextSizeSp + fontSizeAdjustment
-            )
-            setInt(textViewId, "setGravity", textAlignment)
+            setUpSeparator(textColor)
+            setUpFontSize(textViewId, item)
+            setUpFontAlignment(textViewId)
+
+            setTextViewText(textViewId, text)
             setOnClickFillInIntent(textViewId, getFillInIntent(item))
         }
+    }
+
+    private fun RemoteViews.setUpSeparator(color: Int) {
+        val separatorVisibility =
+            if (AgendaWidgetPrefs.getSeparatorVisible(
+                    context,
+                    widgetId
+                )
+            ) View.VISIBLE else View.GONE
+        setViewVisibility(R.id.date_separator, separatorVisibility)
+        setInt(
+            R.id.date_separator,
+            "setBackgroundColor",
+            color
+        )
+    }
+
+    private fun RemoteViews.setUpFontAlignment(textViewId: Int) {
+        val textAlignment = when (AgendaWidgetPrefs.getTextAlignment(context, widgetId)) {
+            AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.START
+            AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
+            AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.END
+        }
+        setInt(textViewId, "setGravity", textAlignment)
+    }
+
+    private fun RemoteViews.setUpFontSize(textViewId: Int, calendarViewItem: CalendarViewItem) {
+        val defaultTextSizeSp = when (calendarViewItem) {
+            is CalendarViewItem.Day -> 16f
+            is CalendarViewItem.Event -> 14f
+        }
+        val fontSizeAdjustment = when (AgendaWidgetPrefs.getFontSize(context, widgetId)) {
+            AgendaWidgetPrefs.FontSize.SMALL -> -2f
+            AgendaWidgetPrefs.FontSize.MEDIUM -> 0f
+            AgendaWidgetPrefs.FontSize.LARGE -> 2f
+        }
+        setTextViewTextSize(
+            textViewId,
+            TypedValue.COMPLEX_UNIT_SP,
+            defaultTextSizeSp + fontSizeAdjustment
+        )
     }
 
     private fun getFillInIntent(item: CalendarViewItem): Intent {
@@ -163,6 +168,15 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
 
     private fun getEvents(): List<CalendarViewItem> {
         return calendarFetcher.readCalendarData(context, widgetId)
+    }
+
+    private fun isColorLight(color: Int): Boolean {
+        val red = Color.red(color) / 255.0
+        val green = Color.green(color) / 255.0
+        val blue = Color.blue(color) / 255.0
+
+        val luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
+        return luminance > 0.5
     }
 
 }
