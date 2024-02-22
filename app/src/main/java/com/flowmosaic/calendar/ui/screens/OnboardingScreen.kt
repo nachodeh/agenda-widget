@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
@@ -221,12 +222,13 @@ fun OnboardingPageContent(index: Int, page: OnboardingPage) {
                 Text(
                     text = page.text,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontFamily = FontFamily.SansSerif,
                     color = getOnPrimaryColor(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp)
-                        .padding(bottom = 32.dp)
+                        .padding(bottom = 32.dp, top = 8.dp)
                 )
             }
         }
