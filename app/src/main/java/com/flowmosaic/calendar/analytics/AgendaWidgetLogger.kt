@@ -204,6 +204,10 @@ object AgendaWidgetLogger {
         val manager = ReviewManagerFactory.create(context)
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->
+            FirebaseAnalytics.getInstance(context)
+                .logEvent(Event.IN_APP_REVIEW.eventName, Bundle().apply {
+                    putBoolean(PARAM_SUCCESS, task.isSuccessful)
+                })
             getAmplitudeInstance(context).track(
                 Event.IN_APP_REVIEW.eventName, mapOf(
                     PARAM_SUCCESS to task.isSuccessful
