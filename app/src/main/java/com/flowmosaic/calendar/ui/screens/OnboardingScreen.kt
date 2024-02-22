@@ -156,7 +156,7 @@ fun PageIndicator(pageCount: Int, currentPage: Int) {
 @Composable
 fun IndicatorSingleDot(isSelected: Boolean) {
     val color =
-        animateColorAsState(targetValue = if (isSelected) getOnPrimaryColor() else MaterialTheme.colorScheme.outline)
+        animateColorAsState(targetValue = if (isSelected) getOnPrimaryColor() else MaterialTheme.colorScheme.tertiary)
 
     val width = animateDpAsState(targetValue = if (isSelected) 35.dp else 15.dp, label = "")
     Box(
@@ -221,7 +221,7 @@ fun OnboardingPageContent(index: Int, page: OnboardingPage) {
                 Text(
                     text = page.text,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.headlineSmall,
                     color = getOnPrimaryColor(),
                     modifier = Modifier
                         .fillMaxWidth()
