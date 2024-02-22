@@ -259,7 +259,7 @@ fun ButtonRow(displayText: String, enableAction: MutableState<Boolean>) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
         Icon(
             imageVector = Icons.Default.DateRange,
             contentDescription = null,
@@ -289,7 +289,7 @@ fun CheckboxRow(
         .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
         Switch(checked = checkboxValue.value, onCheckedChange = null)
     }
 }
@@ -319,7 +319,7 @@ fun NumberSelectorRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
 
         Box {
             Text(
@@ -370,7 +370,7 @@ fun FontSizeSelectorRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
 
         Box {
             Text(
@@ -425,7 +425,7 @@ fun TextAlignmentSelectorRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
 
         Box {
             Text(
@@ -484,7 +484,7 @@ fun ColorSelectorRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
         Canvas(
             modifier = Modifier
                 .clip(CircleShape)
@@ -540,7 +540,7 @@ fun OpacitySelectorRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = displayText, style = MaterialTheme.typography.bodyMedium)
+        Text(text = displayText, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.width(32.dp)) // Adjust spacing as needed
         Slider(
             value = opacityValue.value,
