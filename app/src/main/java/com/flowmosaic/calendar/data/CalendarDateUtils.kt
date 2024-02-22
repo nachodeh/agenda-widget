@@ -22,23 +22,20 @@ object CalendarDateUtils {
             isSameDay(eventCalendar, tomorrowDate) -> context.getString(R.string.tomorrow)
             eventCalendar.after(weekLaterDate) -> {
                 val sdf = SimpleDateFormat("EE, d MMM", Locale.getDefault())
-//                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 sdf.format(eventCalendar.time)
             }
             else -> {
                 val sdf = SimpleDateFormat("EEEE", Locale.getDefault())
                 sdf.format(eventCalendar.time)
             }
-
-//            else -> eventCalendar.getDisplayName(
-//                Calendar.DAY_OF_WEEK,
-//                Calendar.LONG,
-//                Locale.getDefault()
-//            ) as String
-        }
+        }.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     }
 
-    fun getCalendarEventText(calendarEvent: CalendarEvent, context: Context, widgetId: String): String {
+    fun getCalendarEventText(
+        calendarEvent: CalendarEvent,
+        context: Context,
+        widgetId: String
+    ): String {
         return if (calendarEvent.isAllDay) {
             calendarEvent.title
         } else {

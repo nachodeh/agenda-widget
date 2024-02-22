@@ -10,15 +10,14 @@ import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.compose.ui.graphics.toArgb
-import com.flowmosaic.calendar.widget.EXTRA_END_TIME
-import com.flowmosaic.calendar.widget.EXTRA_EVENT_ID
-import com.flowmosaic.calendar.widget.EXTRA_START_TIME
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.data.CalendarDateUtils
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.data.CalendarViewItem
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
-import java.util.Locale
+import com.flowmosaic.calendar.widget.EXTRA_END_TIME
+import com.flowmosaic.calendar.widget.EXTRA_EVENT_ID
+import com.flowmosaic.calendar.widget.EXTRA_START_TIME
 
 class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     RemoteViewsService.RemoteViewsFactory {
@@ -57,26 +56,15 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
 
     override fun getViewAt(position: Int): RemoteViews {
         val item = events[position]
-
         val textColor = AgendaWidgetPrefs.getTextColor(context, widgetId).toArgb()
-        val isColorLight = isColorLight(textColor)
 
-        val layoutResId = when (item) {
-            is CalendarViewItem.Day -> if (isColorLight) R.layout.item_date else R.layout.item_date_dark
-            is CalendarViewItem.Event -> if (isColorLight) R.layout.item_event else R.layout.item_event_dark
-        }
-
-        return RemoteViews(context.packageName, layoutResId).apply {
-            val textViewId = when (item) {
-                is CalendarViewItem.Day -> if (isColorLight) R.id.item_date_text_view else R.id.item_date_text_view_dark
-                is CalendarViewItem.Event -> if (isColorLight) R.id.item_event_text_view else R.id.item_event_text_view_dark
-            }
+        return RemoteViews(context.packageName, getLayoutId(item, textColor)).apply {
+            val textViewId = getTextViewId(item, textColor)
             val text = when (item) {
                 is CalendarViewItem.Day -> CalendarDateUtils.getFormattedDate(
                     context,
                     item.date.time
                 )
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
                 is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(
                     item.event,
@@ -92,6 +80,22 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
 
             setTextViewText(textViewId, text)
             setOnClickFillInIntent(textViewId, getFillInIntent(item))
+        }
+    }
+
+    private fun getLayoutId(calendarViewItem: CalendarViewItem, textColor: Int): Int {
+        val isColorLight = isColorLight(textColor)
+        return when (calendarViewItem) {
+            is CalendarViewItem.Day -> if (isColorLight) R.layout.item_date else R.layout.item_date_dark
+            is CalendarViewItem.Event -> if (isColorLight) R.layout.item_event else R.layout.item_event_dark
+        }
+    }
+
+    private fun getTextViewId(calendarViewItem: CalendarViewItem, textColor: Int): Int {
+        val isColorLight = isColorLight(textColor)
+        return when (calendarViewItem) {
+            is CalendarViewItem.Day -> if (isColorLight) R.id.item_date_text_view else R.id.item_date_text_view_dark
+            is CalendarViewItem.Event -> if (isColorLight) R.id.item_event_text_view else R.id.item_event_text_view_dark
         }
     }
 
