@@ -567,7 +567,7 @@ fun TitleWithDivider(title: String, spaceOnTop: Boolean = false, showDivider: Bo
         Spacer(modifier = Modifier.height(16.dp))
     }
     if (showDivider) {
-        Divider(color = MaterialTheme.colorScheme.secondary, thickness = .5.dp)
+        Divider(color = MaterialTheme.colorScheme.outline, thickness = .5.dp)
     }
     Spacer(modifier = Modifier.height(8.dp))
     Column(
@@ -583,7 +583,7 @@ fun TitleWithDivider(title: String, spaceOnTop: Boolean = false, showDivider: Bo
         Text(
             text = title,
             style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.secondary,
+            color = MaterialTheme.colorScheme.outline,
             fontWeight = FontWeight.Bold,
         )
     }

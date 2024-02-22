@@ -14,7 +14,7 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = Brand,
     onPrimary = Brand,
     secondary = Brand20,
-    tertiary = Brand80,
+    tertiary = Brand50,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -22,7 +22,7 @@ private val LightColorScheme = lightColorScheme(
     inversePrimary = Brand50,
     onPrimary = White,
     secondary = Brand80,
-    tertiary = Brand20
+    tertiary = Brand50
 )
 @Composable
 fun getPrimaryColor(): Color {

@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
 @Composable
-fun LaunchWidgetConfigButton(id: Int, text: String, onNavigate: (widgetId: Int) -> Unit) {
+fun LaunchWidgetConfigButton(id: Int, index: Int, text: String, onNavigate: (widgetId: Int, widgetIndex: Int) -> Unit) {
     Button(
         onClick = {
-            onNavigate(id)
+            onNavigate(id, index)
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,

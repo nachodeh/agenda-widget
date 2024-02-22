@@ -19,17 +19,18 @@ import com.flowmosaic.calendar.ui.theme.getPrimaryColor
 @Composable
 fun Header(subtitle: String = "") {
     val context = LocalContext.current
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(getPrimaryColor())
             .padding(horizontal = 16.dp)
             .padding(top = 16.dp, bottom = 20.dp),
     ) {
+
         Text(
             text = context.getString(R.string.app_name),
             style = MaterialTheme.typography.headlineSmall,
-            color = getOnPrimaryColor()
+            color = getOnPrimaryColor(),
         )
         if (subtitle.isNotEmpty()) {
             Text(

@@ -61,9 +61,10 @@ class MainActivity : ComponentActivity() {
                     LaunchedEffect(navController) {
                         navController.currentBackStackEntryFlow.collect { backStackEntry ->
                             val widgetId = backStackEntry.arguments?.getInt("widgetId")
+                            val widgetIndex = backStackEntry.arguments?.getInt("widgetIndex")
                             headerSubtitle.value = when (backStackEntry.destination.route) {
                                 "widgets_list" -> getString(R.string.active_widgets)
-                                "widget_config/{widgetId}" -> if (widgetId == 0) getString(R.string.prefs_title_editing_default_config) else ""
+                                "widget_config/{widgetId}/{widgetIndex}" -> if (widgetId == 0) getString(R.string.prefs_title_editing_default_config) else "Widget $widgetIndex"
                                 else -> ""
                             }
                             when (backStackEntry.destination.route) {
@@ -105,15 +106,18 @@ class MainActivity : ComponentActivity() {
                                 })
                             }
                             composable("widgets_list") {
-                                WidgetsListView(onNavigate = { widgetId ->
-                                    navController.navigate("widget_config/$widgetId")
+                                WidgetsListView(onNavigate = { widgetId, widgetIndex ->
+                                    navController.navigate("widget_config/$widgetId/$widgetIndex")
                                 })
                             }
                             composable(
-                                "widget_config/{widgetId}",
-                                arguments = listOf(navArgument("widgetId") {
-                                    type = NavType.IntType
-                                })
+                                "widget_config/{widgetId}/{widgetIndex}",
+                                arguments = listOf(
+                                    navArgument("widgetId") {
+                                        type = NavType.IntType
+                                    }, navArgument("widgetIndex") {
+                                        type = NavType.IntType
+                                    })
                             ) { backStackEntry ->
                                 PreferencesScreen(appWidgetId = backStackEntry.arguments?.getInt("widgetId")!!)
                             }
