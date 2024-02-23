@@ -70,7 +70,7 @@ fun TitleWithDivider(title: String) {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun SelectCalendarsButton(displayText: String, widgetId: String) {
+fun SelectCalendarsButton(displayText: String, widgetId: String, logger: AgendaWidgetLogger) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -98,7 +98,7 @@ fun SelectCalendarsButton(displayText: String, widgetId: String) {
     }
 
     if (!calendarPermissionsState.allPermissionsGranted) {
-        return;
+        return
     }
 
     Row(
@@ -127,8 +127,7 @@ fun SelectCalendarsButton(displayText: String, widgetId: String) {
 
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog, widgetId)
-        AgendaWidgetLogger.logUpdatePrefEvent(
-            context,
+        logger.logUpdatePrefEvent(
             AgendaWidgetLogger.PrefsScreenItemName.SELECT_CALENDARS
         )
     }
@@ -139,18 +138,15 @@ fun CheckboxRow(
     displayText: String,
     loggingItem: AgendaWidgetLogger.PrefsScreenItemName,
     checkboxValue: MutableState<Boolean>,
-    saveCheckboxValue: (Boolean) -> Unit
+    saveCheckboxValue: (Boolean) -> Unit,
+    logger: AgendaWidgetLogger
 ) {
-    val context = LocalContext.current
     Row(modifier = Modifier
         .fillMaxWidth()
         .clickable {
             checkboxValue.value = !checkboxValue.value
             saveCheckboxValue(checkboxValue.value)
-            AgendaWidgetLogger.logUpdatePrefEvent(
-                context,
-                loggingItem,
-            )
+            logger.logUpdatePrefEvent(loggingItem)
         }
         .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -168,7 +164,8 @@ fun CheckboxRow(
 fun NumberSelectorRow(
     displayText: String,
     numberValue: MutableState<Int>,
-    saveNumberValue: (Int) -> Unit
+    saveNumberValue: (Int) -> Unit,
+    logger: AgendaWidgetLogger
 ) {
     val options = arrayOf(1, 2, 3, 7, 10, 30, 90, 365)
 
@@ -178,7 +175,8 @@ fun NumberSelectorRow(
         options = options,
         saveSelectedValue = saveNumberValue,
         getDisplayText = { option, _ -> option.toString() },
-        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.NUMBER_DAYS
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.NUMBER_DAYS,
+        logger = logger
     )
 }
 
@@ -186,15 +184,17 @@ fun NumberSelectorRow(
 fun FontSizeSelectorRow(
     displayText: String,
     fontSizeValue: MutableState<AgendaWidgetPrefs.FontSize>,
-    saveFontSizeValue: (AgendaWidgetPrefs.FontSize) -> Unit
+    saveFontSizeValue: (AgendaWidgetPrefs.FontSize) -> Unit,
+    logger: AgendaWidgetLogger
 ) {
     MultipleOptionsSelectorRow(
         displayText = displayText,
         selectedValue = fontSizeValue,
-        options = AgendaWidgetPrefs.FontSize.values(),
+        options = AgendaWidgetPrefs.FontSize.entries.toTypedArray(),
         saveSelectedValue = saveFontSizeValue,
         getDisplayText = { option, context -> option.getDisplayText(context) },
-        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.FONT_SIZE
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.FONT_SIZE,
+        logger = logger
     )
 }
 
@@ -202,15 +202,17 @@ fun FontSizeSelectorRow(
 fun TextAlignmentSelectorRow(
     displayText: String,
     textAlignmentValue: MutableState<AgendaWidgetPrefs.TextAlignment>,
-    saveTextAlignmentValue: (AgendaWidgetPrefs.TextAlignment) -> Unit
+    saveTextAlignmentValue: (AgendaWidgetPrefs.TextAlignment) -> Unit,
+    logger: AgendaWidgetLogger
 ) {
     MultipleOptionsSelectorRow(
         displayText = displayText,
         selectedValue = textAlignmentValue,
-        options = AgendaWidgetPrefs.TextAlignment.values(),
+        options = AgendaWidgetPrefs.TextAlignment.entries.toTypedArray(),
         saveSelectedValue = saveTextAlignmentValue,
         getDisplayText = { option, context -> option.getDisplayText(context) },
-        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.TEXT_ALIGNMENT
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.TEXT_ALIGNMENT,
+        logger = logger,
     )
 }
 
@@ -221,7 +223,8 @@ fun <T> MultipleOptionsSelectorRow(
     options: Array<T>,
     saveSelectedValue: (T) -> Unit,
     getDisplayText: (T, Context) -> String,
-    loggingItem: AgendaWidgetLogger.PrefsScreenItemName
+    loggingItem: AgendaWidgetLogger.PrefsScreenItemName,
+    logger: AgendaWidgetLogger
 ) {
     val expanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -259,7 +262,7 @@ fun <T> MultipleOptionsSelectorRow(
                             selectedValue.value = option
                             saveSelectedValue(option)
                             expanded.value = false
-                            AgendaWidgetLogger.logUpdatePrefEvent(context, loggingItem)
+                            logger.logUpdatePrefEvent(loggingItem)
                         },
                         text = { Text(getDisplayText(option, context)) }
                     )
@@ -273,9 +276,9 @@ fun <T> MultipleOptionsSelectorRow(
 fun ColorSelectorRow(
     displayText: String,
     selectedColor: MutableState<Color>,
-    saveColorValue: (Color) -> Unit
+    saveColorValue: (Color) -> Unit,
+    logger: AgendaWidgetLogger
 ) {
-    val context = LocalContext.current
     val showDialog = rememberSaveable {
         mutableStateOf(false)
     }
@@ -285,8 +288,7 @@ fun ColorSelectorRow(
             .fillMaxWidth()
             .clickable {
                 showDialog.value = true
-                AgendaWidgetLogger.logUpdatePrefEvent(
-                    context,
+                logger.logUpdatePrefEvent(
                     AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
                 )
             }
@@ -343,10 +345,9 @@ fun ColorSelectorRow(
 fun OpacitySelectorRow(
     displayText: String,
     opacityValue: MutableState<Float>,
-    saveOpacityValue: (Float) -> Unit
+    saveOpacityValue: (Float) -> Unit,
+    logger: AgendaWidgetLogger
 ) {
-    val context = LocalContext.current
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -367,8 +368,7 @@ fun OpacitySelectorRow(
                 saveOpacityValue(newValue)
             },
             onValueChangeFinished = {
-                AgendaWidgetLogger.logUpdatePrefEvent(
-                    context,
+                logger.logUpdatePrefEvent(
                     AgendaWidgetLogger.PrefsScreenItemName.OPACITY
                 )
             },

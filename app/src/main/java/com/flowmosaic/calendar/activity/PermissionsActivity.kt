@@ -11,10 +11,13 @@ import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.widget.AgendaWidget
 
 class PermissionsActivity : ComponentActivity() {
+
+    private val logger by lazy { AgendaWidgetLogger(applicationContext) }
+
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val allPermissionsGranted = permissions.entries.all { it.value }
-            AgendaWidgetLogger.logPermissionsResultEvent(applicationContext, allPermissionsGranted)
+            logger.logPermissionsResultEvent(allPermissionsGranted)
             updateWidgets()
             finishAndRemoveTask()
         }
@@ -28,10 +31,7 @@ class PermissionsActivity : ComponentActivity() {
             enableEdgeToEdge()
         }
 
-        AgendaWidgetLogger.logActivityStartedEvent(
-            applicationContext,
-            AgendaWidgetLogger.Activity.PERMISSIONS_ACTIVITY
-        )
+        logger.logActivityStartedEvent(AgendaWidgetLogger.Activity.PERMISSIONS_ACTIVITY)
     }
 
     private fun requestCalendarPermissions() {

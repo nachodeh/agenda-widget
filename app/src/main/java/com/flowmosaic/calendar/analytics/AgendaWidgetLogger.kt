@@ -10,15 +10,32 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import java.util.concurrent.TimeUnit
 
-object AgendaWidgetLogger {
+private const val PARAM_ITEM_NAME: String = "item_name"
+private const val PARAM_DESTINATION: String = "item_name"
+private const val PARAM_TYPE: String = "type"
+private const val PARAM_SUCCESS: String = "success"
+private const val PARAM_SKIPPED: String = "skipped"
 
-    private const val PARAM_ITEM_NAME: String = "item_name"
-    private const val PARAM_DESTINATION: String = "item_name"
-    private const val PARAM_TYPE: String = "type"
-    private const val PARAM_SUCCESS: String = "success"
-    private const val PARAM_SKIPPED: String = "skipped"
+class AgendaWidgetLogger internal constructor(
+    private val amplitude: Amplitude,
+    private val firebaseAnalytics: FirebaseAnalytics,
+    private val context: Context
+) {
 
-    private enum class Event(val eventName: String) {
+    constructor(context: Context) : this(
+        amplitude = Amplitude(
+            // Assuming you have a method similar to this to initialize Amplitude
+            Configuration(
+                apiKey = "040dc24f4d338b42206d69f262a0b6b5",
+                context = context.applicationContext,
+                defaultTracking = DefaultTrackingOptions.ALL,
+            )
+        ),
+        firebaseAnalytics = FirebaseAnalytics.getInstance(context),
+        context = context,
+    )
+
+    internal enum class Event(val eventName: String) {
         ACTIVITY_STARTED("activity_started"),
         NAVIGATION("navigation"),
         ACTION_BUTTON("action_button"),
@@ -67,101 +84,91 @@ object AgendaWidgetLogger {
         DISABLED("disabled"),
     }
 
-    fun getAmplitudeInstance(context: Context): Amplitude {
-        return Amplitude(
-            Configuration(
-                apiKey = "040dc24f4d338b42206d69f262a0b6b5",
-                context = context.applicationContext,
-                defaultTracking = DefaultTrackingOptions.ALL,
-            )
-        )
-    }
-
-    fun logActivityStartedEvent(context: Context, activity: Activity) {
+    fun logActivityStartedEvent(activity: Activity) {
         val bundle = Bundle().apply {
             putString("activity", activity.activityName)
         }
-        FirebaseAnalytics.getInstance(context).logEvent(Event.ACTIVITY_STARTED.eventName, bundle)
+        firebaseAnalytics.logEvent(Event.ACTIVITY_STARTED.eventName, bundle)
 
         val propertiesMap = mutableMapOf<String, Any?>(
             "activity" to activity.activityName,
         )
-        getAmplitudeInstance(context).track(Event.ACTIVITY_STARTED.eventName, propertiesMap)
+        amplitude.track(Event.ACTIVITY_STARTED.eventName, propertiesMap)
     }
 
-    fun logNavigationEvent(context: Context, destination: String?) {
+    fun logNavigationEvent(destination: String?) {
         val eventDestination = destination ?: "not_set"
 
-        FirebaseAnalytics.getInstance(context).logEvent(Event.NAVIGATION.eventName, Bundle().apply {
+        firebaseAnalytics.logEvent(Event.NAVIGATION.eventName, Bundle().apply {
             putString(PARAM_DESTINATION, eventDestination)
         })
 
-        getAmplitudeInstance(context).track(
+        amplitude.track(
             Event.NAVIGATION.eventName, mutableMapOf<String, Any?>(
                 PARAM_DESTINATION to eventDestination,
             )
         )
     }
 
-    fun logPermissionsResultEvent(context: Context, allPermissionsGranted: Boolean) {
-        FirebaseAnalytics.getInstance(context).logEvent(Event.PERMISSIONS_RESULT.eventName, Bundle().apply {
+    fun logPermissionsResultEvent(allPermissionsGranted: Boolean) {
+        firebaseAnalytics.logEvent(Event.PERMISSIONS_RESULT.eventName, Bundle().apply {
             putBoolean(PARAM_SUCCESS, allPermissionsGranted)
         })
 
-        getAmplitudeInstance(context).track(
+        amplitude.track(
             Event.PERMISSIONS_RESULT.eventName, mutableMapOf<String, Any?>(
                 PARAM_SUCCESS to allPermissionsGranted,
             )
         )
     }
 
-    fun logOnboardingCompleteEvent(context: Context, skipped: Boolean) {
-        FirebaseAnalytics.getInstance(context).logEvent(Event.ONBOARDING_COMPLETE.eventName, Bundle().apply {
+    fun logOnboardingCompleteEvent(skipped: Boolean) {
+        firebaseAnalytics.logEvent(Event.ONBOARDING_COMPLETE.eventName, Bundle().apply {
             putBoolean(PARAM_SKIPPED, skipped)
         })
 
-        getAmplitudeInstance(context).track(
+        amplitude.track(
             Event.ONBOARDING_COMPLETE.eventName, mutableMapOf<String, Any?>(
                 PARAM_SKIPPED to skipped,
             )
         )
     }
 
-    fun logActionButtonEvent(context: Context, actionButton: ActionButton) {
-        FirebaseAnalytics.getInstance(context)
+    fun logActionButtonEvent(actionButton: ActionButton) {
+        firebaseAnalytics
             .logEvent(Event.ACTION_BUTTON.eventName, Bundle().apply {
                 putString(PARAM_ITEM_NAME, actionButton.buttonName)
             })
 
-        getAmplitudeInstance(context).track(
+        amplitude.track(
             Event.ACTION_BUTTON.eventName, mutableMapOf<String, Any?>(
                 PARAM_ITEM_NAME to actionButton.buttonName,
             )
         )
     }
 
-    fun logUpdatePrefEvent(context: Context, name: PrefsScreenItemName) {
-        FirebaseAnalytics.getInstance(context)
+    fun logUpdatePrefEvent(name: PrefsScreenItemName) {
+        firebaseAnalytics
             .logEvent(Event.UPDATE_PREF.eventName, Bundle().apply {
                 putString(PARAM_ITEM_NAME, name.itemName)
             })
 
-        getAmplitudeInstance(context).track(
+        amplitude.track(
             Event.UPDATE_PREF.eventName, mutableMapOf<String, Any?>(
                 PARAM_ITEM_NAME to name.itemName,
             )
         )
 
-        launchInAppReview(context)
+        launchInAppReview()
     }
 
-    fun logSelectItemEvent(context: Context, name: WidgetItemName) {
-        FirebaseAnalytics.getInstance(context)
+    fun logSelectItemEvent(name: WidgetItemName) {
+        firebaseAnalytics
             .logEvent(Event.SELECT_ITEM.eventName, Bundle().apply {
                 putString(PARAM_ITEM_NAME, name.itemName)
             })
 
-        getAmplitudeInstance(context).track(
+        amplitude.track(
             Event.SELECT_ITEM.eventName, mutableMapOf<String, Any?>(
                 PARAM_ITEM_NAME to name.itemName,
             )
@@ -169,9 +176,9 @@ object AgendaWidgetLogger {
     }
 
     fun logWidgetLifecycleEvent(
-        context: Context, widgetStatus: WidgetStatus, additionalParams: Map<String, String>? = null
+        widgetStatus: WidgetStatus, additionalParams: Map<String, String>? = null
     ) {
-        FirebaseAnalytics.getInstance(context)
+        firebaseAnalytics
             .logEvent(Event.WIDGET_LIFECYCLE_EVENT.eventName, Bundle().apply {
                 putString(PARAM_TYPE, widgetStatus.status)
                 additionalParams?.let { params ->
@@ -181,13 +188,13 @@ object AgendaWidgetLogger {
                 }
             })
 
-        getAmplitudeInstance(context).track(Event.WIDGET_LIFECYCLE_EVENT.eventName,
+        amplitude.track(Event.WIDGET_LIFECYCLE_EVENT.eventName,
             mutableMapOf<String, Any?>(PARAM_TYPE to widgetStatus.status)
                 .apply { putAll(additionalParams ?: emptyMap()) })
     }
 
 
-    private fun launchInAppReview(context: Context) {
+    private fun launchInAppReview() {
         val pm = context.packageManager
         val pi = pm.getPackageInfo(context.packageName, 0)
         val currentTimeMs = System.currentTimeMillis()
@@ -204,11 +211,11 @@ object AgendaWidgetLogger {
         val manager = ReviewManagerFactory.create(context)
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->
-            FirebaseAnalytics.getInstance(context)
+            firebaseAnalytics
                 .logEvent(Event.IN_APP_REVIEW.eventName, Bundle().apply {
                     putBoolean(PARAM_SUCCESS, task.isSuccessful)
                 })
-            getAmplitudeInstance(context).track(
+            amplitude.track(
                 Event.IN_APP_REVIEW.eventName, mapOf(
                     PARAM_SUCCESS to task.isSuccessful
                 )
@@ -216,8 +223,8 @@ object AgendaWidgetLogger {
         }
     }
 
-    fun flushEvents(context: Context) {
-        getAmplitudeInstance(context).flush()
+    fun flushEvents() {
+        amplitude.flush()
     }
 
 }

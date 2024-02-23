@@ -30,6 +30,15 @@ const val EXTRA_EVENT_ID = "com.flowmosaic.calendar.EVENT_ID"
  */
 class AgendaWidget : AppWidgetProvider() {
 
+    private var loggerInstance: AgendaWidgetLogger? = null
+
+    private fun getLogger(context: Context): AgendaWidgetLogger {
+        if (loggerInstance == null) {
+            loggerInstance = AgendaWidgetLogger(context)
+        }
+        return loggerInstance!!
+    }
+
     fun forceWidgetUpdate(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val widgetComponent = ComponentName(context, AgendaWidget::class.java)
@@ -43,13 +52,13 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         if (AgendaWidgetPrefs.getShouldLogWidgetActivityEvent(context)) {
-            AgendaWidgetLogger.logWidgetLifecycleEvent(
-                context, AgendaWidgetLogger.WidgetStatus.ACTIVE, mapOf(
+            getLogger(context).logWidgetLifecycleEvent(
+                AgendaWidgetLogger.WidgetStatus.ACTIVE, mapOf(
                     "number_of_widgets" to appWidgetIds.size.toString(),
                 )
             )
             AgendaWidgetPrefs.setWidgetActivityEventLastLoggedTimestamp(context)
-            AgendaWidgetLogger.flushEvents(context)
+            getLogger(context).flushEvents()
         }
         for (appWidgetId in appWidgetIds) {
             updateWidget(context, appWidgetManager, appWidgetId)
@@ -58,19 +67,18 @@ class AgendaWidget : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
-        AgendaWidgetLogger.logWidgetLifecycleEvent(context, AgendaWidgetLogger.WidgetStatus.ENABLED)
+        getLogger(context).logWidgetLifecycleEvent(AgendaWidgetLogger.WidgetStatus.ENABLED)
     }
 
     override fun onDisabled(context: Context) {
         // Enter relevant functionality for when the last widget is disabled
-        AgendaWidgetLogger.logWidgetLifecycleEvent(
-            context,
+        getLogger(context).logWidgetLifecycleEvent(
             AgendaWidgetLogger.WidgetStatus.DISABLED
         )
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        AgendaWidgetLogger.logWidgetLifecycleEvent(context, AgendaWidgetLogger.WidgetStatus.DELETED)
+        getLogger(context).logWidgetLifecycleEvent(AgendaWidgetLogger.WidgetStatus.DELETED)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -113,8 +121,7 @@ class AgendaWidget : AppWidgetProvider() {
             }, delayMillis)
         }
 
-        AgendaWidgetLogger.logActionButtonEvent(
-            context,
+        getLogger(context).logActionButtonEvent(
             AgendaWidgetLogger.ActionButton.REFRESH
         )
     }
@@ -126,8 +133,7 @@ class AgendaWidget : AppWidgetProvider() {
         }
         context.startActivity(intent)
 
-        AgendaWidgetLogger.logActionButtonEvent(
-            context,
+        getLogger(context).logActionButtonEvent(
             AgendaWidgetLogger.ActionButton.ADD_EVENT
         )
     }
@@ -140,8 +146,7 @@ class AgendaWidget : AppWidgetProvider() {
 
         when {
             eventId > 0 -> {
-                AgendaWidgetLogger.logSelectItemEvent(
-                    context,
+                getLogger(context).logSelectItemEvent(
                     AgendaWidgetLogger.WidgetItemName.EVENT
                 )
                 builder.appendPath("events")
@@ -149,8 +154,7 @@ class AgendaWidget : AppWidgetProvider() {
             }
 
             startTime > 0 -> {
-                AgendaWidgetLogger.logSelectItemEvent(
-                    context,
+                getLogger(context).logSelectItemEvent(
                     AgendaWidgetLogger.WidgetItemName.DATE
                 )
                 builder.appendPath("time")
