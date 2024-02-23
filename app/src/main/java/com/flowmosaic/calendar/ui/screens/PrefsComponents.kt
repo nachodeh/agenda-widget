@@ -1,5 +1,6 @@
 package com.flowmosaic.calendar.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
@@ -42,6 +42,24 @@ import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.dialog.ColorDialog
 import kotlinx.coroutines.launch
+
+@Composable
+fun TitleWithDivider(title: String) {
+    Divider(color = MaterialTheme.colorScheme.outline, thickness = .5.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.outline,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
 
 @Composable
 fun ButtonRow(displayText: String, enableAction: MutableState<Boolean>) {
@@ -102,80 +120,21 @@ fun CheckboxRow(
 }
 
 @Composable
-fun TitleWithDivider(title: String) {
-    Divider(color = MaterialTheme.colorScheme.outline, thickness = .5.dp)
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.outline,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-}
-
-@Composable
 fun NumberSelectorRow(
     displayText: String,
     numberValue: MutableState<Int>,
     saveNumberValue: (Int) -> Unit
 ) {
-    val options = listOf(1, 2, 3, 7, 10, 30, 90, 365)
-    val expanded = remember { mutableStateOf(false) }
-    val text = "${numberValue.value}"
-    val context = LocalContext.current
+    val options = arrayOf(1, 2, 3, 7, 10, 30, 90, 365)
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                expanded.value = true
-                AgendaWidgetLogger.logUpdatePrefEvent(
-                    context,
-                    AgendaWidgetLogger.PrefsScreenItemName.NUMBER_DAYS
-                )
-            }
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = displayText,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
-        )
-
-        Box {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(horizontal = 0.dp)
-            )
-            DropdownMenu(
-                expanded = expanded.value,
-                onDismissRequest = { expanded.value = false },
-                modifier = Modifier.background(
-                    color = MaterialTheme.colorScheme.background,
-                ),
-            ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        onClick = {
-                            numberValue.value = option
-                            saveNumberValue(option)
-                            expanded.value = false
-                        }, text = { Text(option.toString()) })
-                }
-            }
-        }
-    }
+    MultipleOptionsSelectorRow(
+        displayText = displayText,
+        selectedValue = numberValue,
+        options = options,
+        saveSelectedValue = saveNumberValue,
+        getDisplayText = { option, _ -> option.toString() },
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.NUMBER_DAYS
+    )
 }
 
 @Composable
@@ -184,57 +143,14 @@ fun FontSizeSelectorRow(
     fontSizeValue: MutableState<AgendaWidgetPrefs.FontSize>,
     saveFontSizeValue: (AgendaWidgetPrefs.FontSize) -> Unit
 ) {
-    val options = AgendaWidgetPrefs.FontSize.values()
-    val expanded = remember { mutableStateOf(false) }
-    val context = LocalContext.current
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                expanded.value = true
-                // Add your logging event here if necessary
-            }
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = displayText,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
-        )
-
-        Box {
-            Text(
-                text = fontSizeValue.value.getDisplayText(context),
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(horizontal = 0.dp)
-            )
-            DropdownMenu(
-                expanded = expanded.value,
-                onDismissRequest = { expanded.value = false },
-                modifier = Modifier.background(
-                    color = MaterialTheme.colorScheme.background,
-                ),
-            ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        onClick = {
-                            fontSizeValue.value = option
-                            saveFontSizeValue(option)
-                            expanded.value = false
-                            AgendaWidgetLogger.logUpdatePrefEvent(
-                                context,
-                                AgendaWidgetLogger.PrefsScreenItemName.FONT_SIZE
-                            )
-                        }, text = { Text(option.getDisplayText(context)) })
-                }
-            }
-        }
-    }
+    MultipleOptionsSelectorRow(
+        displayText = displayText,
+        selectedValue = fontSizeValue,
+        options = AgendaWidgetPrefs.FontSize.values(),
+        saveSelectedValue = saveFontSizeValue,
+        getDisplayText = { option, context -> option.getDisplayText(context) },
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.FONT_SIZE
+    )
 }
 
 @Composable
@@ -243,17 +159,32 @@ fun TextAlignmentSelectorRow(
     textAlignmentValue: MutableState<AgendaWidgetPrefs.TextAlignment>,
     saveTextAlignmentValue: (AgendaWidgetPrefs.TextAlignment) -> Unit
 ) {
-    val options = AgendaWidgetPrefs.TextAlignment.values()
+    MultipleOptionsSelectorRow(
+        displayText = displayText,
+        selectedValue = textAlignmentValue,
+        options = AgendaWidgetPrefs.TextAlignment.values(),
+        saveSelectedValue = saveTextAlignmentValue,
+        getDisplayText = { option, context -> option.getDisplayText(context) },
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.TEXT_ALIGNMENT
+    )
+}
+
+@Composable
+fun <T> MultipleOptionsSelectorRow(
+    displayText: String,
+    selectedValue: MutableState<T>,
+    options: Array<T>,
+    saveSelectedValue: (T) -> Unit,
+    getDisplayText: (T, Context) -> String,
+    loggingItem: AgendaWidgetLogger.PrefsScreenItemName
+) {
     val expanded = remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                expanded.value = true
-                // Add your logging event here if necessary
-            }
+            .clickable { expanded.value = true }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -266,7 +197,7 @@ fun TextAlignmentSelectorRow(
 
         Box {
             Text(
-                text = textAlignmentValue.value.getDisplayText(context),
+                text = getDisplayText(selectedValue.value, context),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -275,21 +206,18 @@ fun TextAlignmentSelectorRow(
             DropdownMenu(
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
-                modifier = Modifier.background(
-                    color = MaterialTheme.colorScheme.background,
-                ),
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
             ) {
                 options.forEach { option ->
                     DropdownMenuItem(
                         onClick = {
-                            textAlignmentValue.value = option
-                            saveTextAlignmentValue(option)
+                            selectedValue.value = option
+                            saveSelectedValue(option)
                             expanded.value = false
-                            AgendaWidgetLogger.logUpdatePrefEvent(
-                                context,
-                                AgendaWidgetLogger.PrefsScreenItemName.TEXT_ALIGNMENT
-                            )
-                        }, text = { Text(option.getDisplayText(context)) })
+                            AgendaWidgetLogger.logUpdatePrefEvent(context, loggingItem)
+                        },
+                        text = { Text(getDisplayText(option, context)) }
+                    )
                 }
             }
         }
