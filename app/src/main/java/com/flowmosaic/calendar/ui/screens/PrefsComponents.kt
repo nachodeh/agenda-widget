@@ -1,5 +1,6 @@
 package com.flowmosaic.calendar.ui.screens
 
+import android.Manifest
 import android.content.Context
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -25,6 +26,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,8 +40,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
+import com.flowmosaic.calendar.data.CalendarData
+import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.dialog.ColorDialog
+import com.flowmosaic.calendar.ui.dialog.ShowCalendarDialog
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,15 +68,45 @@ fun TitleWithDivider(title: String) {
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun ButtonRow(displayText: String, enableAction: MutableState<Boolean>) {
+fun SelectCalendarsButton(displayText: String, widgetId: String) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+
+    val showCalendarSelectionDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val calendarFetcher = CalendarFetcher()
+    val calendarList = remember { mutableStateOf(listOf<CalendarData>()) }
+    val selectedCalendars = remember { mutableStateOf(setOf<String>()) }
+
+    val calendarPermissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.READ_CALENDAR,
+        )
+    )
+
+    LaunchedEffect(key1 = Unit) {
+        if (calendarPermissionsState.allPermissionsGranted) {
+            calendarList.value = calendarFetcher.queryCalendarData(context)
+            selectedCalendars.value =
+                AgendaWidgetPrefs.getSelectedCalendars(context, calendarList.value, widgetId)
+        }
+    }
+
+    if (!calendarPermissionsState.allPermissionsGranted) {
+        return;
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
                 coroutineScope.launch {
-                    enableAction.value = true
+                    showCalendarSelectionDialog.value = true
                 }
             }
             .padding(16.dp),
@@ -85,6 +122,14 @@ fun ButtonRow(displayText: String, enableAction: MutableState<Boolean>) {
             imageVector = Icons.Default.DateRange,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary
+        )
+    }
+
+    if (showCalendarSelectionDialog.value) {
+        ShowCalendarDialog(openDialog = showCalendarSelectionDialog, widgetId)
+        AgendaWidgetLogger.logUpdatePrefEvent(
+            context,
+            AgendaWidgetLogger.PrefsScreenItemName.SELECT_CALENDARS
         )
     }
 }

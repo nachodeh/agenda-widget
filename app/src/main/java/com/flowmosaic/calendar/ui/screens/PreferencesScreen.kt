@@ -1,6 +1,5 @@
 package com.flowmosaic.calendar.ui.screens
 
-import android.Manifest
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,24 +8,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
-import com.flowmosaic.calendar.data.CalendarData
-import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
-import com.flowmosaic.calendar.ui.dialog.ShowCalendarDialog
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 data class PreferenceSection(
     val title: String,
@@ -65,22 +57,10 @@ fun PreferencesScreen(appWidgetId: Int) {
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun GeneralPrefsSection(widgetId: String) {
     val context = LocalContext.current
-    val calendarPermissionsState = rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.WRITE_CALENDAR,
-            Manifest.permission.READ_CALENDAR,
-        )
-    )
-    val calendarFetcher = CalendarFetcher()
-    val calendarList = remember { mutableStateOf(listOf<CalendarData>()) }
-    val selectedCalendars = remember { mutableStateOf(setOf<String>()) }
-    val showCalendarSelectionDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+
     val numberOfDays = remember {
         mutableIntStateOf(AgendaWidgetPrefs.getNumberOfDays(context, widgetId))
     }
@@ -91,28 +71,10 @@ fun GeneralPrefsSection(widgetId: String) {
         mutableStateOf(AgendaWidgetPrefs.getShowNoUpcomingEventsText(context, widgetId))
     }
 
-    LaunchedEffect(key1 = Unit) {
-        if (calendarPermissionsState.allPermissionsGranted) {
-            calendarList.value = calendarFetcher.queryCalendarData(context)
-            selectedCalendars.value =
-                AgendaWidgetPrefs.getSelectedCalendars(context, calendarList.value, widgetId)
-        }
-    }
-
-    if (showCalendarSelectionDialog.value) {
-        ShowCalendarDialog(openDialog = showCalendarSelectionDialog, widgetId)
-        AgendaWidgetLogger.logUpdatePrefEvent(
-            context,
-            AgendaWidgetLogger.PrefsScreenItemName.SELECT_CALENDARS
-        )
-    }
-
-    if (calendarPermissionsState.allPermissionsGranted) {
-        ButtonRow(
-            displayText = context.getString(R.string.select_calendars),
-            enableAction = showCalendarSelectionDialog
-        )
-    }
+    SelectCalendarsButton(
+        displayText = context.getString(R.string.select_calendars),
+        widgetId = widgetId,
+    )
     NumberSelectorRow(
         displayText = context.getString(R.string.number_of_days_to_display),
         numberValue = numberOfDays,
