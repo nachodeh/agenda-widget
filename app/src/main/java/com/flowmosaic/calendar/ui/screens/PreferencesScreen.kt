@@ -68,9 +68,7 @@ fun PreferencesScreen(appWidgetId: Int) {
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun GeneralPrefsSection(widgetId: String) {
-
     val context = LocalContext.current
-
     val calendarPermissionsState = rememberMultiplePermissionsState(
         listOf(
             Manifest.permission.WRITE_CALENDAR,
@@ -86,24 +84,11 @@ fun GeneralPrefsSection(widgetId: String) {
     val numberOfDays = remember {
         mutableIntStateOf(AgendaWidgetPrefs.getNumberOfDays(context, widgetId))
     }
-    val setNumberOfDays: (Int) -> Unit = { newValue ->
-        numberOfDays.intValue = newValue
-        AgendaWidgetPrefs.setNumberOfDays(context, newValue, widgetId)
-    }
     val showActionButtons = remember {
         mutableStateOf(AgendaWidgetPrefs.getShowActionButtons(context, widgetId))
     }
-    val setShowActionButtons: (Boolean) -> Unit = { newValue ->
-        showActionButtons.value = newValue
-        AgendaWidgetPrefs.setShowActionButtons(context, newValue, widgetId)
-    }
-
     val showNoUpcomingEvents = remember {
         mutableStateOf(AgendaWidgetPrefs.getShowNoUpcomingEventsText(context, widgetId))
-    }
-    val setShowNoUpcomingEvents: (Boolean) -> Unit = { newValue ->
-        showNoUpcomingEvents.value = newValue
-        AgendaWidgetPrefs.setShowNoUpcomingEventsText(context, newValue, widgetId)
     }
 
     LaunchedEffect(key1 = Unit) {
@@ -131,19 +116,28 @@ fun GeneralPrefsSection(widgetId: String) {
     NumberSelectorRow(
         displayText = context.getString(R.string.number_of_days_to_display),
         numberValue = numberOfDays,
-        saveNumberValue = setNumberOfDays
+        saveNumberValue = { newValue: Int ->
+            numberOfDays.intValue = newValue
+            AgendaWidgetPrefs.setNumberOfDays(context, newValue, widgetId)
+        }
     )
     CheckboxRow(
         displayText = context.getString(R.string.show_action_buttons),
         loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_ACTION_BUTTONS,
         checkboxValue = showActionButtons,
-        saveCheckboxValue = setShowActionButtons
+        saveCheckboxValue = { newValue: Boolean ->
+            showActionButtons.value = newValue
+            AgendaWidgetPrefs.setShowActionButtons(context, newValue, widgetId)
+        }
     )
     CheckboxRow(
         displayText = context.getString(R.string.show_no_upcoming_events),
         loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_NO_EVENTS_TEXT,
         checkboxValue = showNoUpcomingEvents,
-        saveCheckboxValue = setShowNoUpcomingEvents
+        saveCheckboxValue = { newValue: Boolean ->
+            showNoUpcomingEvents.value = newValue
+            AgendaWidgetPrefs.setShowNoUpcomingEventsText(context, newValue, widgetId)
+        }
     )
     Spacer(modifier = Modifier.height(16.dp))
 }
@@ -155,29 +149,27 @@ fun DateAndTimePrefsSection(widgetId: String) {
     val showEndTime = remember {
         mutableStateOf(AgendaWidgetPrefs.getShowEndTime(context, widgetId))
     }
-    val setShowEndTime: (Boolean) -> Unit = { newValue ->
-        showEndTime.value = newValue
-        AgendaWidgetPrefs.setShowEndTime(context, newValue, widgetId)
-    }
     val use12HourFormat = remember {
         mutableStateOf(AgendaWidgetPrefs.getHourFormat12(context, widgetId))
-    }
-    val setUse12HourFormat: (Boolean) -> Unit = { newValue ->
-        use12HourFormat.value = newValue
-        AgendaWidgetPrefs.setHourFormat12(context, newValue, widgetId)
     }
 
     CheckboxRow(
         displayText = context.getString(R.string.show_end_time),
         loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_END_TIME,
         checkboxValue = showEndTime,
-        saveCheckboxValue = setShowEndTime
+        saveCheckboxValue = { newValue: Boolean ->
+            showEndTime.value = newValue
+            AgendaWidgetPrefs.setShowEndTime(context, newValue, widgetId)
+        }
     )
     CheckboxRow(
         displayText = context.getString(R.string.use_12_hour_format),
         loggingItem = AgendaWidgetLogger.PrefsScreenItemName.USE_12_HOUR,
         checkboxValue = use12HourFormat,
-        saveCheckboxValue = setUse12HourFormat
+        saveCheckboxValue = { newValue: Boolean ->
+            use12HourFormat.value = newValue
+            AgendaWidgetPrefs.setHourFormat12(context, newValue, widgetId)
+        }
     )
     Spacer(modifier = Modifier.height(16.dp))
 }
@@ -187,52 +179,42 @@ fun AppearancePrefsSection(widgetId: String) {
     val context = LocalContext.current
 
     val colorState = remember { mutableStateOf(AgendaWidgetPrefs.getTextColor(context, widgetId)) }
-    val setColorState: (Color) -> Unit = { newValue ->
-        colorState.value = newValue
-        AgendaWidgetPrefs.setTextColor(context, newValue, widgetId)
-    }
-
     val fontSize = remember {
         mutableStateOf(AgendaWidgetPrefs.getFontSize(context, widgetId))
     }
-    val setFontSize: (AgendaWidgetPrefs.FontSize) -> Unit = { newValue ->
-        fontSize.value = newValue
-        AgendaWidgetPrefs.setFontSize(context, newValue, widgetId)
-    }
-
     val textAlignment = remember {
         mutableStateOf(AgendaWidgetPrefs.getTextAlignment(context, widgetId))
     }
-    val setTextAlignment: (AgendaWidgetPrefs.TextAlignment) -> Unit = { newValue ->
-        textAlignment.value = newValue
-        AgendaWidgetPrefs.setTextAlignment(context, newValue, widgetId)
-    }
-
     val opacityState =
         remember { mutableFloatStateOf(AgendaWidgetPrefs.getOpacity(context, widgetId)) }
 
     val showDateSeparator = remember {
         mutableStateOf(AgendaWidgetPrefs.getSeparatorVisible(context, widgetId))
     }
-    val setShowDateSeparator: (Boolean) -> Unit = { newValue ->
-        showDateSeparator.value = newValue
-        AgendaWidgetPrefs.setSeparatorVisible(context, newValue, widgetId)
-    }
 
     FontSizeSelectorRow(
         displayText = context.getString(R.string.font_size),
         fontSizeValue = fontSize,
-        saveFontSizeValue = setFontSize
+        saveFontSizeValue = { newValue: AgendaWidgetPrefs.FontSize ->
+            fontSize.value = newValue
+            AgendaWidgetPrefs.setFontSize(context, newValue, widgetId)
+        }
     )
     TextAlignmentSelectorRow(
         displayText = context.getString(R.string.text_alignment),
         textAlignmentValue = textAlignment,
-        saveTextAlignmentValue = setTextAlignment,
+        saveTextAlignmentValue = { newValue: AgendaWidgetPrefs.TextAlignment ->
+            textAlignment.value = newValue
+            AgendaWidgetPrefs.setTextAlignment(context, newValue, widgetId)
+        },
     )
     ColorSelectorRow(
         displayText = context.getString(R.string.text_color),
         selectedColor = colorState,
-        saveColorValue = setColorState
+        saveColorValue = { newValue: Color ->
+            colorState.value = newValue
+            AgendaWidgetPrefs.setTextColor(context, newValue, widgetId)
+        }
     )
     OpacitySelectorRow(
         displayText = context.getString(R.string.background_opacity),
@@ -245,7 +227,10 @@ fun AppearancePrefsSection(widgetId: String) {
         displayText = context.getString(R.string.date_separator_visible),
         loggingItem = AgendaWidgetLogger.PrefsScreenItemName.DATE_SEPARATOR,
         checkboxValue = showDateSeparator,
-        saveCheckboxValue = setShowDateSeparator
+        saveCheckboxValue = { newValue: Boolean ->
+            showDateSeparator.value = newValue
+            AgendaWidgetPrefs.setSeparatorVisible(context, newValue, widgetId)
+        }
     )
     Spacer(modifier = Modifier.height(16.dp))
 }
