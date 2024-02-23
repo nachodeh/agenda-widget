@@ -51,14 +51,16 @@ enum class NavigationParams {
 }
 
 sealed class NavigationItem(val route: String) {
-    object Onboard : NavigationItem(Screen.ONBOARD.name)
-    object WidgetsList : NavigationItem(Screen.WIDGETS_LIST.name)
-    object WidgetConfig : NavigationItem(Screen.WIDGET_CONFIG.name)
-    object WidgetConfigWithParams :
+    data object Onboard : NavigationItem(Screen.ONBOARD.name)
+    data object WidgetsList : NavigationItem(Screen.WIDGETS_LIST.name)
+    data object WidgetConfig : NavigationItem(Screen.WIDGET_CONFIG.name)
+    data object WidgetConfigWithParams :
         NavigationItem("${Screen.WIDGET_CONFIG.name}/{${NavigationParams.WIDGET_ID.name}}/{${NavigationParams.WIDGET_INDEX.name}}")
 }
 
 class MainActivity : ComponentActivity() {
+
+    private val logger by lazy { AgendaWidgetLogger(applicationContext) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,10 +91,7 @@ class MainActivity : ComponentActivity() {
                                 NavigationItem.Onboard.route -> primaryColor.toArgb()
                                 else -> defaultNavBarColor
                             }
-                            AgendaWidgetLogger.logNavigationEvent(
-                                applicationContext,
-                                backStackEntry.destination.route
-                            )
+                            logger.logNavigationEvent(backStackEntry.destination.route)
                         }
                     }
 
@@ -112,10 +111,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        AgendaWidgetLogger.logActivityStartedEvent(
-            applicationContext,
-            AgendaWidgetLogger.Activity.MAIN_ACTIVITY
-        )
+        logger.logActivityStartedEvent(AgendaWidgetLogger.Activity.MAIN_ACTIVITY)
     }
 
     private fun getHeaderSubtitle(backStackEntry: NavBackStackEntry): String {
@@ -145,10 +141,7 @@ class MainActivity : ComponentActivity() {
                     AgendaWidgetPrefs.setOnboardingDone(applicationContext, true)
                     navController.popBackStack()
                     navController.navigate(NavigationItem.WidgetsList.route)
-                    AgendaWidgetLogger.logOnboardingCompleteEvent(
-                        applicationContext,
-                        skipped
-                    )
+                    logger.logOnboardingCompleteEvent(skipped)
                 })
             }
             composable(NavigationItem.WidgetsList.route) {

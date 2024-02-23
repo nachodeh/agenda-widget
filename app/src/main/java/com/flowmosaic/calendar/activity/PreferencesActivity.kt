@@ -22,6 +22,8 @@ import com.flowmosaic.calendar.widget.AgendaWidget
 
 class PreferencesActivity : ComponentActivity() {
 
+    private val logger by lazy { AgendaWidgetLogger(applicationContext) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -51,10 +53,7 @@ class PreferencesActivity : ComponentActivity() {
                 }
             }
         }
-        AgendaWidgetLogger.logActivityStartedEvent(
-            applicationContext,
-            AgendaWidgetLogger.Activity.PREFERENCES_ACTIVITY
-        )
+        logger.logActivityStartedEvent(AgendaWidgetLogger.Activity.PREFERENCES_ACTIVITY)
     }
 
     override fun onPause() {
