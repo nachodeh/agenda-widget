@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
@@ -49,10 +49,18 @@ fun PreferencesScreen(appWidgetId: Int) {
     LazyColumn(Modifier.fillMaxSize(1f)) {
         sections.forEachIndexed { idx, section ->
             if (idx > 0) {
-                item { Divider(color = MaterialTheme.colorScheme.outline, thickness = .5.dp) }
+                item {
+                    HorizontalDivider(
+                        thickness = .5.dp,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                }
             }
             stickyHeader { TitleWithDivider(title = section.title) }
-            item { section.content() }
+            item {
+                section.content()
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 }
@@ -101,7 +109,6 @@ fun GeneralPrefsSection(widgetId: String) {
             AgendaWidgetPrefs.setShowNoUpcomingEventsText(context, newValue, widgetId)
         }
     )
-    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @Composable
@@ -133,7 +140,6 @@ fun DateAndTimePrefsSection(widgetId: String) {
             AgendaWidgetPrefs.setHourFormat12(context, newValue, widgetId)
         }
     )
-    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @Composable
@@ -194,7 +200,6 @@ fun AppearancePrefsSection(widgetId: String) {
             AgendaWidgetPrefs.setSeparatorVisible(context, newValue, widgetId)
         }
     )
-    Spacer(modifier = Modifier.height(16.dp))
 }
 
 

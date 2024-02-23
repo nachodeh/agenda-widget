@@ -136,7 +136,6 @@ object AgendaWidgetPrefs {
         return result
     }
 
-    // TODO
     fun setShowNoUpcomingEventsText(context: Context, showNoUpcomingEvents: Boolean, widgetId: String) {
         val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_NO_UPCOMING_EVENTS, widgetId)
         getPreferences(context).edit().putBoolean(prefsKey, showNoUpcomingEvents).apply()
