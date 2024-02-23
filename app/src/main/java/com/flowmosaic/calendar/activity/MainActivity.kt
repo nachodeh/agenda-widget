@@ -54,6 +54,8 @@ sealed class NavigationItem(val route: String) {
     object Onboard : NavigationItem(Screen.ONBOARD.name)
     object WidgetsList : NavigationItem(Screen.WIDGETS_LIST.name)
     object WidgetConfig : NavigationItem(Screen.WIDGET_CONFIG.name)
+    object WidgetConfigWithParams :
+        NavigationItem("${Screen.WIDGET_CONFIG.name}/{${NavigationParams.WIDGET_ID.name}}/{${NavigationParams.WIDGET_INDEX.name}}")
 }
 
 class MainActivity : ComponentActivity() {
@@ -121,7 +123,7 @@ class MainActivity : ComponentActivity() {
         val widgetIndex = backStackEntry.arguments?.getInt(NavigationParams.WIDGET_INDEX.name)
         return when (backStackEntry.destination.route) {
             NavigationItem.WidgetsList.route -> getString(R.string.active_widgets)
-            "${NavigationItem.WidgetConfig.route}/{${NavigationParams.WIDGET_ID.name}}/{${NavigationParams.WIDGET_INDEX.name}}" ->
+            NavigationItem.WidgetConfigWithParams.route ->
                 if (widgetId == 0)
                     getString(R.string.prefs_title_editing_default_config)
                 else "Widget $widgetIndex"
@@ -154,8 +156,7 @@ class MainActivity : ComponentActivity() {
                     navController.navigate("${NavigationItem.WidgetConfig.route}/$widgetId/$widgetIndex")
                 })
             }
-            composable(
-                "${NavigationItem.WidgetConfig.route}/{${NavigationParams.WIDGET_ID.name}}/{${NavigationParams.WIDGET_INDEX.name}}",
+            composable(NavigationItem.WidgetConfigWithParams.route,
                 arguments = listOf(
                     navArgument(NavigationParams.WIDGET_ID.name) {
                         type = NavType.IntType
