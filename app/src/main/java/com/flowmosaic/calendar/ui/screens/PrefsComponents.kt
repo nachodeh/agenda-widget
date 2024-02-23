@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -45,7 +44,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun TitleWithDivider(title: String) {
-    Divider(color = MaterialTheme.colorScheme.outline, thickness = .5.dp)
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,7 +54,9 @@ fun TitleWithDivider(title: String) {
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.outline,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(top = 24.dp, bottom = 16.dp)
         )
     }
 }
