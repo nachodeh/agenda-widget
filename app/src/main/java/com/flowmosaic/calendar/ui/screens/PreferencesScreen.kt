@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableFloatStateOf
@@ -51,9 +53,12 @@ fun PreferencesScreen(appWidgetId: Int) {
             content = { AppearancePrefsSection(widgetId) }
         ),
     )
-    
+
     LazyColumn(Modifier.fillMaxSize(1f)) {
-        sections.forEach{ section ->
+        sections.forEachIndexed { idx, section ->
+            if (idx > 0) {
+                item { Divider(color = MaterialTheme.colorScheme.outline, thickness = .5.dp) }
+            }
             stickyHeader { TitleWithDivider(title = section.title) }
             item { section.content() }
         }
@@ -61,7 +66,7 @@ fun PreferencesScreen(appWidgetId: Int) {
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
-@Composable 
+@Composable
 fun GeneralPrefsSection(widgetId: String) {
 
     val context = LocalContext.current
@@ -116,7 +121,7 @@ fun GeneralPrefsSection(widgetId: String) {
             AgendaWidgetLogger.PrefsScreenItemName.SELECT_CALENDARS
         )
     }
-    
+
     if (calendarPermissionsState.allPermissionsGranted) {
         ButtonRow(
             displayText = context.getString(R.string.select_calendars),
