@@ -22,6 +22,8 @@ import com.flowmosaic.calendar.widget.EXTRA_START_TIME
 class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     RemoteViewsService.RemoteViewsFactory {
 
+    private val prefs by lazy { AgendaWidgetPrefs(context) }
+
     private var widgetId = ""
 
     init {
@@ -56,7 +58,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
 
     override fun getViewAt(position: Int): RemoteViews {
         val item = events[position]
-        val textColor = AgendaWidgetPrefs.getTextColor(context, widgetId).toArgb()
+        val textColor = prefs.getTextColor(widgetId).toArgb()
 
         return RemoteViews(context.packageName, getLayoutId(item, textColor)).apply {
             val textViewId = getTextViewId(item, textColor)
@@ -101,11 +103,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
 
     private fun RemoteViews.setUpSeparator(color: Int) {
         val separatorVisibility =
-            if (AgendaWidgetPrefs.getSeparatorVisible(
-                    context,
-                    widgetId
-                )
-            ) View.VISIBLE else View.GONE
+            if (prefs.getSeparatorVisible(widgetId)) View.VISIBLE else View.GONE
         setViewVisibility(R.id.date_separator, separatorVisibility)
         setInt(
             R.id.date_separator,
@@ -115,7 +113,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     }
 
     private fun RemoteViews.setUpFontAlignment(textViewId: Int) {
-        val textAlignment = when (AgendaWidgetPrefs.getTextAlignment(context, widgetId)) {
+        val textAlignment = when (prefs.getTextAlignment(widgetId)) {
             AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.START
             AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
             AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.END
@@ -128,7 +126,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             is CalendarViewItem.Day -> 16f
             is CalendarViewItem.Event -> 14f
         }
-        val fontSizeAdjustment = when (AgendaWidgetPrefs.getFontSize(context, widgetId)) {
+        val fontSizeAdjustment = when (prefs.getFontSize(widgetId)) {
             AgendaWidgetPrefs.FontSize.SMALL -> -2f
             AgendaWidgetPrefs.FontSize.MEDIUM -> 0f
             AgendaWidgetPrefs.FontSize.LARGE -> 2f

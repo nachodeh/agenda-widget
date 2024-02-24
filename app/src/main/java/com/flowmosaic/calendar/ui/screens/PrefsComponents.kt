@@ -70,7 +70,7 @@ fun TitleWithDivider(title: String) {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun SelectCalendarsButton(displayText: String, widgetId: String, logger: AgendaWidgetLogger) {
+fun SelectCalendarsButton(displayText: String, widgetId: String, logger: AgendaWidgetLogger, prefs: AgendaWidgetPrefs) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -93,7 +93,7 @@ fun SelectCalendarsButton(displayText: String, widgetId: String, logger: AgendaW
         if (calendarPermissionsState.allPermissionsGranted) {
             calendarList.value = calendarFetcher.queryCalendarData(context)
             selectedCalendars.value =
-                AgendaWidgetPrefs.getSelectedCalendars(context, calendarList.value, widgetId)
+                prefs.getSelectedCalendars(calendarList.value, widgetId)
         }
     }
 

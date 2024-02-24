@@ -39,11 +39,12 @@ object CalendarDateUtils {
         return if (calendarEvent.isAllDay) {
             calendarEvent.title
         } else {
+            val prefs = AgendaWidgetPrefs(context)
             val formattedTimeRange =
                 getFormattedTime(
                     calendarEvent,
-                    AgendaWidgetPrefs.getShowEndTime(context, widgetId),
-                    AgendaWidgetPrefs.getHourFormat12(context, widgetId)
+                    prefs.getShowEndTime(widgetId),
+                    prefs.getHourFormat12(widgetId)
                 )
             "$formattedTimeRange | ${calendarEvent.title}"
         }

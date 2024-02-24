@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.amplitude.android.Amplitude
+import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.google.firebase.analytics.FirebaseAnalytics
 import org.junit.After
 import org.junit.Before
@@ -30,13 +31,16 @@ class AgendaWidgetLoggerTest {
     @Mock
     private lateinit var mockAmplitude: Amplitude
 
+    @Mock
+    private lateinit var mockPrefs: AgendaWidgetPrefs
+
     private lateinit var closeable: AutoCloseable
 
     @Before
     fun setUp() {
         closeable = MockitoAnnotations.openMocks(this)
         context = ApplicationProvider.getApplicationContext()
-        agendaWidgetLogger = AgendaWidgetLogger(mockAmplitude, mockFirebaseAnalytics, context)
+        agendaWidgetLogger = AgendaWidgetLogger(mockAmplitude, mockFirebaseAnalytics, mockPrefs, context)
     }
 
     @After

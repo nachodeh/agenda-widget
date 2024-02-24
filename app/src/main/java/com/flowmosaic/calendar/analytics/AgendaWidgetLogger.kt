@@ -10,15 +10,12 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import java.util.concurrent.TimeUnit
 
-private const val PARAM_ITEM_NAME: String = "item_name"
-private const val PARAM_DESTINATION: String = "item_name"
-private const val PARAM_TYPE: String = "type"
-private const val PARAM_SUCCESS: String = "success"
-private const val PARAM_SKIPPED: String = "skipped"
+
 
 class AgendaWidgetLogger internal constructor(
     private val amplitude: Amplitude,
     private val firebaseAnalytics: FirebaseAnalytics,
+    private val prefs: AgendaWidgetPrefs,
     private val context: Context
 ) {
 
@@ -32,8 +29,17 @@ class AgendaWidgetLogger internal constructor(
             )
         ),
         firebaseAnalytics = FirebaseAnalytics.getInstance(context),
+        prefs = AgendaWidgetPrefs(context),
         context = context,
     )
+
+    companion object {
+        private const val PARAM_ITEM_NAME: String = "item_name"
+        private const val PARAM_DESTINATION: String = "item_name"
+        private const val PARAM_TYPE: String = "type"
+        private const val PARAM_SUCCESS: String = "success"
+        private const val PARAM_SKIPPED: String = "skipped"
+    }
 
     internal enum class Event(val eventName: String) {
         ACTIVITY_STARTED("activity_started"),
@@ -198,7 +204,7 @@ class AgendaWidgetLogger internal constructor(
         val pm = context.packageManager
         val pi = pm.getPackageInfo(context.packageName, 0)
         val currentTimeMs = System.currentTimeMillis()
-        val lastReviewPrompt = AgendaWidgetPrefs.getLastReviewPrompt(context)
+        val lastReviewPrompt = prefs.getLastReviewPrompt()
 
         if ((currentTimeMs - TimeUnit.DAYS.toMillis(2) < pi.firstInstallTime)
             || (currentTimeMs - TimeUnit.DAYS.toMillis(15) < lastReviewPrompt)
@@ -206,7 +212,7 @@ class AgendaWidgetLogger internal constructor(
             return
         }
 
-        AgendaWidgetPrefs.setLastReviewPrompt(context, currentTimeMs)
+        prefs.setLastReviewPrompt(currentTimeMs)
 
         val manager = ReviewManagerFactory.create(context)
         val request = manager.requestReviewFlow()
