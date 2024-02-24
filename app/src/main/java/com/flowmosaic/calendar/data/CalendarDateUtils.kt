@@ -1,7 +1,6 @@
 package com.flowmosaic.calendar.data
 
 import android.content.Context
-import android.util.Log
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import java.text.SimpleDateFormat
@@ -71,26 +70,10 @@ object CalendarDateUtils {
 
         val pattern = if (use12HourFormat) "h:mm a" else "HH:mm"
         val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
+        val formattedStartTime = dateFormat.format(Date(startTimeMillis))
+        val formattedEndTime = dateFormat.format(Date(endTimeMillis))
 
-        return if (!showEndTime) {
-            dateFormat.format(Date(startTimeMillis))
-        } else {
-            val eventEndsAtMidnight = Calendar.getInstance().apply {
-                timeInMillis = endTimeMillis
-                add(
-                    Calendar.MILLISECOND,
-                    -1
-                ) // subtracting 1 millisecond to get to the previous day
-            }.let {
-                it.get(Calendar.HOUR_OF_DAY) == 23 &&
-                        it.get(Calendar.MINUTE) == 59 &&
-                        it.get(Calendar.SECOND) == 59
-            }
-            val startTimeFormatted = dateFormat.format(Date(startTimeMillis))
-            val endTimeAdjustment = if (eventEndsAtMidnight) 1 else 0
-            val endTimeFormatted = dateFormat.format(Date(endTimeMillis + endTimeAdjustment))
-            return "$startTimeFormatted - $endTimeFormatted"
-        }
+        return if (!showEndTime) formattedStartTime  else "$formattedStartTime - $formattedEndTime}"
     }
 
 
