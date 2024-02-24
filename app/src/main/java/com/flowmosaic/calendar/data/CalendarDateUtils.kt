@@ -71,25 +71,12 @@ object CalendarDateUtils {
         val pattern = if (use12HourFormat) "h:mm a" else "HH:mm"
         val dateFormat = SimpleDateFormat(pattern, Locale.getDefault())
 
-        val isEndAtMidnightOfNextDay = Calendar.getInstance().apply {
-            timeInMillis = endTimeMillis
-            add(Calendar.MILLISECOND, -1) // subtracting 1 millisecond to get to the previous day
-        }.let {
-            it.get(Calendar.HOUR_OF_DAY) == 23 &&
-                    it.get(Calendar.MINUTE) == 59 &&
-                    it.get(Calendar.SECOND) == 59
-        }
-
         return if (!showEndTime) {
             dateFormat.format(Date(startTimeMillis))
         } else {
-            "${dateFormat.format(Date(startTimeMillis))} - ${
-                if (isEndAtMidnightOfNextDay) {
-                    if (use12HourFormat) "12:00 AM" else "24:00"
-                } else {
-                    dateFormat.format(Date(endTimeMillis))
-                }
-            }"
+            val startTimeFormatted =dateFormat.format(Date(startTimeMillis))
+            val endTimeFormatted = dateFormat.format(Date(endTimeMillis))
+            return "$startTimeFormatted - $endTimeFormatted"
         }
     }
 
