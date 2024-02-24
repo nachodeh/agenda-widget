@@ -62,11 +62,9 @@ class CalendarFetcher {
         calendarList
     }
 
-    private fun getCalendarEvents(context: Context, widgetId: String): List<CalendarEvent> {
-        val prefs = AgendaWidgetPrefs(context)
-        val events = arrayListOf<CalendarEvent>()
+    private fun getStartAndEndTime(prefs: AgendaWidgetPrefs, widgetId: String): Pair<Long, Long> {
         val currentTime = Calendar.getInstance().timeInMillis
-        val endTime = Calendar.getInstance().apply {
+        val endTime =  Calendar.getInstance().apply {
             timeInMillis = currentTime
             add(Calendar.DAY_OF_MONTH, prefs.getNumberOfDays(widgetId) - 1)
             set(Calendar.HOUR_OF_DAY, 23)
@@ -74,6 +72,13 @@ class CalendarFetcher {
             set(Calendar.SECOND, 59)
             set(Calendar.MILLISECOND, 999)
         }.timeInMillis
+        return Pair(currentTime, endTime)
+    }
+
+    private fun getCalendarEvents(context: Context, widgetId: String): List<CalendarEvent> {
+        val prefs = AgendaWidgetPrefs(context)
+        val events = arrayListOf<CalendarEvent>()
+        val (startTime, endTime) = getStartAndEndTime(prefs, widgetId)
         val selectedCalendarIds = prefs.getSelectedCalendars(null, widgetId)
 
         val projection = arrayOf(
@@ -89,19 +94,18 @@ class CalendarFetcher {
 
         val selection =
             "(${CalendarContract.Instances.BEGIN} <= ? AND ${CalendarContract.Instances.END} >= ?) OR " +
-                    "(${CalendarContract.Instances.ALL_DAY} = 1 AND ${CalendarContract.Instances.BEGIN} <= ? AND ${CalendarContract.Instances.END} IS NULL) OR " +
-                    "(${CalendarContract.Instances.BEGIN} <= ? AND ${CalendarContract.Instances.END} >= ? AND ${CalendarContract.Instances.END} > ?)"
+                    "(${CalendarContract.Instances.ALL_DAY} = 1 AND ${CalendarContract.Instances.BEGIN} <= ? AND ${CalendarContract.Instances.END} IS NULL)"
 
         val selectionArgs = arrayOf(
             endTime.toString(),
-            currentTime.toString(),
+            startTime.toString(),
             endTime.toString()
         )
 
         val sortOrder = "${CalendarContract.Instances.BEGIN} ASC"
 
         val uri = CalendarContract.Instances.CONTENT_URI.buildUpon()
-            .appendPath(currentTime.toString())
+            .appendPath(startTime.toString())
             .appendPath(endTime.toString())
             .build()
 
