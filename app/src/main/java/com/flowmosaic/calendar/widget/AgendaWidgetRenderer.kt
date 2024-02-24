@@ -73,9 +73,10 @@ object AgendaWidgetRenderer {
                 createWidgetActionPendingIntent(context, CLICK_ACTION, widgetId)
             )
 
-            setupEmptyView(context, widgetId)
-            setWidgetBackground(context, widgetId)
-            setActionButtonsVisibility(context, widgetId)
+            val prefs = AgendaWidgetPrefs(context)
+            setupEmptyView(context, widgetId, prefs)
+            setWidgetBackground(widgetId, prefs)
+            setActionButtonsVisibility(widgetId, prefs)
             showOrHideProgress(showProgress)
         }
 
@@ -98,31 +99,27 @@ object AgendaWidgetRenderer {
         }
     }
 
-    private fun RemoteViews.setWidgetBackground(context: Context, widgetId: Int) {
+    private fun RemoteViews.setWidgetBackground(widgetId: Int, prefs: AgendaWidgetPrefs) {
         val backgroundColor = 0x000000
-        val opacity = AgendaWidgetPrefs.getOpacity(context, widgetId.toString())
+        val opacity = prefs.getOpacity(widgetId.toString())
         val color = ColorUtils.setAlphaComponent(backgroundColor, (opacity * 255).toInt())
         setInt(R.id.main_view, "setBackgroundColor", color)
     }
 
     @SuppressLint("RtlHardcoded")
-    private fun RemoteViews.setActionButtonsVisibility(context: Context, widgetId: Int) {
-        val actionButtonsVisible = if (AgendaWidgetPrefs.getShowActionButtons(
-                context,
-                widgetId.toString()
-            )
-        ) View.VISIBLE else View.GONE
+    private fun RemoteViews.setActionButtonsVisibility(widgetId: Int, prefs: AgendaWidgetPrefs) {
+        val actionButtonsVisible = if (prefs.getShowActionButtons(widgetId.toString())) View.VISIBLE else View.GONE
         setViewVisibility(R.id.widget_action_buttons, actionButtonsVisible)
 
         val buttonsAlignment =
-            when (AgendaWidgetPrefs.getTextAlignment(context, widgetId.toString())) {
+            when (prefs.getTextAlignment(widgetId.toString())) {
                 AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.RIGHT
                 AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.RIGHT
                 AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.LEFT
             }
         setInt(R.id.widget_action_buttons, "setGravity", buttonsAlignment)
 
-        val textColor = AgendaWidgetPrefs.getTextColor(context, widgetId.toString()).toArgb()
+        val textColor = prefs.getTextColor(widgetId.toString()).toArgb()
         setInt(R.id.refresh_button, "setColorFilter", textColor)
         setInt(R.id.add_button, "setColorFilter", textColor)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -139,14 +136,13 @@ object AgendaWidgetRenderer {
         }
     }
 
-    private fun RemoteViews.setupEmptyView(context: Context, widgetId: Int) {
-        val noUpcomingEventsText = if (AgendaWidgetPrefs.getShowNoUpcomingEventsText(
-                context,
+    private fun RemoteViews.setupEmptyView(context: Context, widgetId: Int, prefs: AgendaWidgetPrefs) {
+        val noUpcomingEventsText = if (prefs.getShowNoUpcomingEventsText(
                 widgetId.toString()
             )
         ) context.getString(R.string.no_upcoming_events) else ""
         val textAlignment =
-            when (AgendaWidgetPrefs.getTextAlignment(context, widgetId.toString())) {
+            when (prefs.getTextAlignment(widgetId.toString())) {
                 AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.START
                 AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
                 AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.END
@@ -155,7 +151,7 @@ object AgendaWidgetRenderer {
         setInt(R.id.empty_view, "setGravity", textAlignment)
         setTextColor(
             R.id.empty_view,
-            AgendaWidgetPrefs.getTextColor(context, widgetId.toString()).toArgb()
+            prefs.getTextColor(widgetId.toString()).toArgb()
         )
     }
 

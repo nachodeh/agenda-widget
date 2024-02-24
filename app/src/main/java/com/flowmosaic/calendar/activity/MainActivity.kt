@@ -61,6 +61,7 @@ sealed class NavigationItem(val route: String) {
 class MainActivity : ComponentActivity() {
 
     private val logger by lazy { AgendaWidgetLogger(applicationContext) }
+    private val prefs by lazy { AgendaWidgetPrefs(applicationContext) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,7 +139,7 @@ class MainActivity : ComponentActivity() {
         ) {
             composable(NavigationItem.Onboard.route) {
                 OnboardingScreen(onboardPages(), onFinish = { skipped ->
-                    AgendaWidgetPrefs.setOnboardingDone(applicationContext, true)
+                    prefs.setOnboardingDone(true)
                     navController.popBackStack()
                     navController.navigate(NavigationItem.WidgetsList.route)
                     logger.logOnboardingCompleteEvent(skipped)
@@ -193,7 +194,7 @@ class MainActivity : ComponentActivity() {
             .getAppWidgetIds(
                 ComponentName(applicationContext, AgendaWidget::class.java)
             )
-        return !(widgetIds.isNotEmpty() || AgendaWidgetPrefs.getOnboardingDone(applicationContext))
+        return !(widgetIds.isNotEmpty() || prefs.getOnboardingDone())
     }
 
     override fun onPause() {

@@ -51,13 +51,14 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        if (AgendaWidgetPrefs.getShouldLogWidgetActivityEvent(context)) {
+        val prefs = AgendaWidgetPrefs(context)
+        if (prefs.getShouldLogWidgetActivityEvent()) {
             getLogger(context).logWidgetLifecycleEvent(
                 AgendaWidgetLogger.WidgetStatus.ACTIVE, mapOf(
                     "number_of_widgets" to appWidgetIds.size.toString(),
                 )
             )
-            AgendaWidgetPrefs.setWidgetActivityEventLastLoggedTimestamp(context)
+            prefs.setWidgetActivityEventLastLoggedTimestamp()
             getLogger(context).flushEvents()
         }
         for (appWidgetId in appWidgetIds) {
