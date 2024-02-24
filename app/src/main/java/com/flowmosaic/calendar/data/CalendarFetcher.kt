@@ -109,15 +109,13 @@ class CalendarFetcher {
             .appendPath(endTime.toString())
             .build()
 
-        val eventCursor = context.contentResolver.query(
+        context.contentResolver.query(
             uri,
             projection,
             selection,
             selectionArgs,
             sortOrder
-        )
-
-        eventCursor?.use { cursor ->
+        )?.use { cursor ->
             while (cursor.moveToNext()) {
                 val calendarId =
                     cursor.safeGet(CalendarContract.Instances.CALENDAR_ID, Cursor::getLong)
@@ -131,52 +129,48 @@ class CalendarFetcher {
                     cursor.safeGet(CalendarContract.Instances.BEGIN, Cursor::getLong)
                 val actualEndTime = cursor.safeGet(CalendarContract.Instances.END, Cursor::getLong)
 
-
-                if (calendarId != null &&
-                    eventId != null &&
-                    title != null &&
-                    location != null &&
-                    allDay != null &&
-                    actualStartTime != null &&
-                    actualEndTime != null &&
-                    calendarId.toString() in selectedCalendarIds
+                if (calendarId == null ||
+                    eventId == null ||
+                    title == null ||
+                    location == null ||
+                    allDay == null ||
+                    actualStartTime == null ||
+                    actualEndTime == null ||
+                    calendarId.toString() !in selectedCalendarIds
                 ) {
-                    var startDateTime = actualStartTime
-                    var endDateTime = actualEndTime
-                    var maxEndTime = endTime
-
-                    if (allDay == true) {
-                        val timeZone = TimeZone.getDefault()
-                        val startOffsetMillis = timeZone.getOffset(startDateTime)
-                        startDateTime -= startOffsetMillis
-
-                        val endOffsetMillis = timeZone.getOffset(endDateTime)
-                        endDateTime -= endOffsetMillis
-
-                        val maxEndTimeOffsetMillis = timeZone.getOffset(maxEndTime)
-                        maxEndTime -= maxEndTimeOffsetMillis
-                    }
-                    // Only add events happening in the future according to the timezone offset
-                    if (endDateTime > System.currentTimeMillis()) {
-                        val adjustedEndTime = if (endDateTime > maxEndTime) maxEndTime else endDateTime
-                        events.add(
-                            CalendarEvent(
-                                startDateTime,
-                                adjustedEndTime,
-                                title,
-                                location,
-                                allDay,
-                                eventId,
-                                actualStartTime,
-                                actualEndTime
-                            )
-                        )
-                    }
+                    continue
                 }
+
+                val startDateTime = adjustTimeForTimezone(actualStartTime, allDay)
+                val endDateTime = adjustTimeForTimezone(actualEndTime, allDay)
+                val maxEndTime = adjustTimeForTimezone(endTime, allDay)
+
+                if (endDateTime < System.currentTimeMillis()) continue // Skip past events
+
+                events.add(
+                    CalendarEvent(
+                        startDateTime,
+                        endDateTime.coerceAtMost(maxEndTime),
+                        title,
+                        location,
+                        allDay,
+                        eventId,
+                        actualStartTime,
+                        actualEndTime
+                    )
+                )
             }
         }
 
         return events
+    }
+
+    private fun adjustTimeForTimezone(time: Long, allDay: Boolean): Long {
+        if (!allDay) {
+            return time
+        }
+        val timeZone = TimeZone.getDefault()
+        return time - timeZone.getOffset(time)
     }
 
     private fun <T> Cursor.safeGet(columnName: String, getter: Cursor.(Int) -> T): T? {
@@ -196,63 +190,55 @@ class CalendarFetcher {
 
         return parsedCalendarEvents
             .flatMap { event ->
-                var adjustedEvent = event
-
-                // Adjust start time if it's earlier than today
-                if (adjustedEvent.startTimeInMillis < currentDayStartTime) {
-                    adjustedEvent = adjustedEvent.copy(startTimeInMillis = currentDayStartTime)
+                val adjustedEvent = if (event.startTimeInMillis < currentDayStartTime) {
+                    event.copy(startTimeInMillis = currentDayStartTime)
+                } else {
+                    event
                 }
-
-                // If it's an all-day event and spans multiple days, create an event for each day
                 if (adjustedEvent.isAllDay || spansMultipleDays(adjustedEvent)) {
-                    val startCalendar = Calendar.getInstance()
-                        .apply { timeInMillis = adjustedEvent.startTimeInMillis }
-                    val endCalendar = Calendar.getInstance()
-                        .apply { timeInMillis = adjustedEvent.endTimeInMillis }
-                    val eventsList = mutableListOf<CalendarEvent>()
-
-                    while (startCalendar.before(endCalendar)) {
-                        val nextDayStartCalendar = startCalendar.clone() as Calendar
-                        nextDayStartCalendar.set(Calendar.HOUR_OF_DAY, 24)
-                        nextDayStartCalendar.set(Calendar.MINUTE, 0)
-                        nextDayStartCalendar.set(Calendar.SECOND, 0)
-                        nextDayStartCalendar.set(Calendar.MILLISECOND, 0)
-
-                        val eventEndTime: Long = if (nextDayStartCalendar.before(endCalendar)) {
-                            nextDayStartCalendar.timeInMillis
-                        } else {
-                            adjustedEvent.endTimeInMillis
-                        }
-
-                        val clonedEvent = adjustedEvent.copy(
-                            startTimeInMillis = startCalendar.timeInMillis,
-                            endTimeInMillis = eventEndTime
-                        )
-                        eventsList.add(clonedEvent)
-
-                        // Move to next day 00:00
-                        startCalendar.add(Calendar.DAY_OF_MONTH, 1)
-                        startCalendar.set(Calendar.HOUR_OF_DAY, 0)
-                        startCalendar.set(Calendar.MINUTE, 0)
-                        startCalendar.set(Calendar.SECOND, 0)
-                        startCalendar.set(Calendar.MILLISECOND, 0)
-                    }
-                    eventsList
+                    splitMultiDayEvent(adjustedEvent)
                 } else {
                     listOf(adjustedEvent)
                 }
-
             }
             .groupBy { CalendarDateUtils.getDateFromTimestamp(it.startTimeInMillis) }
+            .toSortedMap()
             .flatMap { (date, events) ->
-                listOf(CalendarViewItem.Day(date)) + events.map { CalendarViewItem.Event(it) }
+                val sortedEvents = events.sortedWith(
+                    compareBy({ !it.isAllDay }, { it.startTimeInMillis })
+                )
+                listOf(CalendarViewItem.Day(date)) + sortedEvents.map { CalendarViewItem.Event(it) }
             }
-            .sortedBy { item ->
-                when (item) {
-                    is CalendarViewItem.Day -> item.date.time
-                    is CalendarViewItem.Event -> item.event.startTimeInMillis
-                }
-            }
+    }
+
+    private fun splitMultiDayEvent(event: CalendarEvent): List<CalendarEvent> {
+        val startCalendar = Calendar.getInstance().apply { timeInMillis = event.startTimeInMillis }
+        val endCalendar = Calendar.getInstance().apply { timeInMillis = event.endTimeInMillis }
+        val eventsList = mutableListOf<CalendarEvent>()
+
+        while (startCalendar.before(endCalendar)) {
+            val nextDayStartCalendar = startCalendar.clone() as Calendar
+            nextDayStartCalendar.set(Calendar.HOUR_OF_DAY, 24)
+            nextDayStartCalendar.set(Calendar.MINUTE, 0)
+            nextDayStartCalendar.set(Calendar.SECOND, 0)
+            nextDayStartCalendar.set(Calendar.MILLISECOND, 0)
+
+            val eventEndTime: Long =
+                if (nextDayStartCalendar.before(endCalendar)) nextDayStartCalendar.timeInMillis else event.endTimeInMillis
+
+            val clonedEvent = event.copy(
+                startTimeInMillis = startCalendar.timeInMillis, endTimeInMillis = eventEndTime
+            )
+            eventsList.add(clonedEvent)
+
+            // Move to next day 00:00
+            startCalendar.add(Calendar.DAY_OF_MONTH, 1)
+            startCalendar.set(Calendar.HOUR_OF_DAY, 0)
+            startCalendar.set(Calendar.MINUTE, 0)
+            startCalendar.set(Calendar.SECOND, 0)
+            startCalendar.set(Calendar.MILLISECOND, 0)
+        }
+        return eventsList
     }
 
     private fun spansMultipleDays(event: CalendarEvent): Boolean {

@@ -73,7 +73,7 @@ object CalendarDateUtils {
         val formattedStartTime = dateFormat.format(Date(startTimeMillis))
         val formattedEndTime = dateFormat.format(Date(endTimeMillis))
 
-        return if (!showEndTime) formattedStartTime  else "$formattedStartTime - $formattedEndTime}"
+        return if (!showEndTime) formattedStartTime  else "$formattedStartTime - $formattedEndTime"
     }
 
 
