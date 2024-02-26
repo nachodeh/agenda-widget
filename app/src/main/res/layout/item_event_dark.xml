@@ -6,8 +6,6 @@
     android:textSize="14sp"
     android:textColor="@color/white"
     android:paddingVertical="6dp"
-    android:paddingStart="8dp"
-    android:paddingEnd="0dp"
     android:text="@string/event_placeholder"
     android:maxLines="1"
     android:ellipsize="end"
