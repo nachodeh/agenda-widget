@@ -10,8 +10,6 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="4dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="0dp"
         android:text="@string/date_placeholder"
         android:textColor="@color/white"
         android:textSize="16sp"
