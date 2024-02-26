@@ -57,6 +57,11 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     }
 
     override fun getViewAt(position: Int): RemoteViews {
+        if (position < 0 || position >= events.size) {
+            // Return an empty view if out of bounds
+            return RemoteViews(context.packageName, R.layout.empty_layout)
+        }
+
         val item = events[position]
         val textColor = prefs.getTextColor(widgetId).toArgb()
 
@@ -157,7 +162,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     }
 
     override fun getViewTypeCount(): Int {
-        return 4
+        return 5
     }
 
     override fun getItemId(position: Int): Long {
