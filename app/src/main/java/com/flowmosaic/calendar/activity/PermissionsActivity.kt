@@ -64,8 +64,7 @@ class PermissionsActivity : ComponentActivity() {
     private fun updateWidgets() {
         lifecycleScope.launch {
             // Update the calendars stored on prefs for first fetch
-            val calendars = CalendarFetcher().queryCalendarData(applicationContext)
-            AgendaWidgetPrefs(applicationContext).getSelectedCalendars(calendars, widgetId = "")
+            AgendaWidgetPrefs(applicationContext).initSelectedCalendars(applicationContext)
             AgendaWidget().forceWidgetUpdate(applicationContext)
         }
     }
