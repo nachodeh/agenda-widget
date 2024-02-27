@@ -6,6 +6,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.data.CalendarData
+import com.flowmosaic.calendar.data.CalendarFetcher
+import com.flowmosaic.calendar.data.CalendarPermissionsChecker
 import java.util.concurrent.TimeUnit
 
 class AgendaWidgetPrefs internal constructor(private val sharedPreferences: SharedPreferences) {
@@ -61,6 +63,14 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
 
     fun setWidgetActivityEventLastLoggedTimestamp() {
         sharedPreferences.edit().putLong(PREF_LAST_LOGGED, System.currentTimeMillis()).apply()
+    }
+
+    suspend fun initSelectedCalendars(context: Context) {
+        if (!sharedPreferences.contains(PREF_SELECTED_CALENDARS) && CalendarPermissionsChecker.hasCalendarPermission(context)) {
+            val allCalendars = CalendarFetcher().queryCalendarData(context)
+            val allCalendarIds = allCalendars.map { it.id.toString() }.toMutableSet()
+            setSelectedCalendars(allCalendarIds, widgetId = "")
+        }
     }
 
     fun getSelectedCalendars(

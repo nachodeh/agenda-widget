@@ -12,9 +12,14 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.CalendarContract
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
+import com.flowmosaic.calendar.data.CalendarPermissionsChecker.hasCalendarPermission
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
@@ -52,6 +57,9 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         val prefs = AgendaWidgetPrefs(context)
+        CoroutineScope(Dispatchers.Default).launch {
+            prefs.initSelectedCalendars(context)
+        }
         if (prefs.getShouldLogWidgetActivityEvent()) {
             getLogger(context).logWidgetLifecycleEvent(
                 AgendaWidgetLogger.WidgetStatus.ACTIVE, mapOf(
@@ -195,19 +203,6 @@ class AgendaWidget : AppWidgetProvider() {
         } else {
             AgendaWidgetRenderer.renderPermissionRequestView(context, appWidgetManager, widgetId)
         }
-    }
-
-    private fun hasCalendarPermission(context: Context): Boolean {
-        val readCalendarPermission = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.READ_CALENDAR
-        )
-        val writeCalendarPermission = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.WRITE_CALENDAR
-        )
-        return readCalendarPermission == PackageManager.PERMISSION_GRANTED &&
-                writeCalendarPermission == PackageManager.PERMISSION_GRANTED
     }
 
 }
