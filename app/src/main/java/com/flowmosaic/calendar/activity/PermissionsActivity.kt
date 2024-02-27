@@ -7,8 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
+import com.flowmosaic.calendar.data.CalendarFetcher
+import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.widget.AgendaWidget
+import kotlinx.coroutines.launch
 
 class PermissionsActivity : ComponentActivity() {
 
@@ -58,7 +62,11 @@ class PermissionsActivity : ComponentActivity() {
     }
 
     private fun updateWidgets() {
-        val agendaWidgetProvider = AgendaWidget()
-        agendaWidgetProvider.forceWidgetUpdate(applicationContext)
+        lifecycleScope.launch {
+            // Update the calendars stored on prefs for first fetch
+            val calendars = CalendarFetcher().queryCalendarData(applicationContext)
+            AgendaWidgetPrefs(applicationContext).getSelectedCalendars(calendars, widgetId = "")
+            AgendaWidget().forceWidgetUpdate(applicationContext)
+        }
     }
 }
