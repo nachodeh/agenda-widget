@@ -57,8 +57,12 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         val prefs = AgendaWidgetPrefs(context)
-        CoroutineScope(Dispatchers.Default).launch {
+        // I want this to finish before going ahead with other instrucitons in the method
+        CoroutineScope(Dispatchers.Main).launch {
             prefs.initSelectedCalendars(context)
+            for (appWidgetId in appWidgetIds) {
+                updateWidget(context, appWidgetManager, appWidgetId)
+            }
         }
         if (prefs.getShouldLogWidgetActivityEvent()) {
             getLogger(context).logWidgetLifecycleEvent(
@@ -68,9 +72,6 @@ class AgendaWidget : AppWidgetProvider() {
             )
             prefs.setWidgetActivityEventLastLoggedTimestamp()
             getLogger(context).flushEvents()
-        }
-        for (appWidgetId in appWidgetIds) {
-            updateWidget(context, appWidgetManager, appWidgetId)
         }
     }
 
