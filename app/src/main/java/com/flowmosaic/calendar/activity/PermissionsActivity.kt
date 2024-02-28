@@ -12,6 +12,7 @@ import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.widget.AgendaWidget
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PermissionsActivity : ComponentActivity() {
@@ -23,7 +24,6 @@ class PermissionsActivity : ComponentActivity() {
             val allPermissionsGranted = permissions.entries.all { it.value }
             logger.logPermissionsResultEvent(allPermissionsGranted)
             updateWidgets()
-            finishAndRemoveTask()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,10 +62,11 @@ class PermissionsActivity : ComponentActivity() {
     }
 
     private fun updateWidgets() {
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.Main) {
             // Update the calendars stored on prefs for first fetch
             AgendaWidgetPrefs(applicationContext).initSelectedCalendars(applicationContext)
             AgendaWidget().forceWidgetUpdate(applicationContext)
+            finishAndRemoveTask()
         }
     }
 }
