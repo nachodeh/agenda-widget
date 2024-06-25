@@ -6,37 +6,46 @@
     android:background="@color/transparent"
     android:theme="@style/Theme.CalendarWidget.AppWidgetContainer">
 
-    <ListView
-        android:id="@+id/events_list_view"
+    <RelativeLayout
+        android:id="@+id/list_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:scrollbars="none" />
+        android:layout_alignParentTop="true">
 
-    <TextView
-        android:id="@+id/empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:paddingStart="8dp"
-        android:paddingEnd="0dp"
-        android:paddingTop="8dp"
-        android:shadowColor="#80000000"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="4"
-        android:text="@string/no_upcoming_events"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:visibility="gone" />
+        <ListView
+            android:id="@+id/events_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:scrollbars="none" />
+
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/events_list_view"
+            android:gravity="start"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="0dp"
+            android:shadowColor="#80000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="4"
+            android:text="@string/no_upcoming_events"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/widget_action_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="right">
+        android:layout_alignTop="@+id/list_container"
+        android:gravity="right"
+        android:orientation="horizontal">
 
         <FrameLayout
             android:layout_width="wrap_content"

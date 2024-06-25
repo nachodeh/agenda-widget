@@ -9,6 +9,7 @@
     <string name="show_no_upcoming_events">Pokaż tekst \"Brak nadchodzących wydarzeń\"</string>
     <string name="use_12_hour_format">Używaj formatu 12-godzinnego</string>
     <string name="date_separator_visible">Pokaż separator daty</string>
+    <string name="align_widget_bottom">Wyrównanie do dołu</string>
     <string name="font_size">Rozmiar czcionki</string>
     <string name="text_alignment_left">Lewo</string>
     <string name="text_alignment_center">Środek</string>

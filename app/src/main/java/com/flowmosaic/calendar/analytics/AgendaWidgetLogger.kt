@@ -11,7 +11,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import java.util.concurrent.TimeUnit
 
 
-
 class AgendaWidgetLogger internal constructor(
     private val amplitude: Amplitude,
     private val firebaseAnalytics: FirebaseAnalytics,
@@ -77,6 +76,7 @@ class AgendaWidgetLogger internal constructor(
         SHOW_NO_EVENTS_TEXT("show_no_events_text"),
         USE_12_HOUR("use_12_hour"),
         DATE_SEPARATOR("date_separator"),
+        ALIGN_BOTTOM("align_bottom"),
         TEXT_COLOR("text_color"),
         FONT_SIZE("font_size"),
         TEXT_ALIGNMENT("text_alignment"),

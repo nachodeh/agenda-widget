@@ -9,6 +9,7 @@
     <string name="show_no_upcoming_events">Text \"Keine bevorstehenden Ereignisse anzeigen\" anzeigen</string>
     <string name="use_12_hour_format">Im 12-Stunden-Format anzeigen</string>
     <string name="date_separator_visible">Datums-Trennzeichen anzeigen</string>
+    <string name="align_widget_bottom">Unterer Rand Ausrichtung</string>
     <string name="font_size">Schriftgröße</string>
     <string name="text_alignment_left">Links</string>
     <string name="text_alignment_center">Mitte</string>

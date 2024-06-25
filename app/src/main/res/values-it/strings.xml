@@ -9,6 +9,7 @@
     <string name="show_no_upcoming_events">Mostra il testo \"Nessun evento imminente\"</string>
     <string name="use_12_hour_format">Usa il formato a 12 ore</string>
     <string name="date_separator_visible">Mostra separatore data</string>
+    <string name="align_widget_bottom">Allineamento in basso</string>
     <string name="font_size">Dimensione del carattere</string>
     <string name="text_alignment_left">Sinistra</string>
     <string name="text_alignment_center">Centro</string>

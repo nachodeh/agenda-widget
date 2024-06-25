@@ -11,8 +11,8 @@ import com.flowmosaic.calendar.data.CalendarPermissionsChecker
 import java.util.concurrent.TimeUnit
 
 class AgendaWidgetPrefs internal constructor(private val sharedPreferences: SharedPreferences) {
-    
-    constructor(context: Context) : this (
+
+    constructor(context: Context) : this(
         context.getSharedPreferences(
             context.packageName + "_preferences",
             Context.MODE_PRIVATE
@@ -34,6 +34,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         private const val PREF_LAST_REVIEW_PROMPT = "key_last_review_prompt"
         private const val PREF_SEPARATOR_VISIBLE = "key_separator_visible"
         private const val PREF_ONBOARDING_DONE = "key_onboarding_done"
+        private const val PREF_ALIGN_BOTTOM = "key_align_bottom"
     }
 
     enum class FontSize(private val displayResId: Int) {
@@ -66,7 +67,10 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     }
 
     suspend fun initSelectedCalendars(context: Context) {
-        if (!sharedPreferences.contains(PREF_SELECTED_CALENDARS) && CalendarPermissionsChecker.hasCalendarPermission(context)) {
+        if (!sharedPreferences.contains(PREF_SELECTED_CALENDARS) && CalendarPermissionsChecker.hasCalendarPermission(
+                context
+            )
+        ) {
             val allCalendars = CalendarFetcher().queryCalendarData(context)
             val allCalendarIds = allCalendars.map { it.id.toString() }.toMutableSet()
             setSelectedCalendars(allCalendarIds, widgetId = "")
@@ -250,6 +254,20 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
             setSeparatorVisible(separatorVisible, widgetId)
         }
         return separatorVisible
+    }
+
+    fun setAlignBottom(alignBottom: Boolean, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_ALIGN_BOTTOM, widgetId)
+        sharedPreferences.edit().putBoolean(prefsKey, alignBottom).apply()
+    }
+
+    fun getAlignBottom(widgetId: String): Boolean {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_ALIGN_BOTTOM, widgetId)
+        val alignBottom = sharedPreferences.getBoolean(prefsKey, false)
+        if (!prefExists) {
+            setAlignBottom(alignBottom, widgetId)
+        }
+        return alignBottom
     }
 
     fun getLastReviewPrompt(): Long {
