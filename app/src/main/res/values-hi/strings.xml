@@ -9,6 +9,7 @@
     <string name="show_no_upcoming_events">\"कोई आगामी घटनाओं का पाठ नहीं दिखाएं\" टेक्स्ट दिखाएं</string>
     <string name="use_12_hour_format">12 घंटे का प्रारूप उपयोग करें</string>
     <string name="date_separator_visible">तिथि विभाजक दिखाएं</string>
+    <string name="align_widget_bottom">निचली संरेखण</string>
     <string name="font_size">फ़ॉन्ट आकार</string>
     <string name="text_alignment_left">बाएँ</string>
     <string name="text_alignment_center">केंद्र</string>

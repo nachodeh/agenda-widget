@@ -119,7 +119,11 @@ fun GeneralPrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: Age
 }
 
 @Composable
-fun DateAndTimePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: AgendaWidgetPrefs) {
+fun DateAndTimePrefsSection(
+    widgetId: String,
+    logger: AgendaWidgetLogger,
+    prefs: AgendaWidgetPrefs
+) {
     val context = LocalContext.current
 
     val showEndTime = remember {
@@ -169,6 +173,10 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         mutableStateOf(prefs.getSeparatorVisible(widgetId))
     }
 
+    val alignBottom = remember {
+        mutableStateOf(prefs.getAlignBottom(widgetId))
+    }
+
     FontSizeSelectorRow(
         displayText = context.getString(R.string.font_size),
         fontSizeValue = fontSize,
@@ -211,6 +219,16 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         saveCheckboxValue = { newValue: Boolean ->
             showDateSeparator.value = newValue
             prefs.setSeparatorVisible(newValue, widgetId)
+        },
+        logger = logger
+    )
+    CheckboxRow(
+        displayText = context.getString(R.string.date_separator_visible),
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.ALIGN_BOTTOM,
+        checkboxValue = alignBottom,
+        saveCheckboxValue = { newValue: Boolean ->
+            alignBottom.value = newValue
+            prefs.setAlignBottom(newValue, widgetId)
         },
         logger = logger
     )

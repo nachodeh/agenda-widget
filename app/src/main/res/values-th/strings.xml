@@ -9,6 +9,7 @@
     <string name="show_no_upcoming_events">แสดงข้อความ \"ไม่มีกิจกรรมที่จะมาถึง\"</string>
     <string name="use_12_hour_format">ใช้รูปแบบ 12 ชั่วโมง</string>
     <string name="date_separator_visible">แสดงตัวคั่นวันที่</string>
+    <string name="align_widget_bottom">การจัดแนวด้านล่าง</string>
     <string name="font_size">ขนาดตัวอักษร</string>
     <string name="text_alignment_left">ซ้าย</string>
     <string name="text_alignment_center">ตรงกลาง</string>

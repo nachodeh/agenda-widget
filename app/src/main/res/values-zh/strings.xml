@@ -9,6 +9,7 @@
     <string name="show_no_upcoming_events">显示没有即将到来的事件文本</string>
     <string name="use_12_hour_format">使用12小时制</string>
     <string name="date_separator_visible">显示日期分隔符</string>
+    <string name="align_widget_bottom">底部对齐</string>
     <string name="font_size">字体大小</string>
     <string name="text_alignment_left">左</string>
     <string name="text_alignment_center">中</string>

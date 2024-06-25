@@ -52,7 +52,11 @@ object AgendaWidgetRenderer {
             data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
         }
 
-        val views = RemoteViews(context.packageName, R.layout.agenda_widget).apply {
+        val prefs = AgendaWidgetPrefs(context)
+        val layoutId =
+            if (prefs.getAlignBottom(widgetId.toString())) R.layout.agenda_widget_bottom_aligned else R.layout.agenda_widget
+
+        val views = RemoteViews(context.packageName, layoutId).apply {
             setRemoteAdapter(R.id.events_list_view, intent)
             setEmptyView(R.id.events_list_view, R.id.empty_view)
 
@@ -73,7 +77,6 @@ object AgendaWidgetRenderer {
                 createWidgetActionPendingIntent(context, CLICK_ACTION, widgetId)
             )
 
-            val prefs = AgendaWidgetPrefs(context)
             setupEmptyView(context, widgetId, prefs)
             setWidgetBackground(widgetId, prefs)
             setActionButtonsVisibility(widgetId, prefs)
@@ -108,7 +111,8 @@ object AgendaWidgetRenderer {
 
     @SuppressLint("RtlHardcoded")
     private fun RemoteViews.setActionButtonsVisibility(widgetId: Int, prefs: AgendaWidgetPrefs) {
-        val actionButtonsVisible = if (prefs.getShowActionButtons(widgetId.toString())) View.VISIBLE else View.GONE
+        val actionButtonsVisible =
+            if (prefs.getShowActionButtons(widgetId.toString())) View.VISIBLE else View.GONE
         setViewVisibility(R.id.widget_action_buttons, actionButtonsVisible)
 
         val buttonsAlignment =
@@ -136,7 +140,11 @@ object AgendaWidgetRenderer {
         }
     }
 
-    private fun RemoteViews.setupEmptyView(context: Context, widgetId: Int, prefs: AgendaWidgetPrefs) {
+    private fun RemoteViews.setupEmptyView(
+        context: Context,
+        widgetId: Int,
+        prefs: AgendaWidgetPrefs
+    ) {
         val noUpcomingEventsText = if (prefs.getShowNoUpcomingEventsText(
                 widgetId.toString()
             )
