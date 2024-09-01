@@ -71,7 +71,6 @@ class AgendaWidget : AppWidgetProvider() {
                 )
             )
             prefs.setWidgetActivityEventLastLoggedTimestamp()
-            getLogger(context).flushEvents()
         }
     }
 
