@@ -1,33 +1,18 @@
 package com.flowmosaic.calendar.analytics
 
 import android.content.Context
-import android.os.Bundle
-import com.amplitude.android.Amplitude
-import com.amplitude.android.Configuration
-import com.amplitude.android.DefaultTrackingOptions
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.posthog.PostHog
 import java.util.concurrent.TimeUnit
 
 
 class AgendaWidgetLogger internal constructor(
-    private val amplitude: Amplitude,
-    private val firebaseAnalytics: FirebaseAnalytics,
     private val prefs: AgendaWidgetPrefs,
     private val context: Context
 ) {
 
     constructor(context: Context) : this(
-        amplitude = Amplitude(
-            // Assuming you have a method similar to this to initialize Amplitude
-            Configuration(
-                apiKey = "040dc24f4d338b42206d69f262a0b6b5",
-                context = context.applicationContext,
-                defaultTracking = DefaultTrackingOptions.ALL,
-            )
-        ),
-        firebaseAnalytics = FirebaseAnalytics.getInstance(context),
         prefs = AgendaWidgetPrefs(context),
         context = context,
     )
@@ -38,6 +23,7 @@ class AgendaWidgetLogger internal constructor(
         private const val PARAM_TYPE: String = "type"
         private const val PARAM_SUCCESS: String = "success"
         private const val PARAM_SKIPPED: String = "skipped"
+        private const val PARAM_ACTIVITY: String = "activity"
     }
 
     internal enum class Event(val eventName: String) {
@@ -91,112 +77,65 @@ class AgendaWidgetLogger internal constructor(
     }
 
     fun logActivityStartedEvent(activity: Activity) {
-        val bundle = Bundle().apply {
-            putString("activity", activity.activityName)
-        }
-        firebaseAnalytics.logEvent(Event.ACTIVITY_STARTED.eventName, bundle)
-
-        val propertiesMap = mutableMapOf<String, Any?>(
-            "activity" to activity.activityName,
+        PostHog.capture(
+            event = Event.ACTIVITY_STARTED.eventName,
+            properties = mapOf(PARAM_ACTIVITY to activity.activityName)
         )
-        amplitude.track(Event.ACTIVITY_STARTED.eventName, propertiesMap)
     }
 
     fun logNavigationEvent(destination: String?) {
         val eventDestination = destination ?: "not_set"
-
-        firebaseAnalytics.logEvent(Event.NAVIGATION.eventName, Bundle().apply {
-            putString(PARAM_DESTINATION, eventDestination)
-        })
-
-        amplitude.track(
-            Event.NAVIGATION.eventName, mutableMapOf<String, Any?>(
-                PARAM_DESTINATION to eventDestination,
-            )
+        PostHog.capture(
+            event = Event.NAVIGATION.eventName,
+            properties = mapOf(PARAM_DESTINATION to eventDestination)
         )
     }
 
     fun logPermissionsResultEvent(allPermissionsGranted: Boolean) {
-        firebaseAnalytics.logEvent(Event.PERMISSIONS_RESULT.eventName, Bundle().apply {
-            putBoolean(PARAM_SUCCESS, allPermissionsGranted)
-        })
-
-        amplitude.track(
-            Event.PERMISSIONS_RESULT.eventName, mutableMapOf<String, Any?>(
-                PARAM_SUCCESS to allPermissionsGranted,
-            )
+        PostHog.capture(
+            event = Event.PERMISSIONS_RESULT.eventName,
+            properties = mapOf(PARAM_SUCCESS to allPermissionsGranted)
         )
     }
 
     fun logOnboardingCompleteEvent(skipped: Boolean) {
-        firebaseAnalytics.logEvent(Event.ONBOARDING_COMPLETE.eventName, Bundle().apply {
-            putBoolean(PARAM_SKIPPED, skipped)
-        })
-
-        amplitude.track(
-            Event.ONBOARDING_COMPLETE.eventName, mutableMapOf<String, Any?>(
-                PARAM_SKIPPED to skipped,
-            )
+        PostHog.capture(
+            event = Event.ONBOARDING_COMPLETE.eventName,
+            properties = mapOf(PARAM_SKIPPED to skipped)
         )
     }
 
     fun logActionButtonEvent(actionButton: ActionButton) {
-        firebaseAnalytics
-            .logEvent(Event.ACTION_BUTTON.eventName, Bundle().apply {
-                putString(PARAM_ITEM_NAME, actionButton.buttonName)
-            })
-
-        amplitude.track(
-            Event.ACTION_BUTTON.eventName, mutableMapOf<String, Any?>(
-                PARAM_ITEM_NAME to actionButton.buttonName,
-            )
+        PostHog.capture(
+            event = Event.ACTION_BUTTON.eventName,
+            properties = mapOf(PARAM_ITEM_NAME to actionButton.buttonName)
         )
     }
 
     fun logUpdatePrefEvent(name: PrefsScreenItemName) {
-        firebaseAnalytics
-            .logEvent(Event.UPDATE_PREF.eventName, Bundle().apply {
-                putString(PARAM_ITEM_NAME, name.itemName)
-            })
-
-        amplitude.track(
-            Event.UPDATE_PREF.eventName, mutableMapOf<String, Any?>(
-                PARAM_ITEM_NAME to name.itemName,
-            )
-        )
-
         launchInAppReview()
+        PostHog.capture(
+            event = Event.UPDATE_PREF.eventName,
+            properties = mapOf(PARAM_ITEM_NAME to name.itemName)
+        )
     }
 
     fun logSelectItemEvent(name: WidgetItemName) {
-        firebaseAnalytics
-            .logEvent(Event.SELECT_ITEM.eventName, Bundle().apply {
-                putString(PARAM_ITEM_NAME, name.itemName)
-            })
-
-        amplitude.track(
-            Event.SELECT_ITEM.eventName, mutableMapOf<String, Any?>(
-                PARAM_ITEM_NAME to name.itemName,
-            )
+        PostHog.capture(
+            event = Event.SELECT_ITEM.eventName,
+            properties = mapOf(PARAM_ITEM_NAME to name.itemName)
         )
     }
 
     fun logWidgetLifecycleEvent(
         widgetStatus: WidgetStatus, additionalParams: Map<String, String>? = null
     ) {
-        firebaseAnalytics
-            .logEvent(Event.WIDGET_LIFECYCLE_EVENT.eventName, Bundle().apply {
-                putString(PARAM_TYPE, widgetStatus.status)
-                additionalParams?.let { params ->
-                    for ((key, value) in params) {
-                        putString(key, value)
-                    }
-                }
-            })
-
-        amplitude.track(Event.WIDGET_LIFECYCLE_EVENT.eventName,
-            mutableMapOf<String, Any?>(PARAM_TYPE to widgetStatus.status)
-                .apply { putAll(additionalParams ?: emptyMap()) })
+        val properties = mutableMapOf(PARAM_TYPE to widgetStatus.status)
+        additionalParams?.let { properties.putAll(it) }
+        PostHog.capture(
+            event = Event.WIDGET_LIFECYCLE_EVENT.eventName,
+            properties = properties
+        )
     }
 
 
@@ -217,20 +156,11 @@ class AgendaWidgetLogger internal constructor(
         val manager = ReviewManagerFactory.create(context)
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->
-            firebaseAnalytics
-                .logEvent(Event.IN_APP_REVIEW.eventName, Bundle().apply {
-                    putBoolean(PARAM_SUCCESS, task.isSuccessful)
-                })
-            amplitude.track(
-                Event.IN_APP_REVIEW.eventName, mapOf(
-                    PARAM_SUCCESS to task.isSuccessful
-                )
+            PostHog.capture(
+                event = Event.IN_APP_REVIEW.eventName,
+                properties = mapOf(PARAM_SUCCESS to task.isSuccessful)
             )
         }
-    }
-
-    fun flushEvents() {
-        amplitude.flush()
     }
 
 }

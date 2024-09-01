@@ -223,7 +223,7 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         logger = logger
     )
     CheckboxRow(
-        displayText = context.getString(R.string.date_separator_visible),
+        displayText = context.getString(R.string.align_widget_bottom),
         loggingItem = AgendaWidgetLogger.PrefsScreenItemName.ALIGN_BOTTOM,
         checkboxValue = alignBottom,
         saveCheckboxValue = { newValue: Boolean ->
