@@ -13,8 +13,8 @@ android {
         applicationId "com.flowmosaic.calendar"
         minSdk 24
         targetSdk 34
-        versionCode 40
-        versionName "1.2.12"
+        versionCode 43
+        versionName "1.2.15"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -78,13 +78,12 @@ dependencies {
     implementation 'com.google.accompanist:accompanist-permissions:0.23.1'
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
-    // Firebase
+    // Logging
     implementation platform('com.google.firebase:firebase-bom:32.7.2')
     implementation("com.google.firebase:firebase-crashlytics")
-    implementation("com.google.firebase:firebase-analytics")
+//    implementation("com.google.firebase:firebase-analytics")
 
-    // Amplitude
-    implementation 'com.amplitude:analytics-android:1.14.0'
+    implementation("com.posthog:posthog-android:3.+")
 
     // Reviews API
     implementation 'com.google.android.play:review:2.0.1'
