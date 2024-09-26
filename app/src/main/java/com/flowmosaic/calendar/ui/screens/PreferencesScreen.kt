@@ -1,17 +1,24 @@
 package com.flowmosaic.calendar.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -27,7 +34,7 @@ data class PreferenceSection(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PreferencesScreen(appWidgetId: Int) {
+fun PreferencesScreen(appWidgetId: Int, onCloseClick: (() -> Unit)? = null) {
     val context = LocalContext.current
     val widgetId = if (appWidgetId != 0) appWidgetId.toString() else ""
     val logger = AgendaWidgetLogger(context)
@@ -48,20 +55,44 @@ fun PreferencesScreen(appWidgetId: Int) {
         ),
     )
 
-    LazyColumn(Modifier.fillMaxSize(1f)) {
-        sections.forEachIndexed { idx, section ->
-            if (idx > 0) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = if (onCloseClick != null) 80.dp else 0.dp) // Add padding at the bottom for the button
+        ) {
+            sections.forEachIndexed { idx, section ->
+                if (idx > 0) {
+                    item {
+                        HorizontalDivider(
+                            thickness = .5.dp,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    }
+                }
+                stickyHeader { TitleWithDivider(title = section.title) }
                 item {
-                    HorizontalDivider(
-                        thickness = .5.dp,
-                        color = MaterialTheme.colorScheme.outline
-                    )
+                    section.content()
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
-            stickyHeader { TitleWithDivider(title = section.title) }
-            item {
-                section.content()
-                Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        onCloseClick?.let {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(16.dp)
+            ) {
+                Button(
+                    onClick = { it() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(text = context.getString(R.string.save))
+                }
             }
         }
     }

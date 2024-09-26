@@ -1,7 +1,9 @@
 package com.flowmosaic.calendar.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -19,32 +21,32 @@ import com.flowmosaic.calendar.ui.theme.getPrimaryColor
 @Composable
 fun Header(subtitle: String = "") {
     val context = LocalContext.current
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(getPrimaryColor())
-            .padding(horizontal = 16.dp)
-            .padding(top = 16.dp, bottom = 20.dp),
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
     ) {
-
-        Text(
-            text = context.getString(R.string.app_name),
-            style = MaterialTheme.typography.headlineSmall,
-            color = getOnPrimaryColor(),
-        )
-        if (subtitle.isNotEmpty()) {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = subtitle,
-                style = MaterialTheme.typography.titleSmall,
+                text = context.getString(R.string.app_name),
+                style = MaterialTheme.typography.headlineSmall,
                 color = getOnPrimaryColor(),
-                fontWeight = FontWeight.Light,
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = 8.dp,
-                    )
             )
+            if (subtitle.isNotEmpty()) {
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = getOnPrimaryColor(),
+                    fontWeight = FontWeight.Light,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                )
+            }
         }
     }
 }
