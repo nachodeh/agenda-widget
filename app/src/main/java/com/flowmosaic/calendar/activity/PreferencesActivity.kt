@@ -1,6 +1,7 @@
 package com.flowmosaic.calendar.activity
 
 import android.appwidget.AppWidgetManager
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -26,6 +27,7 @@ class PreferencesActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             CalendarWidgetTheme {
                 val statusBarColor = getPrimaryColor().toArgb()
@@ -46,14 +48,27 @@ class PreferencesActivity : ComponentActivity() {
                         AppWidgetManager.EXTRA_APPWIDGET_ID,
                         AppWidgetManager.INVALID_APPWIDGET_ID
                     ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+
                     Column {
-                        Header()
-                        PreferencesScreen(appWidgetId)
+                        Header(
+                            subtitle = "Preferences",
+                        )
+                        PreferencesScreen(
+                            appWidgetId,
+                            onCloseClick = { saveWidgetConfig(appWidgetId) })
                     }
                 }
             }
         }
         logger.logActivityStartedEvent(AgendaWidgetLogger.Activity.PREFERENCES_ACTIVITY)
+    }
+
+    private fun saveWidgetConfig(appWidgetId: Int) {
+        val resultValue = Intent().apply {
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+        }
+        setResult(RESULT_OK, resultValue)
+        finish()
     }
 
     override fun onPause() {
