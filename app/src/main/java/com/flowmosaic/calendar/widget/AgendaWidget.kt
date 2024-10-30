@@ -1,19 +1,15 @@
 package com.flowmosaic.calendar.widget
 
-import android.Manifest
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.CalendarContract
-import android.util.Log
-import androidx.core.content.ContextCompat
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.data.CalendarPermissionsChecker.hasCalendarPermission
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
@@ -182,7 +178,11 @@ class AgendaWidget : AppWidgetProvider() {
             .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime)
             .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime)
 
-        context.startActivity(viewIntent)
+        try {
+            context.startActivity(viewIntent)
+        } catch (error: Error) {
+            getLogger(context).logException(mapOf("error" to error.stackTrace.toString(), "location" to "handleClickWidgetAgendaItem"))
+        }
     }
 
 
