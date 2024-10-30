@@ -36,6 +36,7 @@ class AgendaWidgetLogger internal constructor(
         IN_APP_REVIEW("in_app_review"),
         PERMISSIONS_RESULT("permissions_result"),
         ONBOARDING_COMPLETE("onboarding_complete"),
+        EXCEPTION("exception"),
     }
 
     enum class Activity(val activityName: String) {
@@ -74,6 +75,13 @@ class AgendaWidgetLogger internal constructor(
         ENABLED("enabled"),
         DELETED("deleted"),
         DISABLED("disabled"),
+    }
+
+    fun logException(additionalParams: Map<String, String>) {
+        PostHog.capture(
+            event = Event.EXCEPTION.eventName,
+            properties = additionalParams
+        )
     }
 
     fun logActivityStartedEvent(activity: Activity) {

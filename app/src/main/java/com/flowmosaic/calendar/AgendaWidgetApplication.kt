@@ -18,7 +18,9 @@ class AgendaWidgetApplication: Application() {
         val config = PostHogAndroidConfig(
             apiKey = POSTHOG_API_KEY,
             host = POSTHOG_HOST
-        )
+        ).apply {
+            sessionReplay = true
+        }
 
 
         // Setup PostHog with the given Context and Config
