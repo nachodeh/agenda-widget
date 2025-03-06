@@ -53,7 +53,7 @@ class AgendaWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         val prefs = AgendaWidgetPrefs(context)
-        // I want this to finish before going ahead with other instrucitons in the method
+        // I want this to finish before going ahead with other instructions in the method
         CoroutineScope(Dispatchers.Main).launch {
             prefs.initSelectedCalendars(context)
             for (appWidgetId in appWidgetIds) {

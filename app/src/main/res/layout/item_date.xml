@@ -12,7 +12,7 @@
         android:shadowColor="#80000000"
         android:shadowDx="1"
         android:shadowDy="1"
-        android:shadowRadius="4"
+        android:shadowRadius="1"
         android:text="@string/date_placeholder"
         android:textColor="@color/white"
         android:textSize="16sp"
