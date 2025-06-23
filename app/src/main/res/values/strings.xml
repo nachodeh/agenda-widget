@@ -32,6 +32,7 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="no_upcoming_events">No upcoming events</string>
+    <string name="show_calendar_color">Show calendar color</string>
 
     <string name="active_widgets">Widget configuration</string>
     <string name="default_configuration">Default configuration</string>
