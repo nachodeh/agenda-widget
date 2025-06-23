@@ -7,7 +7,7 @@ import com.posthog.android.PostHogAndroidConfig
 class AgendaWidgetApplication: Application() {
 
     companion object {
-        const val POSTHOG_API_KEY = "phc_hJuZZ8c8lmb78D1HKnm2q8laVWdK5cdBMhrTZ9cttqB"
+        const val POSTHOG_API_KEY = BuildConfig.POSTHOG_API_KEY
         const val POSTHOG_HOST = "https://us.i.posthog.com"
     }
 

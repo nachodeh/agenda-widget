@@ -5,6 +5,14 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
+
+def posthogApiKey = localProperties.getProperty("POSTHOG_API_KEY") ?: ""
+
 android {
     namespace 'com.flowmosaic.calendar'
     compileSdk 34
@@ -13,13 +21,15 @@ android {
         applicationId "com.flowmosaic.calendar"
         minSdk 24
         targetSdk 34
-        versionCode 47
-        versionName "1.2.19"
+        versionCode 48
+        versionName "1.2.20"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField "String", "POSTHOG_API_KEY", "\"${posthogApiKey}\""
     }
 
     buildTypes {
@@ -46,10 +56,11 @@ android {
     buildFeatures {
         compose true
         viewBinding true
+        buildConfig true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.10'
-    }
+    kotlinCompilerExtensionVersion '1.5.10'
+}
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
