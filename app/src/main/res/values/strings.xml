@@ -7,6 +7,7 @@
     <string name="prefs_title_general">General</string>
     <string name="prefs_title_date_time">Date and Time</string>
     <string name="prefs_title_appearance">Appearance</string>
+    <string name="prefs_title_calendar_colors">Calendar colors</string>
     <string name="select_calendars">Select calendars</string>
     <string name="number_of_days_to_display">Number of days to display</string>
     <string name="show_end_time">Show end time</string>

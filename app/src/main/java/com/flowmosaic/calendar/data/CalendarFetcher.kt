@@ -21,6 +21,7 @@ data class CalendarEvent(
     val eventId: Long,
     val actualStartTime: Long,
     val actualEndTime: Long,
+    val calendarId: Long
 )
 
 sealed class CalendarViewItem {
@@ -156,7 +157,8 @@ class CalendarFetcher {
                         allDay,
                         eventId,
                         actualStartTime,
-                        actualEndTime
+                        actualEndTime,
+                        calendarId
                     )
                 )
             }

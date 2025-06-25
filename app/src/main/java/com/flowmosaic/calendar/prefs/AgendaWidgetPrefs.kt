@@ -36,6 +36,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         private const val PREF_ONBOARDING_DONE = "key_onboarding_done"
         private const val PREF_ALIGN_BOTTOM = "key_align_bottom"
         private const val PREF_SHOW_CAL_COLOR = "show_calendar_color"
+        private const val PREF_CALENDAR_COLOR = "calendar_color"
     }
 
     enum class FontSize(private val displayResId: Int) {
@@ -324,4 +325,23 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         sharedPreferences.edit().putBoolean(prefsKey, showCalendarColor).apply()
     }
 
+    private fun getCalendarColorPrefKey(calendarId: Long): String {
+        return PREF_CALENDAR_COLOR.plus("#").plus(calendarId.toString())
+    }
+
+    fun getCalendarColor(widgetId: String, calendarId: Long): Color {
+        val defaultColor = Color.White.toArgb()
+        val (prefsKey, prefExists) = getKeyWithWidgetId(getCalendarColorPrefKey(calendarId), widgetId)
+        val color = Color(sharedPreferences.getInt(prefsKey, defaultColor))
+        if (!prefExists) {
+            setCalendarColor(color, widgetId, calendarId)
+        }
+        return color
+    }
+
+    fun setCalendarColor(calendarColor: Color, widgetId: String, calendarId: Long) {
+        val colorInt = calendarColor.toArgb()
+        val prefsKey = getKeyWithWidgetIdSave(getCalendarColorPrefKey(calendarId), widgetId)
+        sharedPreferences.edit().putInt(prefsKey, colorInt).apply()
+    }
 }

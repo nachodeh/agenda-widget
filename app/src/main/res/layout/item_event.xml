@@ -10,6 +10,7 @@
         android:layout_width="14sp"
         android:layout_height="14sp"
         android:layout_marginEnd="8dp"
+        android:tintMode="add"
         android:src="@drawable/calendar_color"/>
 
     <TextView
