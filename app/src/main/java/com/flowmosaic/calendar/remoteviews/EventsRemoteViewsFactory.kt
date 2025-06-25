@@ -88,7 +88,9 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             setUpVerticalSpacing(context, textViewId, item)
             setUpFontAlignment(textViewId)
 
-            setUpCalendarColor()
+            if (item is CalendarViewItem.Event) {
+                setUpCalendarColor(textColor, item.event.calendarId)
+            }
 
             setTextViewText(textViewId, text)
             setOnClickFillInIntent(textViewId, getFillInIntent(item))
@@ -248,9 +250,19 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         return luminance > 0.5
     }
 
-    private fun RemoteViews.setUpCalendarColor() {
+    private fun RemoteViews.setUpCalendarColor(textColor: Int, calendarId: Long) {
         val calendarColorVisibility = if (prefs.getShowCalendarColor(widgetId)) View.VISIBLE else View.GONE
-        setViewVisibility(R.id.item_event_calendar_color, calendarColorVisibility)
+
+        val isColorLight = isColorLight(textColor)
+        var id = when (isColorLight) {
+            true -> R.id.item_event_calendar_color
+            false -> R.id.item_event_calendar_color_dark
+        }
+
+        setViewVisibility(id, calendarColorVisibility)
+
+        val calendarColor = prefs.getCalendarColor(widgetId, calendarId)
+        setInt(id, "setColorFilter", calendarColor.toArgb())
     }
 
 }
