@@ -84,7 +84,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             setTextColor(textViewId, textColor)
             setUpSeparator(textColor)
             setUpFontSize(textViewId, item)
-            setUpVerticalSpacing(context, textViewId, item, position)
+            setUpVerticalSpacing(context, textViewId, item)
             setUpFontAlignment(textViewId)
 
             setTextViewText(textViewId, text)
@@ -165,14 +165,13 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         context: Context,
         textViewId: Int,
         calendarViewItem: CalendarViewItem,
-        position: Int
     ) {
         val verticalSpacing = prefs.getVerticalSpacing(widgetId)
         when (calendarViewItem) {
             is CalendarViewItem.Day -> {
                 val topPadding = UnitConverter.dpToPx(
                     when (verticalSpacing) {
-                        AgendaWidgetPrefs.VerticalSpacing.SMALL -> if (position == 0) 0f else 4f
+                        AgendaWidgetPrefs.VerticalSpacing.SMALL -> 4f
                         AgendaWidgetPrefs.VerticalSpacing.LARGE -> 8f
                     }, context
                 )
