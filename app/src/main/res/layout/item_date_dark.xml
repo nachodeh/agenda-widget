@@ -2,27 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/item_date_text_view_dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="4dp"
+        tools:paddingTop="8dp"
+        tools:paddingBottom="4dp"
         android:text="@string/date_placeholder"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/date_separator"
+    <!-- We have to wrap the separator because there is no set margin method on Remote Views below api 31-->
+    <FrameLayout
+        android:id="@+id/date_separator_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="6dp"
-        android:alpha="0.2"
-        android:background="@color/white_80"
-        android:orientation="horizontal"
-        android:visibility="gone" />
+        android:layout_height="wrap_content"
+        android:paddingBottom="6dp"
+        tools:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/date_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.2"
+            android:background="@color/white_80"
+            android:orientation="horizontal" />
+
+    </FrameLayout>
 
 </LinearLayout>

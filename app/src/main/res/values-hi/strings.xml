@@ -27,6 +27,7 @@
     <string name="font_size_small">छोटा</string>
     <string name="font_size_medium">मध्यम</string>
     <string name="font_size_large">"बड़ा "</string>
+    <string name="vertical_spacing">ऊर्ध्वाधर रिक्ति</string>
     <string name="text_alignment">पाठ संरेखण</string>
     <string name="prefs_title_editing_default_config">डिफ़ॉल्ट कॉन्फ़िगरेशन संपादन</string>
     <string name="prefs_title_general">सामान्य</string>

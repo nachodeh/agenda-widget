@@ -28,6 +28,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         private const val PREF_TEXT_COLOR = "key_text_color"
         private const val PREF_LAST_LOGGED = "lastLogged"
         private const val PREF_FONT_SIZE = "key_font_size"
+        private const val PREF_VERTICAL_SPACING = "key_vertical_spacing"
         private const val PREF_TEXT_ALIGNMENT = "key_text_alignment"
         private const val PREF_OPACITY = "key_opacity"
         private const val PREF_HOUR_FORMAT_12 = "key_hour_format_12"
@@ -40,6 +41,15 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     enum class FontSize(private val displayResId: Int) {
         SMALL(R.string.font_size_small),
         MEDIUM(R.string.font_size_medium),
+        LARGE(R.string.font_size_large);
+
+        fun getDisplayText(context: Context): String {
+            return context.getString(displayResId)
+        }
+    }
+
+    enum class VerticalSpacing(private val displayResId: Int) {
+        SMALL(R.string.font_size_small),
         LARGE(R.string.font_size_large);
 
         fun getDisplayText(context: Context): String {
@@ -196,6 +206,22 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     fun setFontSize(fontSize: FontSize, widgetId: String) {
         val prefsKey = getKeyWithWidgetIdSave(PREF_FONT_SIZE, widgetId)
         sharedPreferences.edit().putString(prefsKey, fontSize.name).apply()
+    }
+
+    fun getVerticalSpacing(widgetId: String): VerticalSpacing {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_VERTICAL_SPACING, widgetId)
+        val size = sharedPreferences.getString(prefsKey, VerticalSpacing.LARGE.name)
+            ?: FontSize.LARGE.name
+        val verticalSpacing = VerticalSpacing.valueOf(size)
+        if (!prefExists) {
+            setVerticalSpacing(verticalSpacing, widgetId)
+        }
+        return verticalSpacing
+    }
+
+    fun setVerticalSpacing(verticalSpacing: VerticalSpacing, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_VERTICAL_SPACING, widgetId)
+        sharedPreferences.edit().putString(prefsKey, verticalSpacing.name).apply()
     }
 
     fun getTextAlignment(widgetId: String): TextAlignment {
