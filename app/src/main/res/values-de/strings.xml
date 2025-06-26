@@ -28,6 +28,7 @@
     <string name="font_size_small">Klein</string>
     <string name="font_size_medium">Mittel</string>
     <string name="font_size_large">Groß</string>
+    <string name="vertical_spacing">Vertikaler Abstand</string>
     <string name="text_alignment">Textausrichtung</string>
     <string name="prefs_title_editing_default_config">Bearbeiten der Standardkonfiguration</string>
     <string name="prefs_title_general">Allgemein</string>

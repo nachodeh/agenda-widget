@@ -194,6 +194,9 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
     val fontSize = remember {
         mutableStateOf(prefs.getFontSize(widgetId))
     }
+    val verticalSpacing = remember {
+        mutableStateOf(prefs.getVerticalSpacing(widgetId))
+    }
     val textAlignment = remember {
         mutableStateOf(prefs.getTextAlignment(widgetId))
     }
@@ -214,6 +217,15 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         saveFontSizeValue = { newValue: AgendaWidgetPrefs.FontSize ->
             fontSize.value = newValue
             prefs.setFontSize(newValue, widgetId)
+        },
+        logger = logger
+    )
+    VerticalSpacingSelectorRow(
+        displayText = context.getString(R.string.vertical_spacing),
+        verticalSpacingValue = verticalSpacing,
+        saveVerticalSpacingValue = { newValue: AgendaWidgetPrefs.VerticalSpacing ->
+            verticalSpacing.value = newValue
+            prefs.setVerticalSpacing(newValue, widgetId)
         },
         logger = logger
     )

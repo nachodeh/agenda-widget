@@ -15,6 +15,7 @@ import com.flowmosaic.calendar.data.CalendarDateUtils
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.data.CalendarViewItem
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
+import com.flowmosaic.calendar.ui.UnitConverter
 import com.flowmosaic.calendar.widget.EXTRA_END_TIME
 import com.flowmosaic.calendar.widget.EXTRA_EVENT_ID
 import com.flowmosaic.calendar.widget.EXTRA_START_TIME
@@ -83,6 +84,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             setTextColor(textViewId, textColor)
             setUpSeparator(textColor)
             setUpFontSize(textViewId, item)
+            setUpVerticalSpacing(context, textViewId, item, position)
             setUpFontAlignment(textViewId)
 
             setTextViewText(textViewId, text)
@@ -107,13 +109,29 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     }
 
     private fun RemoteViews.setUpSeparator(color: Int) {
+        // Set visibility
         val separatorVisibility =
             if (prefs.getSeparatorVisible(widgetId)) View.VISIBLE else View.GONE
-        setViewVisibility(R.id.date_separator, separatorVisibility)
+        setViewVisibility(R.id.date_separator_wrapper, separatorVisibility)
+
+        // Set background color
         setInt(
             R.id.date_separator,
             "setBackgroundColor",
             color
+        )
+
+        // Set spacing
+        val verticalSpacing = prefs.getVerticalSpacing(widgetId)
+        val bottomPadding = UnitConverter.spToPx(
+            when (verticalSpacing) {
+                AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
+                AgendaWidgetPrefs.VerticalSpacing.LARGE -> 6f
+            }, context
+        )
+        setViewPadding(
+            R.id.date_separator_wrapper,
+            0, 0, 0, bottomPadding,
         )
     }
 
@@ -141,6 +159,48 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             TypedValue.COMPLEX_UNIT_SP,
             defaultTextSizeSp + fontSizeAdjustment
         )
+    }
+
+    private fun RemoteViews.setUpVerticalSpacing(
+        context: Context,
+        textViewId: Int,
+        calendarViewItem: CalendarViewItem,
+        position: Int
+    ) {
+        val verticalSpacing = prefs.getVerticalSpacing(widgetId)
+        when (calendarViewItem) {
+            is CalendarViewItem.Day -> {
+                val topPadding = UnitConverter.spToPx(
+                    when (verticalSpacing) {
+                        AgendaWidgetPrefs.VerticalSpacing.SMALL -> if (position == 0) 0f else 4f
+                        AgendaWidgetPrefs.VerticalSpacing.LARGE -> 8f
+                    }, context
+                )
+                val bottomPadding = UnitConverter.spToPx(
+                    when (verticalSpacing) {
+                        AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
+                        AgendaWidgetPrefs.VerticalSpacing.LARGE -> 4f
+                    }, context
+                )
+                setViewPadding(
+                    textViewId,
+                    0, topPadding, 0, bottomPadding,
+                )
+            }
+
+            is CalendarViewItem.Event -> {
+                val verticalPadding = UnitConverter.spToPx(
+                    when (verticalSpacing) {
+                        AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
+                        AgendaWidgetPrefs.VerticalSpacing.LARGE -> 5f
+                    }, context
+                )
+                setViewPadding(
+                    textViewId,
+                    0, verticalPadding, 0, verticalPadding,
+                )
+            }
+        }
     }
 
     private fun getFillInIntent(item: CalendarViewItem): Intent {

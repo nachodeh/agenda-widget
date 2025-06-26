@@ -27,6 +27,7 @@
     <string name="font_size_small">Petit</string>
     <string name="font_size_medium">Moyen</string>
     <string name="font_size_large">Grand</string>
+    <string name="vertical_spacing">Espacement vertical</string>
     <string name="text_alignment">Alignement du texte</string>
     <string name="prefs_title_editing_default_config">Modification de la configuration par défaut</string>
     <string name="prefs_title_general">Général</string>

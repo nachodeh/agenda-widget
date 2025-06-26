@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_event_text_view_dark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textSize="14sp"
     android:textColor="@color/white"
-    android:paddingVertical="5dp"
+    tools:paddingVertical="5dp"
     android:text="@string/event_placeholder"
     android:maxLines="1"
     android:ellipsize="end"
