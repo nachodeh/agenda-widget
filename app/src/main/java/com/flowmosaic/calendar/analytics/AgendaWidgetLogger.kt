@@ -66,6 +66,7 @@ class AgendaWidgetLogger internal constructor(
         ALIGN_BOTTOM("align_bottom"),
         TEXT_COLOR("text_color"),
         FONT_SIZE("font_size"),
+        VERTICAL_SPACING("vertical_spacing"),
         TEXT_ALIGNMENT("text_alignment"),
         OPACITY("opacity"),
     }
