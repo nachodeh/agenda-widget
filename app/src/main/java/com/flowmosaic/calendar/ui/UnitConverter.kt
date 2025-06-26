@@ -5,9 +5,9 @@ import android.util.TypedValue
 
 object UnitConverter {
 
-    fun spToPx(sp: Float, context: Context): Int {
+    fun dpToPx(sp: Float, context: Context): Int {
         return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_SP,
+            TypedValue.COMPLEX_UNIT_DIP,
             sp,
             context.resources.displayMetrics
         ).toInt()
