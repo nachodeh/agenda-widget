@@ -123,7 +123,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
 
         // Set spacing
         val verticalSpacing = prefs.getVerticalSpacing(widgetId)
-        val bottomPadding = UnitConverter.spToPx(
+        val bottomPadding = UnitConverter.dpToPx(
             when (verticalSpacing) {
                 AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
                 AgendaWidgetPrefs.VerticalSpacing.LARGE -> 6f
@@ -170,13 +170,13 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         val verticalSpacing = prefs.getVerticalSpacing(widgetId)
         when (calendarViewItem) {
             is CalendarViewItem.Day -> {
-                val topPadding = UnitConverter.spToPx(
+                val topPadding = UnitConverter.dpToPx(
                     when (verticalSpacing) {
                         AgendaWidgetPrefs.VerticalSpacing.SMALL -> if (position == 0) 0f else 4f
                         AgendaWidgetPrefs.VerticalSpacing.LARGE -> 8f
                     }, context
                 )
-                val bottomPadding = UnitConverter.spToPx(
+                val bottomPadding = UnitConverter.dpToPx(
                     when (verticalSpacing) {
                         AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
                         AgendaWidgetPrefs.VerticalSpacing.LARGE -> 4f
@@ -189,7 +189,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             }
 
             is CalendarViewItem.Event -> {
-                val verticalPadding = UnitConverter.spToPx(
+                val verticalPadding = UnitConverter.dpToPx(
                     when (verticalSpacing) {
                         AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
                         AgendaWidgetPrefs.VerticalSpacing.LARGE -> 5f
