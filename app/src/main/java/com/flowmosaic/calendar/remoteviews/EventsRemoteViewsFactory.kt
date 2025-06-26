@@ -76,7 +76,8 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                 is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(
                     item.event,
                     context,
-                    widgetId
+                    widgetId,
+                    prefs.getShowLocation(widgetId)
                 )
             }
 

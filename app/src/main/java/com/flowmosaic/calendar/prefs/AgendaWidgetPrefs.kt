@@ -24,6 +24,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         private const val PREF_SHOW_ACTION_BUTTONS = "key_show_action_buttons"
         private const val PREF_SHOW_NO_UPCOMING_EVENTS = "key_show_no_upcoming_events"
         private const val PREF_SHOW_END_TIME = "key_show_end_time"
+        private const val PREF_SHOW_LOCATION = "key_show_location"
         private const val PREF_NUMBER_OF_DAYS = "key_number_of_days"
         private const val PREF_TEXT_COLOR = "key_text_color"
         private const val PREF_LAST_LOGGED = "lastLogged"
@@ -150,6 +151,20 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     fun setShowEndTime(showEndTime: Boolean, widgetId: String) {
         val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_END_TIME, widgetId)
         sharedPreferences.edit().putBoolean(prefsKey, showEndTime).apply()
+    }
+
+    fun getShowLocation(widgetId: String): Boolean {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_SHOW_LOCATION, widgetId)
+        val result = sharedPreferences.getBoolean(prefsKey, false)
+        if (!prefExists) {
+            setShowLocation(result, widgetId)
+        }
+        return result
+    }
+
+    fun setShowLocation(showLocation: Boolean, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_LOCATION, widgetId)
+        sharedPreferences.edit().putBoolean(prefsKey, showLocation).apply()
     }
 
     fun getNumberOfDays(widgetId: String): Int {

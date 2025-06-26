@@ -8,6 +8,7 @@
     <string name="show_action_buttons">แสดงปุ่มดำเนินการ</string>
     <string name="show_no_upcoming_events">แสดงข้อความ \"ไม่มีกิจกรรมที่จะมาถึง\"</string>
     <string name="use_12_hour_format">ใช้รูปแบบ 12 ชั่วโมง</string>
+    <string name="show_location">แสดงตำแหน่ง</string>
     <string name="date_separator_visible">แสดงตัวคั่นวันที่</string>
     <string name="align_widget_bottom">การจัดแนวด้านล่าง</string>
     <string name="font_size">ขนาดตัวอักษร</string>
@@ -31,7 +32,7 @@
     <string name="text_alignment">การจัดตำแหน่งข้อความ</string>
     <string name="prefs_title_editing_default_config">แก้ไขการกำหนดค่าเริ่มต้น</string>
     <string name="prefs_title_general">ทั่วไป</string>
-    <string name="prefs_title_date_time">วันที่และเวลา</string>
+    <string name="prefs_title_date_time_location">วันที่และเวลา, สถานที่</string>
     <string name="prefs_title_appearance">"ลักษณะ "</string>
     <string name="no_upcoming_events">ไม่มีกิจกรรมที่จะเกิดขึ้น</string>
     <string name="active_widgets">การกำหนดค่าวิดเจ็ต</string>
