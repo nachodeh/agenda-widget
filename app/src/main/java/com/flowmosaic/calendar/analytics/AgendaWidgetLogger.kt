@@ -61,6 +61,7 @@ class AgendaWidgetLogger internal constructor(
         SHOW_END_TIME("show_end_time"),
         SHOW_ACTION_BUTTONS("show_action_buttons"),
         SHOW_NO_EVENTS_TEXT("show_no_events_text"),
+        SHOW_LOCATION("show_location"),
         USE_12_HOUR("use_12_hour"),
         DATE_SEPARATOR("date_separator"),
         ALIGN_BOTTOM("align_bottom"),

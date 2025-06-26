@@ -8,6 +8,7 @@
     <string name="show_action_buttons">显示操作按钮</string>
     <string name="show_no_upcoming_events">显示没有即将到来的事件文本</string>
     <string name="use_12_hour_format">使用12小时制</string>
+    <string name="show_location">显示位置</string>
     <string name="date_separator_visible">显示日期分隔符</string>
     <string name="align_widget_bottom">底部对齐</string>
     <string name="font_size">字体大小</string>
@@ -30,7 +31,7 @@
     <string name="text_alignment">"文字对齐 "</string>
     <string name="prefs_title_editing_default_config">编辑默认配置</string>
     <string name="prefs_title_general">通用</string>
-    <string name="prefs_title_date_time">日期和时间</string>
+    <string name="prefs_title_date_time_location">日期和时间, 位置</string>
     <string name="prefs_title_appearance">外观</string>
     <string name="no_upcoming_events">暂无即将到来的事件</string>
     <string name="active_widgets">小部件配置</string>

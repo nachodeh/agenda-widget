@@ -34,9 +34,10 @@ object CalendarDateUtils {
     fun getCalendarEventText(
         calendarEvent: CalendarEvent,
         context: Context,
-        widgetId: String
+        widgetId: String,
+        locationAllowed: Boolean,
     ): String {
-        return if (calendarEvent.isAllDay) {
+        var text = if (calendarEvent.isAllDay) {
             calendarEvent.title
         } else {
             val prefs = AgendaWidgetPrefs(context)
@@ -48,6 +49,11 @@ object CalendarDateUtils {
                 )
             "$formattedTimeRange | ${calendarEvent.title}"
         }
+
+        if (locationAllowed && !calendarEvent.location.isNullOrBlank()) {
+            text += " @ ${calendarEvent.location}"
+        }
+        return text
     }
 
     fun getDateFromTimestamp(timestamp: Long): Date {
