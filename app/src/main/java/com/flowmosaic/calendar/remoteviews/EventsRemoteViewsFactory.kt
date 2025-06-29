@@ -191,12 +191,12 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     }
 
     private fun RemoteViews.setUpCalendarColor(textColor: Int, calendarId: Long) {
-        val calendarColorVisibility = if (prefs.getShowCalendarColor(widgetId)) View.VISIBLE else View.GONE
+        val calendarColorVisibility = if (prefs.getShowCalendarBlob(widgetId)) View.VISIBLE else View.GONE
 
         val isColorLight = isColorLight(textColor)
         var id = when (isColorLight) {
-            true -> R.id.item_event_calendar_color
-            false -> R.id.item_event_calendar_color_dark
+            true -> R.id.item_event_calendar_blob
+            false -> R.id.item_event_calendar_blob_dark
         }
 
         setViewVisibility(id, calendarColorVisibility)

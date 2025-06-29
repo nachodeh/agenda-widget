@@ -220,8 +220,8 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         mutableStateOf(prefs.getAlignBottom(widgetId))
     }
 
-    var showCalendarColor = remember {
-        mutableStateOf(prefs.getShowCalendarColor(widgetId))
+    var showCalendarBlob = remember {
+        mutableStateOf(prefs.getShowCalendarBlob(widgetId))
     }
 
     FontSizeSelectorRow(
@@ -280,12 +280,12 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         logger = logger
     )
     CheckboxRow(
-        displayText = context.getString(R.string.show_calendar_color),
-        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_CAL_COLOR,
-        checkboxValue = showCalendarColor,
+        displayText = context.getString(R.string.show_calendar_blob),
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_CALENDADR_BLOB,
+        checkboxValue = showCalendarBlob,
         saveCheckboxValue = { newValue: Boolean ->
-            showCalendarColor.value = newValue
-            prefs.setShowCalendarColor(newValue, widgetId)
+            showCalendarBlob.value = newValue
+            prefs.setShowCalendarBlob(newValue, widgetId)
         },
         logger = logger
     )

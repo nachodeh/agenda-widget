@@ -35,7 +35,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         private const val PREF_SEPARATOR_VISIBLE = "key_separator_visible"
         private const val PREF_ONBOARDING_DONE = "key_onboarding_done"
         private const val PREF_ALIGN_BOTTOM = "key_align_bottom"
-        private const val PREF_SHOW_CAL_COLOR = "show_calendar_color"
+        private const val PREF_SHOW_CALENDAR_BLOB = "show_calendar_blob"
         private const val PREF_CALENDAR_COLOR = "calendar_color"
     }
 
@@ -311,18 +311,18 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         return key.plus("_").plus(widgetId)
     }
 
-    fun getShowCalendarColor(widgetId: String): Boolean {
-        val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_SHOW_CAL_COLOR, widgetId)
-        val showCalendarColor = sharedPreferences.getBoolean(prefsKey, false)
+    fun getShowCalendarBlob(widgetId: String): Boolean {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_SHOW_CALENDAR_BLOB, widgetId)
+        val showCalendarBlob = sharedPreferences.getBoolean(prefsKey, false)
         if (!prefExists) {
-            setShowCalendarColor(showCalendarColor, widgetId)
+            setShowCalendarBlob(showCalendarBlob, widgetId)
         }
-        return showCalendarColor
+        return showCalendarBlob
     }
 
-    fun setShowCalendarColor(showCalendarColor: Boolean, widgetId: String) {
-        val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_CAL_COLOR, widgetId)
-        sharedPreferences.edit().putBoolean(prefsKey, showCalendarColor).apply()
+    fun setShowCalendarBlob(showCalendarBlob: Boolean, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_CALENDAR_BLOB, widgetId)
+        sharedPreferences.edit().putBoolean(prefsKey, showCalendarBlob).apply()
     }
 
     private fun getCalendarColorPrefKey(calendarId: Long): String {
