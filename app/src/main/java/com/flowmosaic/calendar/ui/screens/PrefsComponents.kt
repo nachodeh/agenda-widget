@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -44,6 +45,7 @@ import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.dialog.ColorDialog
+import com.flowmosaic.calendar.ui.dialog.ShowCalendarBlobsDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarDialog
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -375,6 +377,58 @@ fun OpacitySelectorRow(
             valueRange = 0f..1f,
             steps = 10,
             modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun ConfigureCalendarBlobsButton(displayText: String, widgetId: String, logger: AgendaWidgetLogger) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val showConfigureCalendarBlobsDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val calendarPermissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.READ_CALENDAR,
+        )
+    )
+
+    if (!calendarPermissionsState.allPermissionsGranted) {
+        return
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                coroutineScope.launch {
+                    showConfigureCalendarBlobsDialog.value = true
+                }
+            }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = displayText,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f)
+        )
+        Icon(
+            imageVector = Icons.Default.Edit,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
+    }
+
+    if (showConfigureCalendarBlobsDialog.value) {
+        ShowCalendarBlobsDialog(openDialog = showConfigureCalendarBlobsDialog, widgetId, logger)
+        logger.logUpdatePrefEvent(
+            AgendaWidgetLogger.PrefsScreenItemName.CONFIGURE_CALENDAR_BLOBS
         )
     }
 }

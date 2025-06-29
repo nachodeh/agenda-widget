@@ -4,7 +4,6 @@ import android.Manifest
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,10 +15,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,11 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
-import com.flowmosaic.calendar.data.CalendarData
-import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 data class PreferenceSection(
     val title: String,
@@ -60,10 +53,6 @@ fun PreferencesScreen(appWidgetId: Int, onCloseClick: (() -> Unit)? = null) {
         PreferenceSection(
             title = context.getString(R.string.prefs_title_appearance),
             content = { AppearancePrefsSection(widgetId, logger, prefs) }
-        ),
-        PreferenceSection(
-            title = context.getString(R.string.prefs_title_calendar_colors),
-            content = { CalendarColorsPrefsSection(widgetId, logger, prefs) }
         )
     )
 
@@ -281,7 +270,7 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
     )
     CheckboxRow(
         displayText = context.getString(R.string.show_calendar_blob),
-        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_CALENDADR_BLOB,
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_CALENDAR_BLOB,
         checkboxValue = showCalendarBlob,
         saveCheckboxValue = { newValue: Boolean ->
             showCalendarBlob.value = newValue
@@ -289,47 +278,9 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         },
         logger = logger
     )
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun CalendarColorsPrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: AgendaWidgetPrefs) {
-    val context = LocalContext.current
-
-    val calendarFetcher = CalendarFetcher()
-
-    val calendarPermissionsState = rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.WRITE_CALENDAR,
-            Manifest.permission.READ_CALENDAR,
-        )
+    ConfigureCalendarBlobsButton(
+        displayText = context.getString(R.string.configure_calendar_blobs),
+        widgetId = widgetId,
+        logger = logger
     )
-
-    if (!calendarPermissionsState.allPermissionsGranted) {
-        return
-    }
-
-    val calendarList = remember { mutableStateListOf<CalendarData>() }
-    LaunchedEffect(Unit) {
-        calendarList.addAll(calendarFetcher.queryCalendarData(context))
-    }
-
-    Column {
-        calendarList.forEach { calendar ->
-            val colorState = remember { mutableStateOf(prefs.getCalendarColor(widgetId, calendar.id)) }
-
-            ColorSelectorRow(
-                displayText = calendar.name,
-                selectedColor = colorState,
-                saveColorValue = { newValue: Color ->
-                    colorState.value = newValue
-                    prefs.setCalendarColor(newValue, widgetId, calendar.id)
-                },
-                logger = logger
-            )
-        }
-    }
 }
-
-
-

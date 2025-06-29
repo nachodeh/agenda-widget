@@ -340,8 +340,12 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     }
 
     fun setCalendarColor(calendarColor: Color, widgetId: String, calendarId: Long) {
-        val colorInt = calendarColor.toArgb()
+        val colorArgb = calendarColor.toArgb()
+        setCalendarColorArgb(colorArgb, widgetId, calendarId)
+    }
+
+    fun setCalendarColorArgb(calendarColorArgb: Int, widgetId: String, calendarId: Long) {
         val prefsKey = getKeyWithWidgetIdSave(getCalendarColorPrefKey(calendarId), widgetId)
-        sharedPreferences.edit().putInt(prefsKey, colorInt).apply()
+        sharedPreferences.edit().putInt(prefsKey, calendarColorArgb).apply()
     }
 }

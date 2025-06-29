@@ -7,7 +7,6 @@
     <string name="prefs_title_general">General</string>
     <string name="prefs_title_date_time">Date and Time</string>
     <string name="prefs_title_appearance">Appearance</string>
-    <string name="prefs_title_calendar_colors">Calendar colors</string>
     <string name="select_calendars">Select calendars</string>
     <string name="number_of_days_to_display">Number of days to display</string>
     <string name="show_end_time">Show end time</string>
@@ -34,6 +33,8 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="no_upcoming_events">No upcoming events</string>
     <string name="show_calendar_blob">Show calendar blob</string>
+    <string name="configure_calendar_blobs">Configure calendar blobs</string>
+    <string name="title_color">Color</string>
 
     <string name="active_widgets">Widget configuration</string>
     <string name="default_configuration">Default configuration</string>
