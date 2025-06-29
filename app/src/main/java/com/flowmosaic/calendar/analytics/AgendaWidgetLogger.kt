@@ -71,7 +71,7 @@ class AgendaWidgetLogger internal constructor(
         VERTICAL_SPACING("vertical_spacing"),
         TEXT_ALIGNMENT("text_alignment"),
         OPACITY("opacity"),
-        SHOW_CAL_COLOR("show_calendar_color")
+        SHOW_CALENDADR_BLOB("show_calendar_blob")
     }
 
     enum class WidgetStatus(val status: String) {
