@@ -199,6 +199,24 @@ fun FontSizeSelectorRow(
 }
 
 @Composable
+fun VerticalSpacingSelectorRow(
+    displayText: String,
+    verticalSpacingValue: MutableState<AgendaWidgetPrefs.VerticalSpacing>,
+    saveVerticalSpacingValue: (AgendaWidgetPrefs.VerticalSpacing) -> Unit,
+    logger: AgendaWidgetLogger
+) {
+    MultipleOptionsSelectorRow(
+        displayText = displayText,
+        selectedValue = verticalSpacingValue,
+        options = AgendaWidgetPrefs.VerticalSpacing.entries.toTypedArray(),
+        saveSelectedValue = saveVerticalSpacingValue,
+        getDisplayText = { option, context -> option.getDisplayText(context) },
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.VERTICAL_SPACING,
+        logger = logger
+    )
+}
+
+@Composable
 fun TextAlignmentSelectorRow(
     displayText: String,
     textAlignmentValue: MutableState<AgendaWidgetPrefs.TextAlignment>,
