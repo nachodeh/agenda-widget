@@ -35,6 +35,7 @@
     <string name="show_calendar_blob">Show calendar blob</string>
     <string name="configure_calendar_blobs">Configure calendar blobs</string>
     <string name="title_color">Color</string>
+    <string name="title_icon">Icon</string>
 
     <string name="active_widgets">Widget configuration</string>
     <string name="default_configuration">Default configuration</string>

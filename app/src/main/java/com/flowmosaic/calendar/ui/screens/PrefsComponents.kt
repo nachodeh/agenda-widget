@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
@@ -37,7 +38,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
@@ -45,11 +48,13 @@ import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.dialog.ColorDialog
+import com.flowmosaic.calendar.ui.dialog.IconDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarBlobsDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarDialog
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
+import com.flowmosaic.calendar.R
 
 @Composable
 fun TitleWithDivider(title: String) {
@@ -279,7 +284,8 @@ fun ColorSelectorRow(
     displayText: String,
     selectedColor: MutableState<Color>,
     saveColorValue: (Color) -> Unit,
-    logger: AgendaWidgetLogger
+    logger: AgendaWidgetLogger,
+    prefName: AgendaWidgetLogger.PrefsScreenItemName
 ) {
     val showDialog = rememberSaveable {
         mutableStateOf(false)
@@ -290,9 +296,7 @@ fun ColorSelectorRow(
             .fillMaxWidth()
             .clickable {
                 showDialog.value = true
-                logger.logUpdatePrefEvent(
-                    AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
-                )
+                logger.logUpdatePrefEvent(prefName)
             }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -429,6 +433,87 @@ fun ConfigureCalendarBlobsButton(displayText: String, widgetId: String, logger: 
         ShowCalendarBlobsDialog(openDialog = showConfigureCalendarBlobsDialog, widgetId, logger)
         logger.logUpdatePrefEvent(
             AgendaWidgetLogger.PrefsScreenItemName.CONFIGURE_CALENDAR_BLOBS
+        )
+    }
+}
+
+@Composable
+fun IconSelectorRow(
+    displayText: String,
+    selectedIcon: MutableState<Int>,
+    saveIconValue: (Int) -> Unit,
+    logger: AgendaWidgetLogger,
+    prefName: AgendaWidgetLogger.PrefsScreenItemName
+) {
+    val showDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val icons = listOf(
+        R.drawable.close,
+        R.drawable.airplane,
+        R.drawable.alarm,
+        R.drawable.bank,
+        R.drawable.baseball,
+        R.drawable.cake,
+        R.drawable.calendar,
+        R.drawable.car,
+        R.drawable.cycling,
+        R.drawable.football,
+        R.drawable.gaming,
+        R.drawable.gavel,
+        R.drawable.holiday,
+        R.drawable.messages,
+        R.drawable.music,
+        R.drawable.pram,
+        R.drawable.present,
+        R.drawable.soccer,
+        R.drawable.suitcase,
+        R.drawable.ticket,
+        R.drawable.train,
+        R.drawable.university,
+        R.drawable.wallet,
+        R.drawable.weather,
+        R.drawable.weights,
+    )
+
+    if (selectedIcon.value < 0 || selectedIcon.value >= icons.size) {
+        selectedIcon.value = 0
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                showDialog.value = true
+                logger.logUpdatePrefEvent(prefName)
+            }
+            .padding(bottom = 16.dp)
+            .padding(start = 16.dp)
+            .padding(end = 16.dp),
+
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = displayText,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f)
+        )
+        Icon(
+            imageVector = ImageVector.vectorResource(icons[selectedIcon.value]),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.width(24.dp).height(24.dp)
+        )
+    }
+
+    if (showDialog.value) {
+        IconDialog(
+            iconList = icons,
+            onDismiss = { showDialog.value = false },
+            selectedIcon = selectedIcon.value,
+            onIconSelected = saveIconValue
         )
     }
 }

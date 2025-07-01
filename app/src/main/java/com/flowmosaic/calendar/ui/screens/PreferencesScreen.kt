@@ -238,7 +238,8 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
             colorState.value = newValue
             prefs.setTextColor(newValue, widgetId)
         },
-        logger = logger
+        logger = logger,
+        AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
     )
     OpacitySelectorRow(
         displayText = context.getString(R.string.background_opacity),

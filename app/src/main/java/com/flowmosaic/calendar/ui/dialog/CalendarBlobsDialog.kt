@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -41,6 +40,7 @@ import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.screens.ColorSelectorRow
+import com.flowmosaic.calendar.ui.screens.IconSelectorRow
 
 @Composable
 fun ShowCalendarBlobsDialog(openDialog: MutableState<Boolean>, widgetId: String, logger: AgendaWidgetLogger) {
@@ -55,6 +55,10 @@ fun ShowCalendarBlobsDialog(openDialog: MutableState<Boolean>, widgetId: String,
 
     var colors = IntArray(calendarList.size) { index ->
         prefs.getCalendarColor(widgetId, calendarList[index].id).toArgb()
+    }
+
+    var icons = IntArray(calendarList.size) { index ->
+        prefs.getCalendarIcon(widgetId, calendarList[index].id)
     }
 
     Dialog(
@@ -74,12 +78,20 @@ fun ShowCalendarBlobsDialog(openDialog: MutableState<Boolean>, widgetId: String,
                         val calendarId = calendarList[index].id
                         prefs.setCalendarColorArgb(colorArgb, widgetId, calendarId)
                     }
+                    icons.forEachIndexed{ index, icon ->
+                        val calendarId = calendarList[index].id
+                        prefs.setCalendarIcon(icon, widgetId, calendarId)
+                    }
                     openDialog.value = false
                 },
                 onCancelClick = {
                     openDialog.value = false
                 },
-                logger = logger
+                logger = logger,
+                icons = icons,
+                onIconChange = { index, icon ->
+                    icons[index] = icon
+                }
             )
         }
     )
@@ -90,6 +102,8 @@ private fun CalendarBlobsDialogContent(
     calendarList: List<CalendarData>,
     colors: IntArray,
     onColorChange: (Int, Int) -> Unit,
+    icons: IntArray,
+    onIconChange: (Int, Int) -> Unit,
     onSaveClick: () -> Unit,
     onCancelClick: () -> Unit,
     logger: AgendaWidgetLogger
@@ -112,10 +126,14 @@ private fun CalendarBlobsDialogContent(
                 itemsIndexed(calendarList) { index, calendar ->
                     if (index < colors.size) {
                         CalendarBlobRow(
-                            colorArgb = colors[index],
                             calendarName = calendar.name,
+                            colorArgb = colors[index],
                             onColorChange = { colorArgb ->
                                 onColorChange(index, colorArgb)
+                            },
+                            icon = icons[index],
+                            onIconChange = { icon ->
+                                onIconChange(index, icon)
                             },
                             logger = logger
                         )
@@ -148,14 +166,17 @@ private fun CalendarBlobsDialogContent(
 
 @Composable
 private fun CalendarBlobRow(
-    colorArgb: Int,
     calendarName: String,
+    colorArgb: Int,
     onColorChange: (Int) -> Unit,
+    icon: Int,
+    onIconChange: (Int) -> Unit,
     logger: AgendaWidgetLogger
 ) {
     val context = LocalContext.current
 
     val colorState = remember { mutableStateOf(Color(colorArgb)) }
+    var iconState = remember { mutableStateOf(icon) }
 
     Row() {
         Text(
@@ -171,7 +192,19 @@ private fun CalendarBlobRow(
             colorState.value = newValue
             onColorChange(newValue.toArgb())
         },
-        logger = logger
+        logger = logger,
+        AgendaWidgetLogger.PrefsScreenItemName.CALENDAR_COLOR
+    )
+
+    IconSelectorRow(
+        displayText = context.getString(R.string.title_icon),
+        selectedIcon = iconState,
+        saveIconValue = { newValue: Int ->
+            iconState.value = newValue
+            onIconChange(newValue)
+        },
+        logger = logger,
+        prefName = AgendaWidgetLogger.PrefsScreenItemName.CALENDAR_ICON
     )
 
     HorizontalDivider(

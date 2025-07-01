@@ -37,6 +37,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         private const val PREF_ALIGN_BOTTOM = "key_align_bottom"
         private const val PREF_SHOW_CALENDAR_BLOB = "show_calendar_blob"
         private const val PREF_CALENDAR_COLOR = "calendar_color"
+        private const val PREF_CALENDAR_ICON = "calendar_icon"
     }
 
     enum class FontSize(private val displayResId: Int) {
@@ -347,5 +348,26 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     fun setCalendarColorArgb(calendarColorArgb: Int, widgetId: String, calendarId: Long) {
         val prefsKey = getKeyWithWidgetIdSave(getCalendarColorPrefKey(calendarId), widgetId)
         sharedPreferences.edit().putInt(prefsKey, calendarColorArgb).apply()
+    }
+
+    private fun getCalendarIconPrefKey(calendarId: Long): String {
+        return PREF_CALENDAR_ICON.plus("#").plus(calendarId.toString())
+    }
+
+    fun setCalendarIcon(icon: Int, widgetId: String, calendarId: Long) {
+        val prefsKey = getKeyWithWidgetIdSave(getCalendarIconPrefKey(calendarId), widgetId)
+        sharedPreferences.edit().putInt(prefsKey, icon).apply()
+    }
+
+    fun getCalendarIcon(widgetId: String, calendarId: Long): Int {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(
+            getCalendarIconPrefKey(calendarId),
+            widgetId
+        )
+        val icon = sharedPreferences.getInt(prefsKey, 0)
+        if (!prefExists) {
+            setCalendarIcon(icon, widgetId, calendarId)
+        }
+        return icon
     }
 }
