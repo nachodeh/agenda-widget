@@ -279,9 +279,11 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         },
         logger = logger
     )
-    ConfigureCalendarBlobsButton(
-        displayText = context.getString(R.string.configure_calendar_blobs),
-        widgetId = widgetId,
-        logger = logger
-    )
+    if (showCalendarBlob.value) {
+        ConfigureCalendarBlobsButton(
+            displayText = context.getString(R.string.configure_calendar_blobs),
+            widgetId = widgetId,
+            logger = logger
+        )
+    }
 }
