@@ -8,6 +8,7 @@
     <string name="show_action_buttons">Mostrar botões de ação</string>
     <string name="show_no_upcoming_events">Mostrar texto \"Nenhum evento futuro\"</string>
     <string name="use_12_hour_format">Usar formato de 12 horas</string>
+    <string name="show_location">Mostrar local</string>
     <string name="date_separator_visible">Mostrar separador de data</string>
     <string name="align_widget_bottom">Alinhamento inferior</string>
     <string name="font_size">Tamanho da fonte</string>
@@ -32,7 +33,7 @@
     <string name="text_alignment">Alinhamento de texto</string>
     <string name="prefs_title_editing_default_config">Editando a configuração padrão</string>
     <string name="prefs_title_general">Geral</string>
-    <string name="prefs_title_date_time">Data e Hora</string>
+    <string name="prefs_title_date_time_location">Data e Hora, Local</string>
     <string name="prefs_title_appearance">Aparência</string>
     <string name="no_upcoming_events">Nenhum evento futuro</string>
     <string name="active_widgets">Configuração do widget</string>

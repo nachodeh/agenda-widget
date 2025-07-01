@@ -8,6 +8,7 @@
     <string name="show_action_buttons">क्रिया बटन दिखाएं</string>
     <string name="show_no_upcoming_events">\"कोई आगामी घटनाओं का पाठ नहीं दिखाएं\" टेक्स्ट दिखाएं</string>
     <string name="use_12_hour_format">12 घंटे का प्रारूप उपयोग करें</string>
+    <string name="show_location">स्थान दिखाएं</string>
     <string name="date_separator_visible">तिथि विभाजक दिखाएं</string>
     <string name="align_widget_bottom">निचली संरेखण</string>
     <string name="font_size">फ़ॉन्ट आकार</string>
@@ -31,7 +32,7 @@
     <string name="text_alignment">पाठ संरेखण</string>
     <string name="prefs_title_editing_default_config">डिफ़ॉल्ट कॉन्फ़िगरेशन संपादन</string>
     <string name="prefs_title_general">सामान्य</string>
-    <string name="prefs_title_date_time">तारीख और समय</string>
+    <string name="prefs_title_date_time_location">तारीख और समय, स्थान</string>
     <string name="prefs_title_appearance">दिखावट</string>
     <string name="no_upcoming_events">कोई आगामी घटनाएँ नहीं</string>
     <string name="active_widgets">"विजेट कॉन्फ़िगरेशन "</string>
