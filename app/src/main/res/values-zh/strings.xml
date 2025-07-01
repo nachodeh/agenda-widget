@@ -27,6 +27,7 @@
     <string name="font_size_small">小</string>
     <string name="font_size_medium">中</string>
     <string name="font_size_large">大</string>
+    <string name="vertical_spacing">垂直间距</string>
     <string name="text_alignment">"文字对齐 "</string>
     <string name="prefs_title_editing_default_config">编辑默认配置</string>
     <string name="prefs_title_general">通用</string>
