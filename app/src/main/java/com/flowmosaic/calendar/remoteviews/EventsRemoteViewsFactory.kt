@@ -264,20 +264,23 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         val calendarIcon = prefs.getCalendarIcon(widgetId, calendarId)
         val icons = getCalendarIcons()
 
-        val calendarBlobVisibility = if (prefs.getShowCalendarBlob(widgetId) && (calendarIcon > 0 && calendarIcon < icons.size)) View.VISIBLE else View.GONE
+        val calendarBlobVisibility = if (prefs.getShowCalendarBlob(widgetId)) View.VISIBLE else View.GONE
         setViewVisibility(wrapperId, calendarBlobVisibility)
 
-        if (calendarIcon != 0 && calendarIcon < icons.size) {
+        val calendarColor = prefs.getCalendarColor(widgetId, calendarId)
+        setInt(backgroundId, "setColorFilter", calendarColor.toArgb())
+
+        if (calendarIcon > 0 && calendarIcon < icons.size) {
             setInt(iconId, "setImageResource", icons[calendarIcon])
 
-            val calendarColor = prefs.getCalendarColor(widgetId, calendarId)
             val tint = when (isColorLight(calendarColor.toArgb(), 0.3)) {
                 true -> Color.Black
                 false -> Color.White
             }
             setInt(iconId, "setColorFilter", tint.toArgb())
-
-            setInt(backgroundId, "setColorFilter", calendarColor.toArgb())
+        }
+        else {
+            setViewVisibility(iconId, View.GONE)
         }
     }
 
