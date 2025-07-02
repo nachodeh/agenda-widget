@@ -18,11 +18,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,18 +38,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
+import com.flowmosaic.calendar.ui.isColorLight
 import com.flowmosaic.calendar.ui.dialog.ColorDialog
+import com.flowmosaic.calendar.ui.dialog.IconDialog
+import com.flowmosaic.calendar.ui.dialog.ShowCalendarBlobsDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarDialog
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
+import com.flowmosaic.calendar.R
+import com.flowmosaic.calendar.ui.getCalendarIcons
 
 @Composable
 fun TitleWithDivider(title: String) {
@@ -295,7 +305,8 @@ fun ColorSelectorRow(
     displayText: String,
     selectedColor: MutableState<Color>,
     saveColorValue: (Color) -> Unit,
-    logger: AgendaWidgetLogger
+    logger: AgendaWidgetLogger,
+    prefName: AgendaWidgetLogger.PrefsScreenItemName
 ) {
     val showDialog = rememberSaveable {
         mutableStateOf(false)
@@ -306,9 +317,7 @@ fun ColorSelectorRow(
             .fillMaxWidth()
             .clickable {
                 showDialog.value = true
-                logger.logUpdatePrefEvent(
-                    AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
-                )
+                logger.logUpdatePrefEvent(prefName)
             }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -393,6 +402,148 @@ fun OpacitySelectorRow(
             valueRange = 0f..1f,
             steps = 10,
             modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun ConfigureCalendarBlobsButton(displayText: String, widgetId: String, logger: AgendaWidgetLogger) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val showConfigureCalendarBlobsDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val calendarPermissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.READ_CALENDAR,
+        )
+    )
+
+    if (!calendarPermissionsState.allPermissionsGranted) {
+        return
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                coroutineScope.launch {
+                    showConfigureCalendarBlobsDialog.value = true
+                }
+            }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = displayText,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f)
+        )
+        Icon(
+            imageVector = Icons.Default.Edit,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
+    }
+
+    if (showConfigureCalendarBlobsDialog.value) {
+        ShowCalendarBlobsDialog(openDialog = showConfigureCalendarBlobsDialog, widgetId, logger)
+        logger.logUpdatePrefEvent(
+            AgendaWidgetLogger.PrefsScreenItemName.CONFIGURE_CALENDAR_BLOBS
+        )
+    }
+}
+
+@Composable
+fun IconSelectorRow(
+    displayText: String,
+    noIconText: String,
+    selectedIcon: MutableState<Int>,
+    backgroundColor: MutableState<Color>,
+    saveIconValue: (Int) -> Unit,
+    logger: AgendaWidgetLogger,
+    prefName: AgendaWidgetLogger.PrefsScreenItemName
+) {
+    val showDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val icons = getCalendarIcons()
+
+    if (selectedIcon.value < 0 || selectedIcon.value >= icons.size) {
+        selectedIcon.value = 0
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                showDialog.value = true
+                logger.logUpdatePrefEvent(prefName)
+            }
+            .padding(bottom = 16.dp)
+            .padding(start = 16.dp)
+            .padding(end = 16.dp),
+
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = displayText,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f)
+        )
+        if (selectedIcon.value == 0) {
+            Text(text = noIconText)
+        }
+        else {
+            CalendarIcon(
+                iconResource = icons[selectedIcon.value],
+                backgroundColor = backgroundColor,
+            )
+        }
+    }
+
+    if (showDialog.value) {
+        IconDialog(
+            iconList = icons,
+            onDismiss = { showDialog.value = false },
+            selectedIcon = selectedIcon.value,
+            onIconSelected = saveIconValue
+        )
+    }
+}
+
+@Composable
+fun CalendarIcon(
+    iconResource: Int,
+    backgroundColor: MutableState<Color>) {
+
+    val tint = when (isColorLight(backgroundColor.value.toArgb(), 0.3)) {
+        true -> Color.Black
+        false -> Color.White
+    }
+
+    Surface(
+        modifier = Modifier
+            .clip(CircleShape)
+            .requiredSize(24.dp)
+    ) {
+        Canvas(
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(backgroundColor.value)
+                .requiredSize(24.dp)
+        ) {}
+        Icon(
+            imageVector = ImageVector.vectorResource(iconResource),
+            contentDescription = null,
+            tint = tint,
+            modifier = Modifier.padding(3.dp)
         )
     }
 }

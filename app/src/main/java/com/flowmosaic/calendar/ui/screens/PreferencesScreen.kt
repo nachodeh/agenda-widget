@@ -1,5 +1,6 @@
 package com.flowmosaic.calendar.ui.screens
 
+import android.Manifest
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -53,7 +54,7 @@ fun PreferencesScreen(appWidgetId: Int, onCloseClick: (() -> Unit)? = null) {
         PreferenceSection(
             title = context.getString(R.string.prefs_title_appearance),
             content = { AppearancePrefsSection(widgetId, logger, prefs) }
-        ),
+        )
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -225,6 +226,10 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         mutableStateOf(prefs.getAlignBottom(widgetId))
     }
 
+    var showCalendarBlob = remember {
+        mutableStateOf(prefs.getShowCalendarBlob(widgetId))
+    }
+
     FontSizeSelectorRow(
         displayText = context.getString(R.string.font_size),
         fontSizeValue = fontSize,
@@ -259,7 +264,8 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
             colorState.value = newValue
             prefs.setTextColor(newValue, widgetId)
         },
-        logger = logger
+        logger = logger,
+        AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
     )
     OpacitySelectorRow(
         displayText = context.getString(R.string.background_opacity),
@@ -289,7 +295,21 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         },
         logger = logger
     )
+    CheckboxRow(
+        displayText = context.getString(R.string.show_calendar_blob),
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_CALENDAR_BLOB,
+        checkboxValue = showCalendarBlob,
+        saveCheckboxValue = { newValue: Boolean ->
+            showCalendarBlob.value = newValue
+            prefs.setShowCalendarBlob(newValue, widgetId)
+        },
+        logger = logger
+    )
+    if (showCalendarBlob.value) {
+        ConfigureCalendarBlobsButton(
+            displayText = context.getString(R.string.configure_calendar_blobs),
+            widgetId = widgetId,
+            logger = logger
+        )
+    }
 }
-
-
-

@@ -48,4 +48,9 @@
     <string name="preview_item_2">"17:00 - 18:00 | फ़ुटबॉल "</string>
     <string name="preview_item_3">जैक का जन्मदिन</string>
     <string name="onboarding_got_it">समझ गया</string>
+    <string name="show_calendar_blob">कैलेंडर ब्लॉब दिखाएँ</string>
+    <string name="configure_calendar_blobs">कैलेंडर ब्लॉब कॉन्फ़िगर करें</string>
+    <string name="title_color">रंग</string>
+    <string name="title_icon">चिह्न</string>
+    <string name="label_set">सेट करें</string>
 </resources>

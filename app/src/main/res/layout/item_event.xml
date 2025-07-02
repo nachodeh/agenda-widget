@@ -1,17 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_event_text_view"
+    android:id="@+id/item_event_wrapper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="14sp"
-    android:textColor="@color/white"
     tools:paddingVertical="5dp"
-    android:text="@string/event_placeholder"
-    android:shadowColor="#80000000"
-    android:shadowDx="1"
-    android:shadowDy="1"
-    android:shadowRadius="1"
-    android:maxLines="1"
-    android:ellipsize="end"
-    />
+    android:gravity="center">
+
+    <RelativeLayout
+        android:id="@+id/item_event_calendar_blob"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp">
+        <ImageView
+            android:id="@+id/item_event_calendar_blob_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tintMode="add"
+            android:src="@drawable/circle" />
+        <ImageView
+            android:id="@+id/item_event_calendar_blob_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="2dp"
+            android:tintMode="add"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/item_event_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:text="@string/event_placeholder"
+        android:shadowColor="#80000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1"
+        android:maxLines="1"
+        android:ellipsize="end"
+        />
+</LinearLayout>
