@@ -59,4 +59,10 @@
     <string name="preview_item_3">Anniversaire de Jack</string>
     <string name="onboarding_got_it">J\'ai compris</string>
     <string name="battery_optimization_warning">Appuyez pour désactiver l\'optimisation de la batterie pour des mises à jour fiables du widget</string>
+
+    <string name="show_calendar_blob">Afficher le blob du calendrier</string>
+    <string name="configure_calendar_blobs">Configurer les blobs du calendrier</string>
+    <string name="title_color">Couleur</string>
+    <string name="title_icon">Icône</string>
+    <string name="label_set">Définir</string>
 </resources>

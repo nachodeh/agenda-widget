@@ -5,13 +5,25 @@
     android:paddingVertical="5dp"
     android:gravity="center">
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/item_event_calendar_blob"
-        android:layout_width="14sp"
-        android:layout_height="14sp"
-        android:layout_marginEnd="8dp"
-        android:tintMode="add"
-        android:src="@drawable/calendar_color"/>
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="8dp">
+        <ImageView
+            android:id="@+id/item_event_calendar_blob_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tintMode="add"
+            android:src="@drawable/circle" />
+        <ImageView
+            android:id="@+id/item_event_calendar_blob_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="2dp"
+            android:tintMode="add"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/item_event_text_view"

@@ -198,7 +198,9 @@ private fun CalendarBlobRow(
 
     IconSelectorRow(
         displayText = context.getString(R.string.title_icon),
+        noIconText = context.getString(R.string.label_set),
         selectedIcon = iconState,
+        backgroundColor = colorState,
         saveIconValue = { newValue: Int ->
             iconState.value = newValue
             onIconChange(newValue)
