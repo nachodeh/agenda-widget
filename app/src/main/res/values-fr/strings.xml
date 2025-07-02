@@ -46,4 +46,9 @@
     <string name="preview_item_2">17h00 - 18h00 | Football</string>
     <string name="preview_item_3">Anniversaire de Jack</string>
     <string name="onboarding_got_it">J\'ai compris</string>
+    <string name="show_calendar_blob">Afficher le blob du calendrier</string>
+    <string name="configure_calendar_blobs">Configurer les blobs du calendrier</string>
+    <string name="title_color">Couleur</string>
+    <string name="title_icon">Icône</string>
+    <string name="label_set">Définir</string>
 </resources>

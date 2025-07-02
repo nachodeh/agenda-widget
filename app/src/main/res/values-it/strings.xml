@@ -46,4 +46,9 @@
     <string name="preview_item_2">17:00 - 18:00 | Calcio</string>
     <string name="preview_item_3">Compleanno di Jack</string>
     <string name="onboarding_got_it">Capito</string>
+    <string name="show_calendar_blob">Mostra blob calendario</string>
+    <string name="configure_calendar_blobs">Configura i blob calendario</string>
+    <string name="title_color">Colore</string>
+    <string name="title_icon">Icona</string>
+    <string name="label_set">Imposta</string>
 </resources>

@@ -47,4 +47,9 @@
     <string name="preview_item_2">17:00 - 18:00 | Piłka nożna</string>
     <string name="preview_item_3">Urodziny Jacka</string>
     <string name="onboarding_got_it">Zrozumiałem</string>
+    <string name="show_calendar_blob">Pokaż blob kalendarza</string>
+    <string name="configure_calendar_blobs">Skonfiguruj blob kalendarza</string>
+    <string name="title_color">Kolor</string>
+    <string name="title_icon">Ikona</string>
+    <string name="label_set">Ustaw</string>
 </resources>

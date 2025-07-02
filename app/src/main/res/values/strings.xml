@@ -32,10 +32,6 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="no_upcoming_events">No upcoming events</string>
-    <string name="show_calendar_blob">Show calendar blob</string>
-    <string name="configure_calendar_blobs">Configure calendar blobs</string>
-    <string name="title_color">Color</string>
-    <string name="title_icon">Icon</string>
 
     <string name="active_widgets">Widget configuration</string>
     <string name="default_configuration">Default configuration</string>
@@ -59,5 +55,9 @@
     <string name="preview_item_2">17:00 – 18:00 | Football</string>
     <string name="preview_item_3">Jack\'s birthday</string>
 
-
+    <string name="show_calendar_blob">Show calendar blob</string>
+    <string name="configure_calendar_blobs">Configure calendar blobs</string>
+    <string name="title_color">Color</string>
+    <string name="title_icon">Icon</string>
+    <string name="label_set">Set</string>
 </resources>

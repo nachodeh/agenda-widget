@@ -46,4 +46,9 @@
     <string name="preview_item_2">17:00 - 18:00 | 足球</string>
     <string name="preview_item_3">杰克的生日</string>
     <string name="onboarding_got_it">明白了</string>
+    <string name="show_calendar_blob">显示日历块</string>
+    <string name="configure_calendar_blobs">配置日历块</string>
+    <string name="title_color">颜色</string>
+    <string name="title_icon">图标</string>
+    <string name="label_set">设置</string>
 </resources>

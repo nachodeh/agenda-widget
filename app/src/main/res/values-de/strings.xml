@@ -47,4 +47,10 @@
     <string name="preview_item_2">17:00 - 18:00 | Fußball</string>
     <string name="preview_item_3">Jacks Geburtstag</string>
     <string name="onboarding_got_it">Verstanden</string>
+
+    <string name="show_calendar_blob">Kalender-Blob anzeigen</string>
+    <string name="configure_calendar_blobs">Kalender-Blobs konfigurieren</string>
+    <string name="title_color">Farbe</string>
+    <string name="title_icon">Symbol</string>
+    <string name="label_set">Einstellen</string>
 </resources>

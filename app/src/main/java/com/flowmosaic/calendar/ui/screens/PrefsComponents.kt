@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
@@ -25,6 +24,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -47,6 +48,7 @@ import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
+import com.flowmosaic.calendar.ui.isColorLight
 import com.flowmosaic.calendar.ui.dialog.ColorDialog
 import com.flowmosaic.calendar.ui.dialog.IconDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarBlobsDialog
@@ -55,6 +57,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
 import com.flowmosaic.calendar.R
+import com.flowmosaic.calendar.ui.getCalendarIcons
 
 @Composable
 fun TitleWithDivider(title: String) {
@@ -440,7 +443,9 @@ fun ConfigureCalendarBlobsButton(displayText: String, widgetId: String, logger: 
 @Composable
 fun IconSelectorRow(
     displayText: String,
+    noIconText: String,
     selectedIcon: MutableState<Int>,
+    backgroundColor: MutableState<Color>,
     saveIconValue: (Int) -> Unit,
     logger: AgendaWidgetLogger,
     prefName: AgendaWidgetLogger.PrefsScreenItemName
@@ -449,33 +454,7 @@ fun IconSelectorRow(
         mutableStateOf(false)
     }
 
-    val icons = listOf(
-        R.drawable.close,
-        R.drawable.airplane,
-        R.drawable.alarm,
-        R.drawable.bank,
-        R.drawable.baseball,
-        R.drawable.cake,
-        R.drawable.calendar,
-        R.drawable.car,
-        R.drawable.cycling,
-        R.drawable.football,
-        R.drawable.gaming,
-        R.drawable.gavel,
-        R.drawable.holiday,
-        R.drawable.messages,
-        R.drawable.music,
-        R.drawable.pram,
-        R.drawable.present,
-        R.drawable.soccer,
-        R.drawable.suitcase,
-        R.drawable.ticket,
-        R.drawable.train,
-        R.drawable.university,
-        R.drawable.wallet,
-        R.drawable.weather,
-        R.drawable.weights,
-    )
+    val icons = getCalendarIcons()
 
     if (selectedIcon.value < 0 || selectedIcon.value >= icons.size) {
         selectedIcon.value = 0
@@ -500,12 +479,15 @@ fun IconSelectorRow(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
-        Icon(
-            imageVector = ImageVector.vectorResource(icons[selectedIcon.value]),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.width(24.dp).height(24.dp)
-        )
+        if (selectedIcon.value == 0) {
+            Text(text = noIconText)
+        }
+        else {
+            CalendarIcon(
+                iconResource = icons[selectedIcon.value],
+                backgroundColor = backgroundColor,
+            )
+        }
     }
 
     if (showDialog.value) {
@@ -514,6 +496,36 @@ fun IconSelectorRow(
             onDismiss = { showDialog.value = false },
             selectedIcon = selectedIcon.value,
             onIconSelected = saveIconValue
+        )
+    }
+}
+
+@Composable
+fun CalendarIcon(
+    iconResource: Int,
+    backgroundColor: MutableState<Color>) {
+
+    val tint = when (isColorLight(backgroundColor.value.toArgb(), 0.3)) {
+        true -> Color.Black
+        false -> Color.White
+    }
+
+    Surface(
+        modifier = Modifier
+            .clip(CircleShape)
+            .requiredSize(24.dp)
+    ) {
+        Canvas(
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(backgroundColor.value)
+                .requiredSize(24.dp)
+        ) {}
+        Icon(
+            imageVector = ImageVector.vectorResource(iconResource),
+            contentDescription = null,
+            tint = tint,
+            modifier = Modifier.padding(3.dp)
         )
     }
 }

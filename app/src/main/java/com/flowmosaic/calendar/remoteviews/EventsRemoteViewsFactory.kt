@@ -3,18 +3,20 @@ package com.flowmosaic.calendar.remoteviews
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.data.CalendarDateUtils
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.data.CalendarViewItem
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
+import com.flowmosaic.calendar.ui.getCalendarIcons
+import com.flowmosaic.calendar.ui.isColorLight
 import com.flowmosaic.calendar.widget.EXTRA_END_TIME
 import com.flowmosaic.calendar.widget.EXTRA_EVENT_ID
 import com.flowmosaic.calendar.widget.EXTRA_START_TIME
@@ -86,7 +88,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             setUpFontAlignment(textViewId)
 
             if (item is CalendarViewItem.Event) {
-                setUpCalendarColor(textColor, item.event.calendarId)
+                setUpCalendarBlob(textColor, item.event.calendarId)
             }
 
             setTextViewText(textViewId, text)
@@ -181,28 +183,34 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         return calendarFetcher.readCalendarData(context, widgetId)
     }
 
-    private fun isColorLight(color: Int): Boolean {
-        val red = Color.red(color) / 255.0
-        val green = Color.green(color) / 255.0
-        val blue = Color.blue(color) / 255.0
-
-        val luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
-        return luminance > 0.5
-    }
-
-    private fun RemoteViews.setUpCalendarColor(textColor: Int, calendarId: Long) {
-        val calendarColorVisibility = if (prefs.getShowCalendarBlob(widgetId)) View.VISIBLE else View.GONE
-
-        val isColorLight = isColorLight(textColor)
-        var id = when (isColorLight) {
-            true -> R.id.item_event_calendar_blob
-            false -> R.id.item_event_calendar_blob_dark
+    private fun RemoteViews.setUpCalendarBlob(textColor: Int, calendarId: Long) {
+        var wrapperId = R.id.item_event_calendar_blob
+        var backgroundId = R.id.item_event_calendar_blob_background
+        var iconId = R.id.item_event_calendar_blob_icon
+        if (!isColorLight(textColor)) {
+            wrapperId = R.id.item_event_calendar_blob_dark
+            backgroundId = R.id.item_event_calendar_blob_dark_background
+            iconId = R.id.item_event_calendar_blob_dark_icon
         }
 
-        setViewVisibility(id, calendarColorVisibility)
+        val calendarIcon = prefs.getCalendarIcon(widgetId, calendarId)
+        val icons = getCalendarIcons()
 
-        val calendarColor = prefs.getCalendarColor(widgetId, calendarId)
-        setInt(id, "setColorFilter", calendarColor.toArgb())
+        val calendarBlobVisibility = if (prefs.getShowCalendarBlob(widgetId) && (calendarIcon > 0 && calendarIcon < icons.size)) View.VISIBLE else View.GONE
+        setViewVisibility(wrapperId, calendarBlobVisibility)
+
+        if (calendarIcon != 0 && calendarIcon < icons.size) {
+            setInt(iconId, "setImageResource", icons[calendarIcon])
+
+            val calendarColor = prefs.getCalendarColor(widgetId, calendarId)
+            val tint = when (isColorLight(calendarColor.toArgb(), 0.3)) {
+                true -> Color.Black
+                false -> Color.White
+            }
+            setInt(iconId, "setColorFilter", tint.toArgb())
+
+            setInt(backgroundId, "setColorFilter", calendarColor.toArgb())
+        }
     }
 
 }

@@ -47,4 +47,9 @@
     <string name="preview_item_2">17:00 - 18:00 | ฟุตบอล</string>
     <string name="preview_item_3">วันเกิดของแจ็ค</string>
     <string name="onboarding_got_it">เข้าใจแล้ว</string>
+    <string name="show_calendar_blob">แสดงบล็อบปฏิทิน</string>
+    <string name="configure_calendar_blobs">กำหนดค่าบล็อบปฏิทิน</string>
+    <string name="title_color">สี</string>
+    <string name="title_icon">ไอคอน</string>
+    <string name="label_set">ตั้งค่า</string>
 </resources>

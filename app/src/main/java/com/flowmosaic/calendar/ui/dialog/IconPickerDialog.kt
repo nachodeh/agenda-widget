@@ -71,7 +71,6 @@ fun IconDialog(
                                     MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
                                     RoundedCornerShape(5.dp)
                                 )) {
-                                // @todo change this to a calendar icon which does the colour for us and used in the view
                                 Icon(
                                     imageVector = ImageVector.vectorResource(icon),
                                     contentDescription = null,
