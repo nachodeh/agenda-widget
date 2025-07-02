@@ -8,6 +8,7 @@
     <string name="show_action_buttons">Mostra pulsanti di azione</string>
     <string name="show_no_upcoming_events">Mostra il testo \"Nessun evento imminente\"</string>
     <string name="use_12_hour_format">Usa il formato a 12 ore</string>
+    <string name="show_location">Mostra luogo</string>
     <string name="date_separator_visible">Mostra separatore data</string>
     <string name="align_widget_bottom">Allineamento in basso</string>
     <string name="font_size">Dimensione del carattere</string>
@@ -27,10 +28,11 @@
     <string name="font_size_small">Piccolo</string>
     <string name="font_size_medium">Medio</string>
     <string name="font_size_large">Grande</string>
+    <string name="vertical_spacing">Spaziatura verticale</string>
     <string name="text_alignment">Allineamento del testo</string>
     <string name="prefs_title_editing_default_config">Modifica della configurazione predefinita</string>
     <string name="prefs_title_general">Generale</string>
-    <string name="prefs_title_date_time">Data e ora</string>
+    <string name="prefs_title_date_time_location">Data e ora, Luogo</string>
     <string name="prefs_title_appearance">Aspetto</string>
     <string name="no_upcoming_events">Nessun evento in arrivo</string>
     <string name="active_widgets">Configurazione del widget</string>

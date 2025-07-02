@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
@@ -47,7 +48,7 @@ fun PreferencesScreen(appWidgetId: Int, onCloseClick: (() -> Unit)? = null) {
             content = { GeneralPrefsSection(widgetId, logger, prefs) }
         ),
         PreferenceSection(
-            title = context.getString(R.string.prefs_title_date_time),
+            title = context.getString(R.string.prefs_title_date_time_location),
             content = { DateAndTimePrefsSection(widgetId, logger, prefs) }
         ),
         PreferenceSection(
@@ -164,6 +165,9 @@ fun DateAndTimePrefsSection(
     val use12HourFormat = remember {
         mutableStateOf(prefs.getHourFormat12(widgetId))
     }
+    val showLocation = remember {
+        mutableStateOf(prefs.getShowLocation(widgetId))
+    }
 
     CheckboxRow(
         displayText = context.getString(R.string.show_end_time),
@@ -185,6 +189,16 @@ fun DateAndTimePrefsSection(
         },
         logger = logger
     )
+    CheckboxRow(
+        displayText = stringResource(id = R.string.show_location),
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_LOCATION,
+        checkboxValue = showLocation,
+        saveCheckboxValue = { newValue: Boolean ->
+            showLocation.value = newValue
+            prefs.setShowLocation(newValue, widgetId)
+        },
+        logger = logger
+    )
 }
 
 @Composable
@@ -194,6 +208,9 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
     val colorState = remember { mutableStateOf(prefs.getTextColor(widgetId)) }
     val fontSize = remember {
         mutableStateOf(prefs.getFontSize(widgetId))
+    }
+    val verticalSpacing = remember {
+        mutableStateOf(prefs.getVerticalSpacing(widgetId))
     }
     val textAlignment = remember {
         mutableStateOf(prefs.getTextAlignment(widgetId))
@@ -219,6 +236,15 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
         saveFontSizeValue = { newValue: AgendaWidgetPrefs.FontSize ->
             fontSize.value = newValue
             prefs.setFontSize(newValue, widgetId)
+        },
+        logger = logger
+    )
+    VerticalSpacingSelectorRow(
+        displayText = context.getString(R.string.vertical_spacing),
+        verticalSpacingValue = verticalSpacing,
+        saveVerticalSpacingValue = { newValue: AgendaWidgetPrefs.VerticalSpacing ->
+            verticalSpacing.value = newValue
+            prefs.setVerticalSpacing(newValue, widgetId)
         },
         logger = logger
     )

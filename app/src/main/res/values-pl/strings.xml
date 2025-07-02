@@ -8,6 +8,7 @@
     <string name="show_action_buttons">Pokaż przyciski akcji</string>
     <string name="show_no_upcoming_events">Pokaż tekst \"Brak nadchodzących wydarzeń\"</string>
     <string name="use_12_hour_format">Używaj formatu 12-godzinnego</string>
+    <string name="show_location">Pokaż lokalizację</string>
     <string name="date_separator_visible">Pokaż separator daty</string>
     <string name="align_widget_bottom">Wyrównanie do dołu</string>
     <string name="font_size">Rozmiar czcionki</string>
@@ -28,10 +29,11 @@
     <string name="font_size_small">Mały</string>
     <string name="font_size_medium">Średni</string>
     <string name="font_size_large">Duży</string>
+    <string name="vertical_spacing">Odstępy pionowe</string>
     <string name="text_alignment">Wyrównanie tekstu</string>
     <string name="prefs_title_editing_default_config">Edycja domyślnej konfiguracji</string>
     <string name="prefs_title_general">Ogólne</string>
-    <string name="prefs_title_date_time">Data i czas</string>
+    <string name="prefs_title_date_time_location">Data i czas, Lokalizacja</string>
     <string name="prefs_title_appearance">Wygląd</string>
     <string name="no_upcoming_events">Brak nadchodzących wydarzeń</string>
     <string name="active_widgets">Konfiguracja widżetu</string>

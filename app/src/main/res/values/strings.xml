@@ -5,7 +5,7 @@
     <string name="tap_to_set_up">%1$s needs access to your calendar to show your events.\n\n Tap here and grant access.</string>
     <string name="prefs_title_editing_default_config">Editing default configuration</string>
     <string name="prefs_title_general">General</string>
-    <string name="prefs_title_date_time">Date and Time</string>
+    <string name="prefs_title_date_time_location">Date and Time, Location</string>
     <string name="prefs_title_appearance">Appearance</string>
     <string name="select_calendars">Select calendars</string>
     <string name="number_of_days_to_display">Number of days to display</string>
@@ -13,12 +13,14 @@
     <string name="show_action_buttons">Show action buttons</string>
     <string name="show_no_upcoming_events">Show no upcoming events text</string>
     <string name="use_12_hour_format">Use 12 hour format</string>
+    <string name="show_location">Show location</string>
     <string name="date_separator_visible">Show date separator</string>
     <string name="align_widget_bottom">Bottom alignment</string>
     <string name="font_size">Font size</string>
     <string name="font_size_small">Small</string>
     <string name="font_size_medium">Medium</string>
     <string name="font_size_large">Large</string>
+    <string name="vertical_spacing">Vertical spacing</string>
     <string name="text_alignment">Text alignment</string>
     <string name="text_alignment_left">Left</string>
     <string name="text_alignment_center">Center</string>
