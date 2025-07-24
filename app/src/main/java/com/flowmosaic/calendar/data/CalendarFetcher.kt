@@ -146,6 +146,7 @@ class CalendarFetcher {
                 val maxEndTime = adjustTimeForTimezone(endTime, allDay)
 
                 if (endDateTime < System.currentTimeMillis()) continue // Skip past events
+                if (startDateTime >= endTime) continue // Skip events that will show as next day in current timezone.
 
                 events.add(
                     CalendarEvent(
