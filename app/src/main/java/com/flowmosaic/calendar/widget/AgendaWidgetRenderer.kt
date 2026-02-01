@@ -103,7 +103,7 @@ object AgendaWidgetRenderer {
     }
 
     private fun RemoteViews.setWidgetBackground(widgetId: Int, prefs: AgendaWidgetPrefs) {
-        val backgroundColor = 0x000000
+        val backgroundColor = prefs.getBackgroundColor(widgetId.toString()).toArgb() and 0xFFFFFF
         val opacity = prefs.getOpacity(widgetId.toString())
         val color = ColorUtils.setAlphaComponent(backgroundColor, (opacity * 255).toInt())
         setInt(R.id.main_view, "setBackgroundColor", color)

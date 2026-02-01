@@ -205,6 +205,7 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
     val context = LocalContext.current
 
     val colorState = remember { mutableStateOf(prefs.getTextColor(widgetId)) }
+    val backgroundColorState = remember { mutableStateOf(prefs.getBackgroundColor(widgetId)) }
     val fontSize = remember {
         mutableStateOf(prefs.getFontSize(widgetId))
     }
@@ -259,7 +260,18 @@ fun AppearancePrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: 
             colorState.value = newValue
             prefs.setTextColor(newValue, widgetId)
         },
-        logger = logger
+        logger = logger,
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
+    )
+    ColorSelectorRow(
+        displayText = context.getString(R.string.background_color),
+        selectedColor = backgroundColorState,
+        saveColorValue = { newValue: Color ->
+            backgroundColorState.value = newValue
+            prefs.setBackgroundColor(newValue, widgetId)
+        },
+        logger = logger,
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.BACKGROUND_COLOR
     )
     OpacitySelectorRow(
         displayText = context.getString(R.string.background_opacity),
