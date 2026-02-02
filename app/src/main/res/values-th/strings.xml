@@ -16,7 +16,17 @@
     <string name="text_alignment_center">ตรงกลาง</string>
     <string name="text_alignment_right">ขวา</string>
     <string name="text_color">สีข้อความ</string>
+    <string name="background_color">สีพื้นหลัง</string>
     <string name="background_opacity">ความโปร่งใสของพื้นหลัง</string>
+    <string name="color_picker_presets">ค่าที่ตั้งไว้ล่วงหน้า</string>
+    <string name="color_picker_spectrum">สเปกตรัม</string>
+    <string name="color_picker_hex">เลขฐานสิบหก</string>
+    <string name="color_picker_hue">เฉดสี</string>
+    <string name="color_picker_saturation">ความอิ่มตัว</string>
+    <string name="color_picker_brightness">ความสว่าง</string>
+    <string name="color_picker_select">เลือก</string>
+    <string name="color_picker_hex_label">สีเลขฐานสิบหก (เช่น #FF5500)</string>
+    <string name="color_picker_hex_error">สีเลขฐานสิบหกไม่ถูกต้อง</string>
     <string name="save">บันทึก</string>
     <string name="cancel">ยกเลิก</string>
     <string name="grant_permissions">อนุญาตสิทธิ์</string>

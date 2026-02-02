@@ -5,10 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,7 +31,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -52,11 +49,13 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.flowmosaic.calendar.R
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -86,17 +85,17 @@ fun ColorDialog(
                         Tab(
                             selected = selectedTabIndex == 0,
                             onClick = { selectedTabIndex = 0 },
-                            text = { Text("Presets") }
+                            text = { Text(stringResource(R.string.color_picker_presets)) }
                         )
                         Tab(
                             selected = selectedTabIndex == 1,
                             onClick = { selectedTabIndex = 1 },
-                            text = { Text("Spectrum") }
+                            text = { Text(stringResource(R.string.color_picker_spectrum)) }
                         )
                         Tab(
                             selected = selectedTabIndex == 2,
                             onClick = { selectedTabIndex = 2 },
-                            text = { Text("Hex") }
+                            text = { Text(stringResource(R.string.color_picker_hex)) }
                         )
                     }
 
@@ -199,8 +198,9 @@ private fun SpectrumTab(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Hue spectrum bar
-        Text("Hue", style = MaterialTheme.typography.labelMedium)
+        // Hue slider with gradient bar
+        Text(stringResource(R.string.color_picker_hue), style = MaterialTheme.typography.labelMedium)
+        Spacer(modifier = Modifier.height(16.dp))
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -222,18 +222,10 @@ private fun SpectrumTab(
                 .pointerInput(Unit) {
                     detectTapGestures { offset ->
                         hue = (offset.x / size.width * 360f).coerceIn(0f, 360f)
-                        val newColor = Color.hsv(hue, saturation, brightness)
-                        onColorChanged(newColor)
+                        onColorChanged(Color.hsv(hue, saturation, brightness))
                     }
                 }
-        ) {
-            // Indicator
-            Box(
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(start = ((hue / 360f) * 100).dp)
-            )
-        }
+        )
         Slider(
             value = hue,
             onValueChange = {
@@ -245,7 +237,7 @@ private fun SpectrumTab(
         )
 
         // Saturation slider
-        Text("Saturation", style = MaterialTheme.typography.labelMedium)
+        Text(stringResource(R.string.color_picker_saturation), style = MaterialTheme.typography.labelMedium)
         Slider(
             value = saturation,
             onValueChange = {
@@ -257,7 +249,7 @@ private fun SpectrumTab(
         )
 
         // Brightness slider
-        Text("Brightness", style = MaterialTheme.typography.labelMedium)
+        Text(stringResource(R.string.color_picker_brightness), style = MaterialTheme.typography.labelMedium)
         Slider(
             value = brightness,
             onValueChange = {
@@ -274,7 +266,7 @@ private fun SpectrumTab(
             onClick = onColorSelected,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Select")
+            Text(stringResource(R.string.color_picker_select))
         }
     }
 }
@@ -316,9 +308,9 @@ private fun HexInputTab(
                     isError = filtered.isNotEmpty() && !filtered.startsWith("#")
                 }
             },
-            label = { Text("Hex color (e.g. #FF5500)") },
+            label = { Text(stringResource(R.string.color_picker_hex_label)) },
             isError = isError,
-            supportingText = if (isError) {{ Text("Invalid hex color") }} else null,
+            supportingText = if (isError) {{ Text(stringResource(R.string.color_picker_hex_error)) }} else null,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Characters,
@@ -335,25 +327,6 @@ private fun HexInputTab(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Quick hex presets
-        Text("Quick presets:", style = MaterialTheme.typography.labelMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            listOf("#FFFFFF", "#000000", "#FF0000", "#00FF00", "#0000FF").forEach { hex ->
-                TextButton(onClick = {
-                    hexText = hex
-                    parseHexColor(hex)?.let { onColorChanged(it) }
-                }) {
-                    Text(hex, style = MaterialTheme.typography.labelSmall)
-                }
-            }
-        }
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
@@ -361,7 +334,7 @@ private fun HexInputTab(
             modifier = Modifier.fillMaxWidth(),
             enabled = !isError && hexText.isNotEmpty()
         ) {
-            Text("Select")
+            Text(stringResource(R.string.color_picker_select))
         }
     }
 }

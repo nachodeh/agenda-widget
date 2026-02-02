@@ -16,7 +16,17 @@
     <string name="text_alignment_center">中</string>
     <string name="text_alignment_right">右</string>
     <string name="text_color">文字顏色</string>
+    <string name="background_color">背景颜色</string>
     <string name="background_opacity">背景透明度</string>
+    <string name="color_picker_presets">预设</string>
+    <string name="color_picker_spectrum">色谱</string>
+    <string name="color_picker_hex">十六进制</string>
+    <string name="color_picker_hue">色相</string>
+    <string name="color_picker_saturation">饱和度</string>
+    <string name="color_picker_brightness">亮度</string>
+    <string name="color_picker_select">选择</string>
+    <string name="color_picker_hex_label">十六进制颜色 (例如 #FF5500)</string>
+    <string name="color_picker_hex_error">无效的十六进制颜色</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
     <string name="grant_permissions">授予權限</string>
