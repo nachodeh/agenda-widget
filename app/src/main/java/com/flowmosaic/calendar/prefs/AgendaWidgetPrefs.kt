@@ -32,6 +32,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         private const val PREF_VERTICAL_SPACING = "key_vertical_spacing"
         private const val PREF_TEXT_ALIGNMENT = "key_text_alignment"
         private const val PREF_OPACITY = "key_opacity"
+        private const val PREF_BACKGROUND_COLOR = "key_background_color"
         private const val PREF_HOUR_FORMAT_12 = "key_hour_format_12"
         private const val PREF_LAST_REVIEW_PROMPT = "key_last_review_prompt"
         private const val PREF_SEPARATOR_VISIBLE = "key_separator_visible"
@@ -267,6 +268,22 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     fun setOpacity(opacity: Float, widgetId: String) {
         val prefsKey = getKeyWithWidgetIdSave(PREF_OPACITY, widgetId)
         sharedPreferences.edit().putFloat(prefsKey, opacity).apply()
+    }
+
+    fun getBackgroundColor(widgetId: String): Color {
+        val defaultColor = Color.Black.toArgb()
+        val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_BACKGROUND_COLOR, widgetId)
+        val color = Color(sharedPreferences.getInt(prefsKey, defaultColor))
+        if (!prefExists) {
+            setBackgroundColor(color, widgetId)
+        }
+        return color
+    }
+
+    fun setBackgroundColor(backgroundColor: Color, widgetId: String) {
+        val colorInt = backgroundColor.toArgb()
+        val prefsKey = getKeyWithWidgetIdSave(PREF_BACKGROUND_COLOR, widgetId)
+        sharedPreferences.edit().putInt(prefsKey, colorInt).apply()
     }
 
     fun getHourFormat12(widgetId: String): Boolean {

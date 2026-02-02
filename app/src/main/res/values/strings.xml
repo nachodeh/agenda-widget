@@ -26,7 +26,17 @@
     <string name="text_alignment_center">Center</string>
     <string name="text_alignment_right">Right</string>
     <string name="text_color">Text color</string>
+    <string name="background_color">Background color</string>
     <string name="background_opacity">Background opacity</string>
+    <string name="color_picker_presets">Presets</string>
+    <string name="color_picker_spectrum">Spectrum</string>
+    <string name="color_picker_hex">Hex</string>
+    <string name="color_picker_hue">Hue</string>
+    <string name="color_picker_saturation">Saturation</string>
+    <string name="color_picker_brightness">Brightness</string>
+    <string name="color_picker_select">Select</string>
+    <string name="color_picker_hex_label">Hex color (e.g. #FF5500)</string>
+    <string name="color_picker_hex_error">Invalid hex color</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="grant_permissions">Grant Permissions</string>
