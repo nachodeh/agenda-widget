@@ -295,7 +295,8 @@ fun ColorSelectorRow(
     displayText: String,
     selectedColor: MutableState<Color>,
     saveColorValue: (Color) -> Unit,
-    logger: AgendaWidgetLogger
+    logger: AgendaWidgetLogger,
+    loggingItem: AgendaWidgetLogger.PrefsScreenItemName = AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
 ) {
     val showDialog = rememberSaveable {
         mutableStateOf(false)
@@ -306,9 +307,7 @@ fun ColorSelectorRow(
             .fillMaxWidth()
             .clickable {
                 showDialog.value = true
-                logger.logUpdatePrefEvent(
-                    AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
-                )
+                logger.logUpdatePrefEvent(loggingItem)
             }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -342,11 +341,6 @@ fun ColorSelectorRow(
         Color(0xFF81D4FA),
         Color(0xFFB39DDB),
         Color(0xFF000000),
-//        Color(0xFF888888),
-//        Color(0xFFEF9A9A),
-//        Color(0xFFF48FB1),
-//        Color(0xFFA5D6A7),
-//        Color(0xFFCE93D8),
     )
 
     if (showDialog.value) {

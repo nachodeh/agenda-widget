@@ -16,7 +16,17 @@
     <string name="text_alignment_center">Środek</string>
     <string name="text_alignment_right">Prawo</string>
     <string name="text_color">Kolor tekstu</string>
+    <string name="background_color">Kolor tła</string>
     <string name="background_opacity">Przezroczystość tła</string>
+    <string name="color_picker_presets">Predefiniowane</string>
+    <string name="color_picker_spectrum">Spektrum</string>
+    <string name="color_picker_hex">Hex</string>
+    <string name="color_picker_hue">Barwa</string>
+    <string name="color_picker_saturation">Nasycenie</string>
+    <string name="color_picker_brightness">Jasność</string>
+    <string name="color_picker_select">Wybierz</string>
+    <string name="color_picker_hex_label">Kolor szesnastkowy (np. #FF5500)</string>
+    <string name="color_picker_hex_error">Nieprawidłowy kolor szesnastkowy</string>
     <string name="save">Zapisz</string>
     <string name="cancel">Anuluj</string>
     <string name="grant_permissions">Przyznaj uprawnienia</string>
