@@ -21,8 +21,8 @@ android {
         applicationId "com.flowmosaic.calendar"
         minSdk 24
         targetSdk 34
-        versionCode 48
-        versionName "1.2.20"
+        versionCode 49
+        versionName "1.2.21"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
