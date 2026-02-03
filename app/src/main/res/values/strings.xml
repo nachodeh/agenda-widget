@@ -67,5 +67,6 @@
     <string name="preview_item_2">17:00 – 18:00 | Football</string>
     <string name="preview_item_3">Jack\'s birthday</string>
 
+    <string name="battery_optimization_warning">Tap to disable battery optimization for reliable widget updates</string>
 
 </resources>

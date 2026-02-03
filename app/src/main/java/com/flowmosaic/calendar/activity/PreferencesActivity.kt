@@ -2,18 +2,28 @@ package com.flowmosaic.calendar.activity
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.Color
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.screens.PreferencesScreen
@@ -28,34 +38,74 @@ class PreferencesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Detect system dark mode
+        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+            Configuration.UI_MODE_NIGHT_YES
+
+        // Enable edge-to-edge before setContent for SDK 35+ compatibility
+        // Status bar: force dark style (light icons on dark background)
+        // Navigation bar: adapt icons based on theme
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = if (isDarkMode) {
+                // Dark mode: light (white) icons for dark background
+                SystemBarStyle.light(
+                    android.graphics.Color.TRANSPARENT,
+                    android.graphics.Color.TRANSPARENT
+                )
+            } else {
+                // Light mode: dark (black) icons for light background
+                SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+            }
+        )
+
         setContent {
             CalendarWidgetTheme {
-                val statusBarColor = getPrimaryColor().toArgb()
-                enableEdgeToEdge(
-                    navigationBarStyle = SystemBarStyle.light(
-                        MaterialTheme.colorScheme.background.toArgb(),
-                        MaterialTheme.colorScheme.background.toArgb()
-                    ),
-                    statusBarStyle = SystemBarStyle.dark(statusBarColor)
-                )
-                Surface(
+                val primaryColor = getPrimaryColor()
+                val backgroundColor = MaterialTheme.colorScheme.background
+
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .safeDrawingPadding(),
-                    color = MaterialTheme.colorScheme.background
+                        .background(backgroundColor)
                 ) {
-                    val appWidgetId = intent?.extras?.getInt(
-                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID
-                    ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+                    // Status bar background - extends behind status bar with primary color
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .windowInsetsTopHeight(WindowInsets.statusBars)
+                            .background(primaryColor)
+                    )
 
-                    Column {
-                        Header(
-                            subtitle = "Preferences",
-                        )
-                        PreferencesScreen(
-                            appWidgetId,
-                            onCloseClick = { saveWidgetConfig(appWidgetId) })
+                    // Navigation bar background - extends behind navigation bar
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                            .background(backgroundColor)
+                            .align(Alignment.BottomCenter)
+                    )
+
+                    // Main content with safe drawing padding
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .safeDrawingPadding(),
+                        color = backgroundColor
+                    ) {
+                        val appWidgetId = intent?.extras?.getInt(
+                            AppWidgetManager.EXTRA_APPWIDGET_ID,
+                            AppWidgetManager.INVALID_APPWIDGET_ID
+                        ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+
+                        Column {
+                            Header(
+                                subtitle = "Preferences",
+                            )
+                            PreferencesScreen(
+                                appWidgetId,
+                                onCloseClick = { saveWidgetConfig(appWidgetId) })
+                        }
                     }
                 }
             }

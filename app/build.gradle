@@ -15,12 +15,12 @@ def posthogApiKey = localProperties.getProperty("POSTHOG_API_KEY") ?: ""
 
 android {
     namespace 'com.flowmosaic.calendar'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.flowmosaic.calendar"
         minSdk 24
-        targetSdk 34
+        targetSdk 36
         versionCode 49
         versionName "1.2.21"
 
@@ -106,6 +106,9 @@ dependencies {
 
     // Splash screen
     implementation 'androidx.core:core-splashscreen:1.1.0-alpha02'
+
+    // WorkManager for reliable widget updates
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
 
 
     // Mockito

@@ -60,6 +60,12 @@ class AgendaWidget : AppWidgetProvider() {
                 updateWidget(context, appWidgetManager, appWidgetId)
             }
         }
+
+        // Ensure WorkManager updates are scheduled (handles app update/restore scenarios)
+        if (appWidgetIds.isNotEmpty()) {
+            WidgetUpdateWorker.schedulePeriodicUpdates(context)
+        }
+
         if (prefs.getShouldLogWidgetActivityEvent()) {
             getLogger(context).logWidgetLifecycleEvent(
                 AgendaWidgetLogger.WidgetStatus.ACTIVE, mapOf(
@@ -73,6 +79,8 @@ class AgendaWidget : AppWidgetProvider() {
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
         getLogger(context).logWidgetLifecycleEvent(AgendaWidgetLogger.WidgetStatus.ENABLED)
+        // Schedule periodic updates using WorkManager for reliable updates
+        WidgetUpdateWorker.schedulePeriodicUpdates(context)
     }
 
     override fun onDisabled(context: Context) {
@@ -80,6 +88,8 @@ class AgendaWidget : AppWidgetProvider() {
         getLogger(context).logWidgetLifecycleEvent(
             AgendaWidgetLogger.WidgetStatus.DISABLED
         )
+        // Cancel periodic updates when no widgets remain
+        WidgetUpdateWorker.cancelPeriodicUpdates(context)
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
