@@ -150,7 +150,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxSize()
                             .safeDrawingPadding(),
-                        color = Color.Transparent
+                        color = backgroundColor
                     ) {
                         Column {
                             if (renderHeader.value) {

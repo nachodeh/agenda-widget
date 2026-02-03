@@ -94,7 +94,7 @@ class PreferencesActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxSize()
                             .safeDrawingPadding(),
-                        color = Color.Transparent
+                        color = backgroundColor
                     ) {
                         val appWidgetId = intent?.extras?.getInt(
                             AppWidgetManager.EXTRA_APPWIDGET_ID,
