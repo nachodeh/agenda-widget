@@ -2,6 +2,7 @@ package com.flowmosaic.calendar.activity
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -75,13 +76,28 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
 
+        // Detect system dark mode
+        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+            Configuration.UI_MODE_NIGHT_YES
+
         // Enable edge-to-edge before setContent for SDK 35+ compatibility
+        // Status bar: always use light icons (white) since primary color is always dark blue
+        // Navigation bar: dark icons for light backgrounds, light icons for dark backgrounds
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.light(
+            statusBarStyle = SystemBarStyle.light(
                 android.graphics.Color.TRANSPARENT,
                 android.graphics.Color.TRANSPARENT
-            )
+            ),
+            navigationBarStyle = if (isDarkMode) {
+                // Dark mode: light (white) icons for dark background
+                SystemBarStyle.light(
+                    android.graphics.Color.TRANSPARENT,
+                    android.graphics.Color.TRANSPARENT
+                )
+            } else {
+                // Light mode: dark (black) icons for light background
+                SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+            }
         )
 
         setContent {
