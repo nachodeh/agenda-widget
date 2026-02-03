@@ -59,4 +59,5 @@
     <string name="preview_item_2">17:00 - 18:00 | ฟุตบอล</string>
     <string name="preview_item_3">วันเกิดของแจ็ค</string>
     <string name="onboarding_got_it">เข้าใจแล้ว</string>
+    <string name="battery_optimization_warning">แตะเพื่อปิดการเพิ่มประสิทธิภาพแบตเตอรี่สำหรับการอัปเดตวิดเจ็ตที่เชื่อถือได้</string>
 </resources>

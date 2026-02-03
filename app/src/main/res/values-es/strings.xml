@@ -58,4 +58,5 @@
     <string name="preview_item_2">17:00 - 18:00 | Fútbol</string>
     <string name="preview_item_3">Cumpleaños de Jack</string>
     <string name="onboarding_got_it">Entendido</string>
+    <string name="battery_optimization_warning">Toca para desactivar la optimización de batería para actualizaciones confiables del widget</string>
 </resources>

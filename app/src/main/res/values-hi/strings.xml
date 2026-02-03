@@ -58,4 +58,5 @@
     <string name="preview_item_2">"17:00 - 18:00 | फ़ुटबॉल "</string>
     <string name="preview_item_3">जैक का जन्मदिन</string>
     <string name="onboarding_got_it">समझ गया</string>
+    <string name="battery_optimization_warning">विश्वसनीय विजेट अपडेट के लिए बैटरी अनुकूलन अक्षम करने के लिए टैप करें</string>
 </resources>
