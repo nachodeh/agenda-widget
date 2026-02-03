@@ -7,17 +7,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavBackStackEntry
@@ -66,48 +74,74 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
+
+        // Enable edge-to-edge before setContent for SDK 35+ compatibility
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.light(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            )
+        )
+
         setContent {
             CalendarWidgetTheme {
-                Surface(
+                val primaryColor = getPrimaryColor()
+                val backgroundColor = MaterialTheme.colorScheme.background
+                val renderHeader = remember { mutableStateOf(false) }
+                val headerSubtitle = remember { mutableStateOf("") }
+                val isOnboarding = remember { mutableStateOf(false) }
+
+                val navController = rememberNavController()
+                LaunchedEffect(navController) {
+                    navController.currentBackStackEntryFlow.collect { backStackEntry ->
+                        headerSubtitle.value = getHeaderSubtitle(backStackEntry)
+                        val onOnboard = backStackEntry.destination.route == NavigationItem.Onboard.route
+                        renderHeader.value = !onOnboard
+                        isOnboarding.value = onOnboard
+                        logger.logNavigationEvent(backStackEntry.destination.route)
+                    }
+                }
+
+                // Determine colors for system bar backgrounds
+                val statusBarBackgroundColor = primaryColor
+                val navBarBackgroundColor = if (isOnboarding.value) primaryColor else backgroundColor
+
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .safeDrawingPadding(),
-                    color = MaterialTheme.colorScheme.background
+                        .background(backgroundColor)
                 ) {
-                    val defaultNavBarColor = MaterialTheme.colorScheme.background.toArgb()
-                    val primaryColor = getPrimaryColor()
-                    val navBarColor = remember { mutableIntStateOf(defaultNavBarColor) }
-                    val renderHeader = remember { mutableStateOf(false) }
-                    val headerSubtitle = remember { mutableStateOf("") }
-
-                    val navController = rememberNavController()
-                    LaunchedEffect(navController) {
-                        navController.currentBackStackEntryFlow.collect { backStackEntry ->
-                            headerSubtitle.value = getHeaderSubtitle(backStackEntry)
-                            renderHeader.value = when (backStackEntry.destination.route) {
-                                NavigationItem.Onboard.route -> false
-                                else -> true
-                            }
-                            navBarColor.intValue = when (backStackEntry.destination.route) {
-                                NavigationItem.Onboard.route -> primaryColor.toArgb()
-                                else -> defaultNavBarColor
-                            }
-                            logger.logNavigationEvent(backStackEntry.destination.route)
-                        }
-                    }
-
-                    enableEdgeToEdge(
-                        navigationBarStyle = SystemBarStyle.light(
-                            navBarColor.intValue, navBarColor.intValue
-                        ),
-                        statusBarStyle = SystemBarStyle.dark(primaryColor.toArgb())
+                    // Status bar background - extends behind status bar with primary color
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .windowInsetsTopHeight(WindowInsets.statusBars)
+                            .background(statusBarBackgroundColor)
                     )
 
-                    Column {
-                        if (renderHeader.value) {
-                            Header(subtitle = headerSubtitle.value)
+                    // Navigation bar background - extends behind navigation bar
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                            .background(navBarBackgroundColor)
+                            .align(androidx.compose.ui.Alignment.BottomCenter)
+                    )
+
+                    // Main content with safe drawing padding
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .safeDrawingPadding(),
+                        color = Color.Transparent
+                    ) {
+                        Column {
+                            if (renderHeader.value) {
+                                Header(subtitle = headerSubtitle.value)
+                            }
+                            AgendaWidgetNavHost(navController)
                         }
-                        AgendaWidgetNavHost(navController)
                     }
                 }
             }

@@ -7,13 +7,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.Color
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.ui.Header
 import com.flowmosaic.calendar.ui.screens.PreferencesScreen
@@ -28,34 +37,62 @@ class PreferencesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Enable edge-to-edge before setContent for SDK 35+ compatibility
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.light(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            )
+        )
+
         setContent {
             CalendarWidgetTheme {
-                val statusBarColor = getPrimaryColor().toArgb()
-                enableEdgeToEdge(
-                    navigationBarStyle = SystemBarStyle.light(
-                        MaterialTheme.colorScheme.background.toArgb(),
-                        MaterialTheme.colorScheme.background.toArgb()
-                    ),
-                    statusBarStyle = SystemBarStyle.dark(statusBarColor)
-                )
-                Surface(
+                val primaryColor = getPrimaryColor()
+                val backgroundColor = MaterialTheme.colorScheme.background
+
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .safeDrawingPadding(),
-                    color = MaterialTheme.colorScheme.background
+                        .background(backgroundColor)
                 ) {
-                    val appWidgetId = intent?.extras?.getInt(
-                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID
-                    ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+                    // Status bar background - extends behind status bar with primary color
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .windowInsetsTopHeight(WindowInsets.statusBars)
+                            .background(primaryColor)
+                    )
 
-                    Column {
-                        Header(
-                            subtitle = "Preferences",
-                        )
-                        PreferencesScreen(
-                            appWidgetId,
-                            onCloseClick = { saveWidgetConfig(appWidgetId) })
+                    // Navigation bar background - extends behind navigation bar
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                            .background(backgroundColor)
+                            .align(Alignment.BottomCenter)
+                    )
+
+                    // Main content with safe drawing padding
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .safeDrawingPadding(),
+                        color = Color.Transparent
+                    ) {
+                        val appWidgetId = intent?.extras?.getInt(
+                            AppWidgetManager.EXTRA_APPWIDGET_ID,
+                            AppWidgetManager.INVALID_APPWIDGET_ID
+                        ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+
+                        Column {
+                            Header(
+                                subtitle = "Preferences",
+                            )
+                            PreferencesScreen(
+                                appWidgetId,
+                                onCloseClick = { saveWidgetConfig(appWidgetId) })
+                        }
                     }
                 }
             }
