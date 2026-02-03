@@ -2,32 +2,48 @@ package com.flowmosaic.calendar.activity
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -71,10 +87,14 @@ class MainActivity : ComponentActivity() {
 
     private val logger by lazy { AgendaWidgetLogger(applicationContext) }
     private val prefs by lazy { AgendaWidgetPrefs(applicationContext) }
+    private val isBatteryOptimizationDisabled = mutableStateOf(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
+
+        // Check battery optimization status
+        checkBatteryOptimization()
 
         // Detect system dark mode
         val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
@@ -152,6 +172,12 @@ class MainActivity : ComponentActivity() {
                         Column {
                             if (renderHeader.value) {
                                 Header(subtitle = headerSubtitle.value)
+                            }
+                            // Battery optimization warning banner
+                            if (!isBatteryOptimizationDisabled.value && !isOnboarding.value) {
+                                BatteryOptimizationBanner(
+                                    onClick = { requestBatteryOptimizationExemption() }
+                                )
                             }
                             AgendaWidgetNavHost(navController)
                         }
@@ -244,11 +270,54 @@ class MainActivity : ComponentActivity() {
         return !(widgetIds.isNotEmpty() || prefs.getOnboardingDone())
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Re-check battery optimization when returning to the app
+        checkBatteryOptimization()
+    }
+
     override fun onPause() {
         val agendaWidgetProvider = AgendaWidget()
         agendaWidgetProvider.forceWidgetUpdate(applicationContext)
 
         super.onPause()
+    }
+
+    private fun checkBatteryOptimization() {
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        isBatteryOptimizationDisabled.value = powerManager.isIgnoringBatteryOptimizations(packageName)
+    }
+
+    private fun requestBatteryOptimizationExemption() {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+            data = Uri.parse("package:$packageName")
+        }
+        startActivity(intent)
+    }
+
+    @Composable
+    private fun BatteryOptimizationBanner(onClick: () -> Unit) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.errorContainer)
+                .clickable { onClick() }
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Warning,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.size(20.dp)
+            )
+            Text(
+                text = getString(R.string.battery_optimization_warning),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
     }
 
 }
