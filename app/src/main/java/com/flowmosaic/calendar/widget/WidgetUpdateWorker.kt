@@ -45,7 +45,7 @@ class WidgetUpdateWorker(
 
     companion object {
         private const val WORK_NAME = "widget_periodic_update"
-        private const val UPDATE_INTERVAL_MINUTES = 30L
+        private const val UPDATE_INTERVAL_MINUTES = 15L
 
         /**
          * Schedule periodic widget updates using WorkManager.
