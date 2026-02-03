@@ -43,13 +43,10 @@ class PreferencesActivity : ComponentActivity() {
             Configuration.UI_MODE_NIGHT_YES
 
         // Enable edge-to-edge before setContent for SDK 35+ compatibility
-        // Status bar: always use light icons (white) since primary color is always dark blue
-        // Navigation bar: dark icons for light backgrounds, light icons for dark backgrounds
+        // Status bar: force dark style (light icons on dark background)
+        // Navigation bar: adapt icons based on theme
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(
-                android.graphics.Color.TRANSPARENT,
-                android.graphics.Color.TRANSPARENT
-            ),
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
             navigationBarStyle = if (isDarkMode) {
                 // Dark mode: light (white) icons for dark background
                 SystemBarStyle.light(
