@@ -1,7 +1,11 @@
 package com.flowmosaic.calendar.activity
 
 import android.Manifest
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -9,7 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
-import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.widget.AgendaWidget
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +26,13 @@ class PermissionsActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val allPermissionsGranted = permissions.entries.all { it.value }
             logger.logPermissionsResultEvent(allPermissionsGranted)
+            // After calendar permissions, request battery optimization exemption
+            requestBatteryOptimizationExemption()
+        }
+
+    private val batteryOptimizationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            // Whether granted or not, proceed to update widgets
             updateWidgets()
         }
 
@@ -57,7 +67,21 @@ class PermissionsActivity : ComponentActivity() {
                 )
             )
         } else {
-            finishAndRemoveTask()
+            // Calendar permissions already granted, check battery optimization
+            requestBatteryOptimizationExemption()
+        }
+    }
+
+    private fun requestBatteryOptimizationExemption() {
+        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                data = Uri.parse("package:$packageName")
+            }
+            batteryOptimizationLauncher.launch(intent)
+        } else {
+            // Already exempted, proceed to update widgets
+            updateWidgets()
         }
     }
 
