@@ -3,12 +3,12 @@ package com.flowmosaic.calendar.remoteviews
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.data.CalendarDateUtils
@@ -16,6 +16,7 @@ import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.data.CalendarViewItem
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.UnitConverter
+import com.flowmosaic.calendar.ui.isColorLight
 import com.flowmosaic.calendar.widget.EXTRA_END_TIME
 import com.flowmosaic.calendar.widget.EXTRA_EVENT_ID
 import com.flowmosaic.calendar.widget.EXTRA_START_TIME
@@ -87,6 +88,10 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             setUpFontSize(textViewId, item)
             setUpVerticalSpacing(context, textViewId, item)
             setUpFontAlignment(textViewId)
+
+            if (item is CalendarViewItem.Event) {
+                setUpCalendarBlob(textColor, item.event.calendarId)
+            }
 
             setTextViewText(textViewId, text)
             setOnClickFillInIntent(textViewId, getFillInIntent(item))
@@ -237,13 +242,53 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         return calendarFetcher.readCalendarData(context, widgetId)
     }
 
-    private fun isColorLight(color: Int): Boolean {
-        val red = Color.red(color) / 255.0
-        val green = Color.green(color) / 255.0
-        val blue = Color.blue(color) / 255.0
+    private fun RemoteViews.setUpCalendarBlob(textColor: Int, calendarId: Long) {
+        var wrapperId = R.id.item_event_calendar_blob
+        var backgroundId = R.id.item_event_calendar_blob_background
+        var emojiId = R.id.item_event_calendar_blob_emoji
+        if (!isColorLight(textColor)) {
+            wrapperId = R.id.item_event_calendar_blob_dark
+            backgroundId = R.id.item_event_calendar_blob_dark_background
+            emojiId = R.id.item_event_calendar_blob_dark_emoji
+        }
 
-        val luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue
-        return luminance > 0.5
+        // Check if blobs are enabled
+        if (!prefs.getShowCalendarBlob(widgetId)) {
+            setViewVisibility(wrapperId, View.GONE)
+            return
+        }
+
+        val indicatorStyle = prefs.getIndicatorStyle(widgetId)
+        val containerSizePx = UnitConverter.dpToPx(18f, context).toFloat()
+        setViewLayoutWidth(wrapperId, containerSizePx, TypedValue.COMPLEX_UNIT_PX)
+        setViewLayoutHeight(wrapperId, containerSizePx, TypedValue.COMPLEX_UNIT_PX)
+
+        when (indicatorStyle) {
+            AgendaWidgetPrefs.IndicatorStyle.COLORS -> {
+                // Show color blob
+                val calendarColor = prefs.getCalendarColor(widgetId, calendarId)
+                setInt(backgroundId, "setColorFilter", calendarColor.toArgb())
+                val blobPadding = UnitConverter.dpToPx(2f, context)
+                setViewPadding(backgroundId, blobPadding, blobPadding, blobPadding, blobPadding)
+                setViewVisibility(emojiId, View.GONE)
+                setViewVisibility(backgroundId, View.VISIBLE)
+                setViewVisibility(wrapperId, View.VISIBLE)
+            }
+            AgendaWidgetPrefs.IndicatorStyle.EMOJIS -> {
+                val calendarEmoji = prefs.getCalendarEmoji(widgetId, calendarId)
+                if (calendarEmoji.isNotEmpty()) {
+                    // Show emoji
+                    setTextViewText(emojiId, calendarEmoji)
+                    setTextViewTextSize(emojiId, TypedValue.COMPLEX_UNIT_DIP, 14f)
+                    setViewVisibility(emojiId, View.VISIBLE)
+                    setViewVisibility(backgroundId, View.GONE)
+                    setViewVisibility(wrapperId, View.VISIBLE)
+                } else {
+                    // No emoji set - hide the indicator
+                    setViewVisibility(wrapperId, View.GONE)
+                }
+            }
+        }
     }
 
 }
