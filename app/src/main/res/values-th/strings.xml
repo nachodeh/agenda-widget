@@ -64,6 +64,9 @@
     <string name="show_calendar_blob">แสดงบล็อบปฏิทิน</string>
     <string name="configure_calendar_blobs">กำหนดค่าบล็อบปฏิทิน</string>
     <string name="title_color">สี</string>
-    <string name="title_icon">ไอคอน</string>
-    <string name="label_set">ตั้งค่า</string>
+    <string name="title_emoji">อีโมจิ</string>
+    <string name="label_none">ไม่มี</string>
+    <string name="indicator_style">รูปแบบตัวบ่งชี้</string>
+    <string name="style_colors">สี</string>
+    <string name="style_emojis">อีโมจิ</string>
 </resources>

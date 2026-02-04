@@ -38,26 +38,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.data.CalendarData
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
-import com.flowmosaic.calendar.ui.isColorLight
 import com.flowmosaic.calendar.ui.dialog.ColorDialog
-import com.flowmosaic.calendar.ui.dialog.IconDialog
+import com.flowmosaic.calendar.ui.dialog.EmojiDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarBlobsDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarDialog
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
 import com.flowmosaic.calendar.R
-import com.flowmosaic.calendar.ui.getCalendarIcons
+import com.flowmosaic.calendar.ui.getCommonEmoji
 
 @Composable
 fun TitleWithDivider(title: String) {
@@ -454,12 +450,11 @@ fun ConfigureCalendarBlobsButton(displayText: String, widgetId: String, logger: 
 }
 
 @Composable
-fun IconSelectorRow(
+fun EmojiSelectorRow(
     displayText: String,
-    noIconText: String,
-    selectedIcon: MutableState<Int>,
-    backgroundColor: MutableState<Color>,
-    saveIconValue: (Int) -> Unit,
+    noEmojiText: String,
+    selectedEmoji: MutableState<String>,
+    saveEmojiValue: (String) -> Unit,
     logger: AgendaWidgetLogger,
     prefName: AgendaWidgetLogger.PrefsScreenItemName
 ) {
@@ -467,11 +462,7 @@ fun IconSelectorRow(
         mutableStateOf(false)
     }
 
-    val icons = getCalendarIcons()
-
-    if (selectedIcon.value < 0 || selectedIcon.value >= icons.size) {
-        selectedIcon.value = 0
-    }
+    val emojis = getCommonEmoji()
 
     Row(
         modifier = Modifier
@@ -492,53 +483,27 @@ fun IconSelectorRow(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
-        if (selectedIcon.value == 0) {
-            Text(text = noIconText)
-        }
-        else {
-            CalendarIcon(
-                iconResource = icons[selectedIcon.value],
-                backgroundColor = backgroundColor,
-            )
+        if (selectedEmoji.value.isEmpty()) {
+            Text(text = noEmojiText)
+        } else {
+            CalendarEmoji(emoji = selectedEmoji.value)
         }
     }
 
     if (showDialog.value) {
-        IconDialog(
-            iconList = icons,
+        EmojiDialog(
+            emojiList = emojis,
             onDismiss = { showDialog.value = false },
-            selectedIcon = selectedIcon.value,
-            onIconSelected = saveIconValue
+            selectedEmoji = selectedEmoji.value,
+            onEmojiSelected = saveEmojiValue
         )
     }
 }
 
 @Composable
-fun CalendarIcon(
-    iconResource: Int,
-    backgroundColor: MutableState<Color>) {
-
-    val tint = when (isColorLight(backgroundColor.value.toArgb(), 0.3)) {
-        true -> Color.Black
-        false -> Color.White
-    }
-
-    Surface(
-        modifier = Modifier
-            .clip(CircleShape)
-            .requiredSize(24.dp)
-    ) {
-        Canvas(
-            modifier = Modifier
-                .clip(CircleShape)
-                .background(backgroundColor.value)
-                .requiredSize(24.dp)
-        ) {}
-        Icon(
-            imageVector = ImageVector.vectorResource(iconResource),
-            contentDescription = null,
-            tint = tint,
-            modifier = Modifier.padding(3.dp)
-        )
-    }
+fun CalendarEmoji(emoji: String) {
+    Text(
+        text = emoji,
+        style = MaterialTheme.typography.titleLarge
+    )
 }

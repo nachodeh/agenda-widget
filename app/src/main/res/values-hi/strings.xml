@@ -63,6 +63,9 @@
     <string name="show_calendar_blob">कैलेंडर ब्लॉब दिखाएँ</string>
     <string name="configure_calendar_blobs">कैलेंडर ब्लॉब कॉन्फ़िगर करें</string>
     <string name="title_color">रंग</string>
-    <string name="title_icon">चिह्न</string>
-    <string name="label_set">सेट करें</string>
+    <string name="title_emoji">इमोजी</string>
+    <string name="label_none">कोई नहीं</string>
+    <string name="indicator_style">संकेतक शैली</string>
+    <string name="style_colors">रंग</string>
+    <string name="style_emojis">इमोजी</string>
 </resources>

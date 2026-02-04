@@ -16,7 +16,6 @@ import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.data.CalendarViewItem
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.UnitConverter
-import com.flowmosaic.calendar.ui.getCalendarIcons
 import com.flowmosaic.calendar.ui.isColorLight
 import com.flowmosaic.calendar.widget.EXTRA_END_TIME
 import com.flowmosaic.calendar.widget.EXTRA_EVENT_ID
@@ -246,33 +245,49 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     private fun RemoteViews.setUpCalendarBlob(textColor: Int, calendarId: Long) {
         var wrapperId = R.id.item_event_calendar_blob
         var backgroundId = R.id.item_event_calendar_blob_background
-        var iconId = R.id.item_event_calendar_blob_icon
+        var emojiId = R.id.item_event_calendar_blob_emoji
         if (!isColorLight(textColor)) {
             wrapperId = R.id.item_event_calendar_blob_dark
             backgroundId = R.id.item_event_calendar_blob_dark_background
-            iconId = R.id.item_event_calendar_blob_dark_icon
+            emojiId = R.id.item_event_calendar_blob_dark_emoji
         }
 
-        val calendarIcon = prefs.getCalendarIcon(widgetId, calendarId)
-        val icons = getCalendarIcons()
+        // Check if blobs are enabled
+        if (!prefs.getShowCalendarBlob(widgetId)) {
+            setViewVisibility(wrapperId, View.GONE)
+            return
+        }
 
-        val calendarBlobVisibility = if (prefs.getShowCalendarBlob(widgetId)) View.VISIBLE else View.GONE
-        setViewVisibility(wrapperId, calendarBlobVisibility)
+        val indicatorStyle = prefs.getIndicatorStyle(widgetId)
+        val containerSizePx = UnitConverter.dpToPx(18f, context).toFloat()
+        setViewLayoutWidth(wrapperId, containerSizePx, TypedValue.COMPLEX_UNIT_PX)
+        setViewLayoutHeight(wrapperId, containerSizePx, TypedValue.COMPLEX_UNIT_PX)
 
-        val calendarColor = prefs.getCalendarColor(widgetId, calendarId)
-        setInt(backgroundId, "setColorFilter", calendarColor.toArgb())
-
-        if (calendarIcon > 0 && calendarIcon < icons.size) {
-            setInt(iconId, "setImageResource", icons[calendarIcon])
-
-            val tint = when (isColorLight(calendarColor.toArgb(), 0.3)) {
-                true -> Color.Black
-                false -> Color.White
+        when (indicatorStyle) {
+            AgendaWidgetPrefs.IndicatorStyle.COLORS -> {
+                // Show color blob
+                val calendarColor = prefs.getCalendarColor(widgetId, calendarId)
+                setInt(backgroundId, "setColorFilter", calendarColor.toArgb())
+                val blobPadding = UnitConverter.dpToPx(2f, context)
+                setViewPadding(backgroundId, blobPadding, blobPadding, blobPadding, blobPadding)
+                setViewVisibility(emojiId, View.GONE)
+                setViewVisibility(backgroundId, View.VISIBLE)
+                setViewVisibility(wrapperId, View.VISIBLE)
             }
-            setInt(iconId, "setColorFilter", tint.toArgb())
-        }
-        else {
-            setViewVisibility(iconId, View.GONE)
+            AgendaWidgetPrefs.IndicatorStyle.EMOJIS -> {
+                val calendarEmoji = prefs.getCalendarEmoji(widgetId, calendarId)
+                if (calendarEmoji.isNotEmpty()) {
+                    // Show emoji
+                    setTextViewText(emojiId, calendarEmoji)
+                    setTextViewTextSize(emojiId, TypedValue.COMPLEX_UNIT_DIP, 14f)
+                    setViewVisibility(emojiId, View.VISIBLE)
+                    setViewVisibility(backgroundId, View.GONE)
+                    setViewVisibility(wrapperId, View.VISIBLE)
+                } else {
+                    // No emoji set - hide the indicator
+                    setViewVisibility(wrapperId, View.GONE)
+                }
+            }
         }
     }
 

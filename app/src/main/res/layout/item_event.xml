@@ -16,13 +16,13 @@
             android:layout_height="match_parent"
             android:tintMode="add"
             android:src="@drawable/circle" />
-        <ImageView
-            android:id="@+id/item_event_calendar_blob_icon"
+        <TextView
+            android:id="@+id/item_event_calendar_blob_emoji"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="2dp"
-            android:tintMode="add"
-            android:layout_alignParentStart="true" />
+            android:gravity="center"
+            android:textSize="14sp"
+            android:layout_centerInParent="true" />
     </RelativeLayout>
 
     <TextView

@@ -63,6 +63,9 @@
     <string name="show_calendar_blob">Mostra blob calendario</string>
     <string name="configure_calendar_blobs">Configura i blob calendario</string>
     <string name="title_color">Colore</string>
-    <string name="title_icon">Icona</string>
-    <string name="label_set">Imposta</string>
+    <string name="title_emoji">Emoji</string>
+    <string name="label_none">Nessuno</string>
+    <string name="indicator_style">Stile indicatore</string>
+    <string name="style_colors">Colori</string>
+    <string name="style_emojis">Emoji</string>
 </resources>

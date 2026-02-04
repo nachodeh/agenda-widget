@@ -74,7 +74,7 @@ class AgendaWidgetLogger internal constructor(
         SHOW_CALENDAR_BLOB("show_calendar_blob"),
         CONFIGURE_CALENDAR_BLOBS("configure_calendar_blobs"),
         CALENDAR_COLOR("calendar_color"),
-        CALENDAR_ICON("calendar_icon")
+        CALENDAR_EMOJI("calendar_emoji")
     }
 
     enum class WidgetStatus(val status: String) {
