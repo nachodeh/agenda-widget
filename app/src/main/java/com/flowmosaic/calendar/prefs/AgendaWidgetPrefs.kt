@@ -38,6 +38,10 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         private const val PREF_SEPARATOR_VISIBLE = "key_separator_visible"
         private const val PREF_ONBOARDING_DONE = "key_onboarding_done"
         private const val PREF_ALIGN_BOTTOM = "key_align_bottom"
+        private const val PREF_SHOW_CALENDAR_BLOB = "show_calendar_blob"
+        private const val PREF_CALENDAR_COLOR = "calendar_color"
+        private const val PREF_CALENDAR_EMOJI = "calendar_emoji"
+        private const val PREF_CALENDAR_INDICATOR_STYLE = "calendar_indicator_style"
     }
 
     enum class FontSize(private val displayResId: Int) {
@@ -67,6 +71,11 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         fun getDisplayText(context: Context): String {
             return context.getString(displayResId)
         }
+    }
+
+    enum class IndicatorStyle {
+        COLORS,
+        EMOJIS
     }
 
     fun getShouldLogWidgetActivityEvent(): Boolean {
@@ -367,4 +376,82 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         return key.plus("_").plus(widgetId)
     }
 
+    fun getShowCalendarBlob(widgetId: String): Boolean {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_SHOW_CALENDAR_BLOB, widgetId)
+        val showCalendarBlob = sharedPreferences.getBoolean(prefsKey, false)
+        if (!prefExists) {
+            setShowCalendarBlob(showCalendarBlob, widgetId)
+        }
+        return showCalendarBlob
+    }
+
+    fun setShowCalendarBlob(showCalendarBlob: Boolean, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_CALENDAR_BLOB, widgetId)
+        sharedPreferences.edit().putBoolean(prefsKey, showCalendarBlob).apply()
+    }
+
+    private fun getCalendarColorPrefKey(calendarId: Long): String {
+        return PREF_CALENDAR_COLOR.plus("#").plus(calendarId.toString())
+    }
+
+    fun getCalendarColor(widgetId: String, calendarId: Long): Color {
+        val defaultColor = Color.White.toArgb()
+        val (prefsKey, prefExists) = getKeyWithWidgetId(getCalendarColorPrefKey(calendarId), widgetId)
+        val color = Color(sharedPreferences.getInt(prefsKey, defaultColor))
+        if (!prefExists) {
+            setCalendarColor(color, widgetId, calendarId)
+        }
+        return color
+    }
+
+    fun setCalendarColor(calendarColor: Color, widgetId: String, calendarId: Long) {
+        val colorArgb = calendarColor.toArgb()
+        setCalendarColorArgb(colorArgb, widgetId, calendarId)
+    }
+
+    fun setCalendarColorArgb(calendarColorArgb: Int, widgetId: String, calendarId: Long) {
+        val prefsKey = getKeyWithWidgetIdSave(getCalendarColorPrefKey(calendarId), widgetId)
+        sharedPreferences.edit().putInt(prefsKey, calendarColorArgb).apply()
+    }
+
+    private fun getCalendarEmojiPrefKey(calendarId: Long): String {
+        return PREF_CALENDAR_EMOJI.plus("#").plus(calendarId.toString())
+    }
+
+    fun setCalendarEmoji(emoji: String, widgetId: String, calendarId: Long) {
+        val prefsKey = getKeyWithWidgetIdSave(getCalendarEmojiPrefKey(calendarId), widgetId)
+        sharedPreferences.edit().putString(prefsKey, emoji).apply()
+    }
+
+    fun getCalendarEmoji(widgetId: String, calendarId: Long): String {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(
+            getCalendarEmojiPrefKey(calendarId),
+            widgetId
+        )
+        val emoji = sharedPreferences.getString(prefsKey, "") ?: ""
+        if (!prefExists) {
+            setCalendarEmoji(emoji, widgetId, calendarId)
+        }
+        return emoji
+    }
+
+    fun getIndicatorStyle(widgetId: String): IndicatorStyle {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_CALENDAR_INDICATOR_STYLE, widgetId)
+        val styleName = sharedPreferences.getString(prefsKey, IndicatorStyle.COLORS.name)
+            ?: IndicatorStyle.COLORS.name
+        val style = try {
+            IndicatorStyle.valueOf(styleName)
+        } catch (e: IllegalArgumentException) {
+            IndicatorStyle.COLORS
+        }
+        if (!prefExists) {
+            setIndicatorStyle(style, widgetId)
+        }
+        return style
+    }
+
+    fun setIndicatorStyle(style: IndicatorStyle, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_CALENDAR_INDICATOR_STYLE, widgetId)
+        sharedPreferences.edit().putString(prefsKey, style.name).apply()
+    }
 }
