@@ -23,11 +23,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
@@ -36,13 +36,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavBackStackEntry
@@ -77,10 +75,15 @@ enum class NavigationParams {
 
 sealed class NavigationItem(val route: String) {
     data object Onboard : NavigationItem(Screen.ONBOARD.name)
+
     data object WidgetsList : NavigationItem(Screen.WIDGETS_LIST.name)
+
     data object WidgetConfig : NavigationItem(Screen.WIDGET_CONFIG.name)
+
     data object WidgetConfigWithParams :
-        NavigationItem("${Screen.WIDGET_CONFIG.name}/{${NavigationParams.WIDGET_ID.name}}/{${NavigationParams.WIDGET_INDEX.name}}")
+        NavigationItem(
+            "${Screen.WIDGET_CONFIG.name}/{${NavigationParams.WIDGET_ID.name}}/{${NavigationParams.WIDGET_INDEX.name}}"
+        )
 }
 
 class MainActivity : ComponentActivity() {
@@ -97,24 +100,26 @@ class MainActivity : ComponentActivity() {
         checkBatteryOptimization()
 
         // Detect system dark mode
-        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-            Configuration.UI_MODE_NIGHT_YES
+        val isDarkMode =
+            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
 
         // Enable edge-to-edge before setContent for SDK 35+ compatibility
         // Status bar: force dark style (light icons on dark background)
         // Navigation bar: adapt icons based on theme
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
-            navigationBarStyle = if (isDarkMode) {
-                // Dark mode: light (white) icons for dark background
-                SystemBarStyle.light(
-                    android.graphics.Color.TRANSPARENT,
-                    android.graphics.Color.TRANSPARENT
-                )
-            } else {
-                // Light mode: dark (black) icons for light background
-                SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
-            }
+            navigationBarStyle =
+                if (isDarkMode) {
+                    // Dark mode: light (white) icons for dark background
+                    SystemBarStyle.light(
+                        android.graphics.Color.TRANSPARENT,
+                        android.graphics.Color.TRANSPARENT
+                    )
+                } else {
+                    // Light mode: dark (black) icons for light background
+                    SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+                }
         )
 
         setContent {
@@ -129,7 +134,8 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect(navController) {
                     navController.currentBackStackEntryFlow.collect { backStackEntry ->
                         headerSubtitle.value = getHeaderSubtitle(backStackEntry)
-                        val onOnboard = backStackEntry.destination.route == NavigationItem.Onboard.route
+                        val onOnboard =
+                            backStackEntry.destination.route == NavigationItem.Onboard.route
                         renderHeader.value = !onOnboard
                         isOnboarding.value = onOnboard
                         logger.logNavigationEvent(backStackEntry.destination.route)
@@ -138,35 +144,30 @@ class MainActivity : ComponentActivity() {
 
                 // Determine colors for system bar backgrounds
                 val statusBarBackgroundColor = primaryColor
-                val navBarBackgroundColor = if (isOnboarding.value) primaryColor else backgroundColor
+                val navBarBackgroundColor =
+                    if (isOnboarding.value) primaryColor else backgroundColor
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(backgroundColor)
-                ) {
+                Box(modifier = Modifier.fillMaxSize().background(backgroundColor)) {
                     // Status bar background - extends behind status bar with primary color
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .windowInsetsTopHeight(WindowInsets.statusBars)
-                            .background(statusBarBackgroundColor)
+                        modifier =
+                            Modifier.fillMaxWidth()
+                                .windowInsetsTopHeight(WindowInsets.statusBars)
+                                .background(statusBarBackgroundColor)
                     )
 
                     // Navigation bar background - extends behind navigation bar
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .windowInsetsBottomHeight(WindowInsets.navigationBars)
-                            .background(navBarBackgroundColor)
-                            .align(androidx.compose.ui.Alignment.BottomCenter)
+                        modifier =
+                            Modifier.fillMaxWidth()
+                                .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                                .background(navBarBackgroundColor)
+                                .align(androidx.compose.ui.Alignment.BottomCenter)
                     )
 
                     // Main content with safe drawing padding
                     Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .safeDrawingPadding(),
+                        modifier = Modifier.fillMaxSize().safeDrawingPadding(),
                         color = backgroundColor
                     ) {
                         Column {
@@ -194,10 +195,8 @@ class MainActivity : ComponentActivity() {
         return when (backStackEntry.destination.route) {
             NavigationItem.WidgetsList.route -> getString(R.string.active_widgets)
             NavigationItem.WidgetConfigWithParams.route ->
-                if (widgetId == 0)
-                    getString(R.string.prefs_title_editing_default_config)
+                if (widgetId == 0) getString(R.string.prefs_title_editing_default_config)
                 else "Widget $widgetIndex"
-
             else -> ""
         }
     }
@@ -208,33 +207,41 @@ class MainActivity : ComponentActivity() {
     ) {
         NavHost(
             navController = navController,
-            startDestination = if (showOnboard()) NavigationItem.Onboard.route else NavigationItem.WidgetsList.route
+            startDestination =
+                if (showOnboard()) NavigationItem.Onboard.route
+                else NavigationItem.WidgetsList.route
         ) {
             composable(NavigationItem.Onboard.route) {
-                OnboardingScreen(onboardPages(), onFinish = { skipped ->
-                    prefs.setOnboardingDone(true)
-                    navController.popBackStack()
-                    navController.navigate(NavigationItem.WidgetsList.route)
-                    logger.logOnboardingCompleteEvent(skipped)
-                })
+                OnboardingScreen(
+                    onboardPages(),
+                    onFinish = { skipped ->
+                        prefs.setOnboardingDone(true)
+                        navController.popBackStack()
+                        navController.navigate(NavigationItem.WidgetsList.route)
+                        logger.logOnboardingCompleteEvent(skipped)
+                    }
+                )
             }
             composable(NavigationItem.WidgetsList.route) {
-                WidgetsListView(onNavigate = { widgetId, widgetIndex ->
-                    navController.navigate("${NavigationItem.WidgetConfig.route}/$widgetId/$widgetIndex")
-                })
+                WidgetsListView(
+                    onNavigate = { widgetId, widgetIndex ->
+                        navController.navigate(
+                            "${NavigationItem.WidgetConfig.route}/$widgetId/$widgetIndex"
+                        )
+                    }
+                )
             }
-            composable(NavigationItem.WidgetConfigWithParams.route,
-                arguments = listOf(
-                    navArgument(NavigationParams.WIDGET_ID.name) {
-                        type = NavType.IntType
-                    }, navArgument(NavigationParams.WIDGET_INDEX.name) {
-                        type = NavType.IntType
-                    })
+            composable(
+                NavigationItem.WidgetConfigWithParams.route,
+                arguments =
+                    listOf(
+                        navArgument(NavigationParams.WIDGET_ID.name) { type = NavType.IntType },
+                        navArgument(NavigationParams.WIDGET_INDEX.name) { type = NavType.IntType }
+                    )
             ) { backStackEntry ->
                 PreferencesScreen(
-                    appWidgetId = backStackEntry.arguments?.getInt(
-                        NavigationParams.WIDGET_ID.name
-                    )!!
+                    appWidgetId =
+                        backStackEntry.arguments?.getInt(NavigationParams.WIDGET_ID.name)!!
                 )
             }
         }
@@ -263,10 +270,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun showOnboard(): Boolean {
-        val widgetIds = AppWidgetManager.getInstance(applicationContext)
-            .getAppWidgetIds(
-                ComponentName(applicationContext, AgendaWidget::class.java)
-            )
+        val widgetIds =
+            AppWidgetManager.getInstance(applicationContext)
+                .getAppWidgetIds(ComponentName(applicationContext, AgendaWidget::class.java))
         return !(widgetIds.isNotEmpty() || prefs.getOnboardingDone())
     }
 
@@ -285,24 +291,26 @@ class MainActivity : ComponentActivity() {
 
     private fun checkBatteryOptimization() {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-        isBatteryOptimizationDisabled.value = powerManager.isIgnoringBatteryOptimizations(packageName)
+        isBatteryOptimizationDisabled.value =
+            powerManager.isIgnoringBatteryOptimizations(packageName)
     }
 
     private fun requestBatteryOptimizationExemption() {
-        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-            data = Uri.parse("package:$packageName")
-        }
+        val intent =
+            Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                data = Uri.parse("package:$packageName")
+            }
         startActivity(intent)
     }
 
     @Composable
     private fun BatteryOptimizationBanner(onClick: () -> Unit) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.errorContainer)
-                .clickable { onClick() }
-                .padding(12.dp),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.errorContainer)
+                    .clickable { onClick() }
+                    .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -319,6 +327,4 @@ class MainActivity : ComponentActivity() {
             )
         }
     }
-
 }
-

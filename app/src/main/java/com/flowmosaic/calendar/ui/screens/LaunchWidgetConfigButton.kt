@@ -18,15 +18,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LaunchWidgetConfigButton(id: Int, index: Int, text: String, onNavigate: (widgetId: Int, widgetIndex: Int) -> Unit) {
+fun LaunchWidgetConfigButton(
+    id: Int,
+    index: Int,
+    text: String,
+    onNavigate: (widgetId: Int, widgetIndex: Int) -> Unit
+) {
     Button(
-        onClick = {
-            onNavigate(id, index)
-        },
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
+        onClick = { onNavigate(id, index) },
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ),
         modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
     ) {
         Row(
@@ -38,8 +42,7 @@ fun LaunchWidgetConfigButton(id: Int, index: Int, text: String, onNavigate: (wid
                 text = text,
                 style = MaterialTheme.typography.labelLarge,
                 textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .padding(vertical = 16.dp, horizontal = 8.dp)
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
             )
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

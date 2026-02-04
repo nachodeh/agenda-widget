@@ -39,24 +39,26 @@ class PreferencesActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Detect system dark mode
-        val isDarkMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-            Configuration.UI_MODE_NIGHT_YES
+        val isDarkMode =
+            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                Configuration.UI_MODE_NIGHT_YES
 
         // Enable edge-to-edge before setContent for SDK 35+ compatibility
         // Status bar: force dark style (light icons on dark background)
         // Navigation bar: adapt icons based on theme
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
-            navigationBarStyle = if (isDarkMode) {
-                // Dark mode: light (white) icons for dark background
-                SystemBarStyle.light(
-                    android.graphics.Color.TRANSPARENT,
-                    android.graphics.Color.TRANSPARENT
-                )
-            } else {
-                // Light mode: dark (black) icons for light background
-                SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
-            }
+            navigationBarStyle =
+                if (isDarkMode) {
+                    // Dark mode: light (white) icons for dark background
+                    SystemBarStyle.light(
+                        android.graphics.Color.TRANSPARENT,
+                        android.graphics.Color.TRANSPARENT
+                    )
+                } else {
+                    // Light mode: dark (black) icons for light background
+                    SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+                }
         )
 
         setContent {
@@ -64,39 +66,36 @@ class PreferencesActivity : ComponentActivity() {
                 val primaryColor = getPrimaryColor()
                 val backgroundColor = MaterialTheme.colorScheme.background
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(backgroundColor)
-                ) {
+                Box(modifier = Modifier.fillMaxSize().background(backgroundColor)) {
                     // Status bar background - extends behind status bar with primary color
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .windowInsetsTopHeight(WindowInsets.statusBars)
-                            .background(primaryColor)
+                        modifier =
+                            Modifier.fillMaxWidth()
+                                .windowInsetsTopHeight(WindowInsets.statusBars)
+                                .background(primaryColor)
                     )
 
                     // Navigation bar background - extends behind navigation bar
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .windowInsetsBottomHeight(WindowInsets.navigationBars)
-                            .background(backgroundColor)
-                            .align(Alignment.BottomCenter)
+                        modifier =
+                            Modifier.fillMaxWidth()
+                                .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                                .background(backgroundColor)
+                                .align(Alignment.BottomCenter)
                     )
 
                     // Main content with safe drawing padding
                     Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .safeDrawingPadding(),
+                        modifier = Modifier.fillMaxSize().safeDrawingPadding(),
                         color = backgroundColor
                     ) {
-                        val appWidgetId = intent?.extras?.getInt(
-                            AppWidgetManager.EXTRA_APPWIDGET_ID,
-                            AppWidgetManager.INVALID_APPWIDGET_ID
-                        ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
+                        val appWidgetId =
+                            intent
+                                ?.extras
+                                ?.getInt(
+                                    AppWidgetManager.EXTRA_APPWIDGET_ID,
+                                    AppWidgetManager.INVALID_APPWIDGET_ID
+                                ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
 
                         Column {
                             Header(
@@ -104,7 +103,8 @@ class PreferencesActivity : ComponentActivity() {
                             )
                             PreferencesScreen(
                                 appWidgetId,
-                                onCloseClick = { saveWidgetConfig(appWidgetId) })
+                                onCloseClick = { saveWidgetConfig(appWidgetId) }
+                            )
                         }
                     }
                 }
@@ -114,9 +114,8 @@ class PreferencesActivity : ComponentActivity() {
     }
 
     private fun saveWidgetConfig(appWidgetId: Int) {
-        val resultValue = Intent().apply {
-            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-        }
+        val resultValue =
+            Intent().apply { putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId) }
         setResult(RESULT_OK, resultValue)
         finish()
     }
@@ -127,5 +126,4 @@ class PreferencesActivity : ComponentActivity() {
 
         super.onPause()
     }
-
 }

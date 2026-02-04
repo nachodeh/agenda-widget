@@ -6,13 +6,12 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.posthog.PostHog
 import java.util.concurrent.TimeUnit
 
+class AgendaWidgetLogger
+internal constructor(private val prefs: AgendaWidgetPrefs, private val context: Context) {
 
-class AgendaWidgetLogger internal constructor(
-    private val prefs: AgendaWidgetPrefs,
-    private val context: Context
-) {
-
-    constructor(context: Context) : this(
+    constructor(
+        context: Context
+    ) : this(
         prefs = AgendaWidgetPrefs(context),
         context = context,
     )
@@ -85,10 +84,7 @@ class AgendaWidgetLogger internal constructor(
     }
 
     fun logException(additionalParams: Map<String, String>) {
-        PostHog.capture(
-            event = Event.EXCEPTION.eventName,
-            properties = additionalParams
-        )
+        PostHog.capture(event = Event.EXCEPTION.eventName, properties = additionalParams)
     }
 
     fun logActivityStartedEvent(activity: Activity) {
@@ -143,16 +139,13 @@ class AgendaWidgetLogger internal constructor(
     }
 
     fun logWidgetLifecycleEvent(
-        widgetStatus: WidgetStatus, additionalParams: Map<String, String>? = null
+        widgetStatus: WidgetStatus,
+        additionalParams: Map<String, String>? = null
     ) {
         val properties = mutableMapOf(PARAM_TYPE to widgetStatus.status)
         additionalParams?.let { properties.putAll(it) }
-        PostHog.capture(
-            event = Event.WIDGET_LIFECYCLE_EVENT.eventName,
-            properties = properties
-        )
+        PostHog.capture(event = Event.WIDGET_LIFECYCLE_EVENT.eventName, properties = properties)
     }
-
 
     private fun launchInAppReview() {
         val pm = context.packageManager
@@ -160,8 +153,9 @@ class AgendaWidgetLogger internal constructor(
         val currentTimeMs = System.currentTimeMillis()
         val lastReviewPrompt = prefs.getLastReviewPrompt()
 
-        if ((currentTimeMs - TimeUnit.DAYS.toMillis(2) < pi.firstInstallTime)
-            || (currentTimeMs - TimeUnit.DAYS.toMillis(15) < lastReviewPrompt)
+        if (
+            (currentTimeMs - TimeUnit.DAYS.toMillis(2) < pi.firstInstallTime) ||
+                (currentTimeMs - TimeUnit.DAYS.toMillis(15) < lastReviewPrompt)
         ) {
             return
         }
@@ -177,5 +171,4 @@ class AgendaWidgetLogger internal constructor(
             )
         }
     }
-
 }

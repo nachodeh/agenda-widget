@@ -30,9 +30,10 @@ object AgendaWidgetRenderer {
         val tapToSetupString = context.getString(R.string.tap_to_set_up, appName)
         views.setTextViewText(R.id.permission_request_text, tapToSetupString)
 
-        val intent = Intent(context, PermissionsActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
+        val intent =
+            Intent(context, PermissionsActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
 
         val pendingIntentFlags = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, pendingIntentFlags)
@@ -47,41 +48,44 @@ object AgendaWidgetRenderer {
         widgetId: Int,
         showProgress: Boolean = false
     ) {
-        val intent = Intent(context, EventsWidgetService::class.java).apply {
-            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-            data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
-        }
+        val intent =
+            Intent(context, EventsWidgetService::class.java).apply {
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+                data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
+            }
 
         val prefs = AgendaWidgetPrefs(context)
         val layoutId =
-            if (prefs.getAlignBottom(widgetId.toString())) R.layout.agenda_widget_bottom_aligned else R.layout.agenda_widget
+            if (prefs.getAlignBottom(widgetId.toString())) R.layout.agenda_widget_bottom_aligned
+            else R.layout.agenda_widget
 
-        val views = RemoteViews(context.packageName, layoutId).apply {
-            setRemoteAdapter(R.id.events_list_view, intent)
-            setEmptyView(R.id.events_list_view, R.id.empty_view)
+        val views =
+            RemoteViews(context.packageName, layoutId).apply {
+                setRemoteAdapter(R.id.events_list_view, intent)
+                setEmptyView(R.id.events_list_view, R.id.empty_view)
 
-            setPendingIntentTemplate(
-                R.id.events_list_view,
-                createWidgetActionPendingIntent(context, CLICK_ACTION, widgetId)
-            )
-            setOnClickPendingIntent(
-                R.id.refresh_button,
-                createWidgetActionPendingIntent(context, UPDATE_ACTION, widgetId)
-            )
-            setOnClickPendingIntent(
-                R.id.add_button,
-                createWidgetActionPendingIntent(context, CREATE_ACTION, widgetId)
-            )
-            setOnClickPendingIntent(
-                R.id.empty_view,
-                createWidgetActionPendingIntent(context, CLICK_ACTION, widgetId)
-            )
+                setPendingIntentTemplate(
+                    R.id.events_list_view,
+                    createWidgetActionPendingIntent(context, CLICK_ACTION, widgetId)
+                )
+                setOnClickPendingIntent(
+                    R.id.refresh_button,
+                    createWidgetActionPendingIntent(context, UPDATE_ACTION, widgetId)
+                )
+                setOnClickPendingIntent(
+                    R.id.add_button,
+                    createWidgetActionPendingIntent(context, CREATE_ACTION, widgetId)
+                )
+                setOnClickPendingIntent(
+                    R.id.empty_view,
+                    createWidgetActionPendingIntent(context, CLICK_ACTION, widgetId)
+                )
 
-            setupEmptyView(context, widgetId, prefs)
-            setWidgetBackground(widgetId, prefs)
-            setActionButtonsVisibility(widgetId, prefs)
-            showOrHideProgress(showProgress)
-        }
+                setupEmptyView(context, widgetId, prefs)
+                setWidgetBackground(widgetId, prefs)
+                setActionButtonsVisibility(widgetId, prefs)
+                showOrHideProgress(showProgress)
+            }
 
         appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.events_list_view)
         appWidgetManager.updateAppWidget(widgetId, views)
@@ -128,11 +132,13 @@ object AgendaWidgetRenderer {
         setInt(R.id.add_button, "setColorFilter", textColor)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             setColorStateList(
-                R.id.refresh_spinner, "setIndeterminateTintList",
+                R.id.refresh_spinner,
+                "setIndeterminateTintList",
                 ColorStateList(
                     arrayOf(
                         intArrayOf(android.R.attr.state_enabled),
-                    ), intArrayOf(
+                    ),
+                    intArrayOf(
                         textColor,
                     )
                 )
@@ -145,10 +151,10 @@ object AgendaWidgetRenderer {
         widgetId: Int,
         prefs: AgendaWidgetPrefs
     ) {
-        val noUpcomingEventsText = if (prefs.getShowNoUpcomingEventsText(
-                widgetId.toString()
-            )
-        ) context.getString(R.string.no_upcoming_events) else ""
+        val noUpcomingEventsText =
+            if (prefs.getShowNoUpcomingEventsText(widgetId.toString()))
+                context.getString(R.string.no_upcoming_events)
+            else ""
         val textAlignment =
             when (prefs.getTextAlignment(widgetId.toString())) {
                 AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.START
@@ -157,10 +163,7 @@ object AgendaWidgetRenderer {
             }
         setTextViewText(R.id.empty_view, noUpcomingEventsText)
         setInt(R.id.empty_view, "setGravity", textAlignment)
-        setTextColor(
-            R.id.empty_view,
-            prefs.getTextColor(widgetId.toString()).toArgb()
-        )
+        setTextColor(R.id.empty_view, prefs.getTextColor(widgetId.toString()).toArgb())
     }
 
     private fun RemoteViews.showOrHideProgress(showProgress: Boolean) {
@@ -172,5 +175,4 @@ object AgendaWidgetRenderer {
             setViewVisibility(R.id.refresh_spinner, View.GONE)
         }
     }
-
 }

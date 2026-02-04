@@ -12,11 +12,10 @@ import java.util.concurrent.TimeUnit
 
 class AgendaWidgetPrefs internal constructor(private val sharedPreferences: SharedPreferences) {
 
-    constructor(context: Context) : this(
-        context.getSharedPreferences(
-            context.packageName + "_preferences",
-            Context.MODE_PRIVATE
-        )
+    constructor(
+        context: Context
+    ) : this(
+        context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
     )
 
     companion object {
@@ -88,9 +87,9 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     }
 
     suspend fun initSelectedCalendars(context: Context) {
-        if (!sharedPreferences.contains(PREF_SELECTED_CALENDARS) && CalendarPermissionsChecker.hasCalendarPermission(
-                context
-            )
+        if (
+            !sharedPreferences.contains(PREF_SELECTED_CALENDARS) &&
+                CalendarPermissionsChecker.hasCalendarPermission(context)
         ) {
             val allCalendars = CalendarFetcher().queryCalendarData(context)
             val allCalendarIds = allCalendars.map { it.id.toString() }.toMutableSet()
@@ -105,15 +104,16 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_SELECTED_CALENDARS, widgetId)
         val selectedCalendars = sharedPreferences.getStringSet(prefsKey, null)
 
-        val result = selectedCalendars?.toMutableSet()
-            ?: if (allCalendars == null) {
-                mutableSetOf()
-            } else {
-                // Selected calendars not found in preferences, save allCalendars as selected
-                val allCalendarIds = allCalendars.map { it.id.toString() }.toMutableSet()
-                setSelectedCalendars(allCalendarIds, widgetId)
-                allCalendarIds
-            }
+        val result =
+            selectedCalendars?.toMutableSet()
+                ?: if (allCalendars == null) {
+                    mutableSetOf()
+                } else {
+                    // Selected calendars not found in preferences, save allCalendars as selected
+                    val allCalendarIds = allCalendars.map { it.id.toString() }.toMutableSet()
+                    setSelectedCalendars(allCalendarIds, widgetId)
+                    allCalendarIds
+                }
         if (!prefExists) {
             setSelectedCalendars(result, widgetId)
         }
@@ -126,9 +126,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         widgetId: String,
     ) {
         val prefsKey = getKeyWithWidgetIdSave(PREF_SELECTED_CALENDARS, widgetId)
-        sharedPreferences.edit()
-            .putStringSet(prefsKey, selectedCalendarIds)
-            .apply()
+        sharedPreferences.edit().putStringSet(prefsKey, selectedCalendarIds).apply()
     }
 
     fun getShowActionButtons(widgetId: String): Boolean {
@@ -219,8 +217,8 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
 
     fun getFontSize(widgetId: String): FontSize {
         val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_FONT_SIZE, widgetId)
-        val size = sharedPreferences.getString(prefsKey, FontSize.MEDIUM.name)
-            ?: FontSize.MEDIUM.name
+        val size =
+            sharedPreferences.getString(prefsKey, FontSize.MEDIUM.name) ?: FontSize.MEDIUM.name
         val fontSize = FontSize.valueOf(size)
         if (!prefExists) {
             setFontSize(fontSize, widgetId)
@@ -235,8 +233,8 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
 
     fun getVerticalSpacing(widgetId: String): VerticalSpacing {
         val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_VERTICAL_SPACING, widgetId)
-        val size = sharedPreferences.getString(prefsKey, VerticalSpacing.LARGE.name)
-            ?: FontSize.LARGE.name
+        val size =
+            sharedPreferences.getString(prefsKey, VerticalSpacing.LARGE.name) ?: FontSize.LARGE.name
         val verticalSpacing = VerticalSpacing.valueOf(size)
         if (!prefExists) {
             setVerticalSpacing(verticalSpacing, widgetId)
@@ -251,8 +249,9 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
 
     fun getTextAlignment(widgetId: String): TextAlignment {
         val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_TEXT_ALIGNMENT, widgetId)
-        val alignment = sharedPreferences.getString(prefsKey, TextAlignment.LEFT.name)
-            ?: TextAlignment.LEFT.name
+        val alignment =
+            sharedPreferences.getString(prefsKey, TextAlignment.LEFT.name)
+                ?: TextAlignment.LEFT.name
         val textAlignment = TextAlignment.valueOf(alignment)
         if (!prefExists) {
             setTextAlignment(textAlignment, widgetId)
@@ -353,10 +352,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         sharedPreferences.edit().putBoolean(PREF_ONBOARDING_DONE, onboardingDone).apply()
     }
 
-    private fun getKeyWithWidgetId(
-        key: String,
-        widgetId: String
-    ): Pair<String, Boolean> {
+    private fun getKeyWithWidgetId(key: String, widgetId: String): Pair<String, Boolean> {
         if (widgetId.isEmpty()) {
             return key to true
         }
@@ -396,7 +392,8 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
 
     fun getCalendarColor(widgetId: String, calendarId: Long): Color {
         val defaultColor = Color.White.toArgb()
-        val (prefsKey, prefExists) = getKeyWithWidgetId(getCalendarColorPrefKey(calendarId), widgetId)
+        val (prefsKey, prefExists) =
+            getKeyWithWidgetId(getCalendarColorPrefKey(calendarId), widgetId)
         val color = Color(sharedPreferences.getInt(prefsKey, defaultColor))
         if (!prefExists) {
             setCalendarColor(color, widgetId, calendarId)
@@ -424,10 +421,8 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     }
 
     fun getCalendarEmoji(widgetId: String, calendarId: Long): String {
-        val (prefsKey, prefExists) = getKeyWithWidgetId(
-            getCalendarEmojiPrefKey(calendarId),
-            widgetId
-        )
+        val (prefsKey, prefExists) =
+            getKeyWithWidgetId(getCalendarEmojiPrefKey(calendarId), widgetId)
         val emoji = sharedPreferences.getString(prefsKey, "") ?: ""
         if (!prefExists) {
             setCalendarEmoji(emoji, widgetId, calendarId)
@@ -437,13 +432,15 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
 
     fun getIndicatorStyle(widgetId: String): IndicatorStyle {
         val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_CALENDAR_INDICATOR_STYLE, widgetId)
-        val styleName = sharedPreferences.getString(prefsKey, IndicatorStyle.COLORS.name)
-            ?: IndicatorStyle.COLORS.name
-        val style = try {
-            IndicatorStyle.valueOf(styleName)
-        } catch (e: IllegalArgumentException) {
-            IndicatorStyle.COLORS
-        }
+        val styleName =
+            sharedPreferences.getString(prefsKey, IndicatorStyle.COLORS.name)
+                ?: IndicatorStyle.COLORS.name
+        val style =
+            try {
+                IndicatorStyle.valueOf(styleName)
+            } catch (e: IllegalArgumentException) {
+                IndicatorStyle.COLORS
+            }
         if (!prefExists) {
             setIndicatorStyle(style, widgetId)
         }

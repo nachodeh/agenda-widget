@@ -7,9 +7,10 @@ object UnitConverter {
 
     fun dpToPx(sp: Float, context: Context): Int {
         return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            sp,
-            context.resources.displayMetrics
-        ).toInt()
+                TypedValue.COMPLEX_UNIT_DIP,
+                sp,
+                context.resources.displayMetrics
+            )
+            .toInt()
     }
 }
