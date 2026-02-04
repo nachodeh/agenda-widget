@@ -17,7 +17,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
 const val CREATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_CREATE_EVENT"
 const val CLICK_ACTION = "com.flowmosaic.calendar.widget.CLICK_ACTION"
@@ -26,9 +25,7 @@ const val EXTRA_START_TIME = "com.flowmosaic.calendar.START_TIME"
 const val EXTRA_END_TIME = "com.flowmosaic.calendar.END_TIME"
 const val EXTRA_EVENT_ID = "com.flowmosaic.calendar.EVENT_ID"
 
-/**
- * Implementation of App Widget functionality.
- */
+/** Implementation of App Widget functionality. */
 class AgendaWidget : AppWidgetProvider() {
 
     private var loggerInstance: AgendaWidgetLogger? = null
@@ -67,11 +64,13 @@ class AgendaWidget : AppWidgetProvider() {
         }
 
         if (prefs.getShouldLogWidgetActivityEvent()) {
-            getLogger(context).logWidgetLifecycleEvent(
-                AgendaWidgetLogger.WidgetStatus.ACTIVE, mapOf(
-                    "number_of_widgets" to appWidgetIds.size.toString(),
+            getLogger(context)
+                .logWidgetLifecycleEvent(
+                    AgendaWidgetLogger.WidgetStatus.ACTIVE,
+                    mapOf(
+                        "number_of_widgets" to appWidgetIds.size.toString(),
+                    )
                 )
-            )
             prefs.setWidgetActivityEventLastLoggedTimestamp()
         }
     }
@@ -85,9 +84,7 @@ class AgendaWidget : AppWidgetProvider() {
 
     override fun onDisabled(context: Context) {
         // Enter relevant functionality for when the last widget is disabled
-        getLogger(context).logWidgetLifecycleEvent(
-            AgendaWidgetLogger.WidgetStatus.DISABLED
-        )
+        getLogger(context).logWidgetLifecycleEvent(AgendaWidgetLogger.WidgetStatus.DISABLED)
         // Cancel periodic updates when no widgets remain
         WidgetUpdateWorker.cancelPeriodicUpdates(context)
     }
@@ -113,10 +110,11 @@ class AgendaWidget : AppWidgetProvider() {
     }
 
     private fun handleClickWidgetRefresh(context: Context, intent: Intent) {
-        val widgetId = intent.getIntExtra(
-            AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager.INVALID_APPWIDGET_ID
-        )
+        val widgetId =
+            intent.getIntExtra(
+                AppWidgetManager.EXTRA_APPWIDGET_ID,
+                AppWidgetManager.INVALID_APPWIDGET_ID
+            )
 
         if (widgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
             updateWidget(
@@ -126,31 +124,32 @@ class AgendaWidget : AppWidgetProvider() {
                 showProgress = true
             )
             val delayMillis = 300L
-            Handler(Looper.getMainLooper()).postDelayed({
-                updateWidget(
-                    context,
-                    AppWidgetManager.getInstance(context),
-                    widgetId,
-                    showProgress = false
+            Handler(Looper.getMainLooper())
+                .postDelayed(
+                    {
+                        updateWidget(
+                            context,
+                            AppWidgetManager.getInstance(context),
+                            widgetId,
+                            showProgress = false
+                        )
+                    },
+                    delayMillis
                 )
-            }, delayMillis)
         }
 
-        getLogger(context).logActionButtonEvent(
-            AgendaWidgetLogger.ActionButton.REFRESH
-        )
+        getLogger(context).logActionButtonEvent(AgendaWidgetLogger.ActionButton.REFRESH)
     }
 
     private fun handleClickWidgetCreate(context: Context) {
-        val intent = Intent(Intent.ACTION_INSERT).apply {
-            data = CalendarContract.Events.CONTENT_URI
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
+        val intent =
+            Intent(Intent.ACTION_INSERT).apply {
+                data = CalendarContract.Events.CONTENT_URI
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
         context.startActivity(intent)
 
-        getLogger(context).logActionButtonEvent(
-            AgendaWidgetLogger.ActionButton.ADD_EVENT
-        )
+        getLogger(context).logActionButtonEvent(AgendaWidgetLogger.ActionButton.ADD_EVENT)
     }
 
     private fun handleClickWidgetAgendaItem(context: Context, intent: Intent) {
@@ -161,41 +160,40 @@ class AgendaWidget : AppWidgetProvider() {
 
         when {
             eventId > 0 -> {
-                getLogger(context).logSelectItemEvent(
-                    AgendaWidgetLogger.WidgetItemName.EVENT
-                )
+                getLogger(context).logSelectItemEvent(AgendaWidgetLogger.WidgetItemName.EVENT)
                 builder.appendPath("events")
                 ContentUris.appendId(builder, eventId)
             }
-
             startTime > 0 -> {
-                getLogger(context).logSelectItemEvent(
-                    AgendaWidgetLogger.WidgetItemName.DATE
-                )
+                getLogger(context).logSelectItemEvent(AgendaWidgetLogger.WidgetItemName.DATE)
                 builder.appendPath("time")
                 ContentUris.appendId(builder, startTime)
             }
-
             else -> {
                 builder.appendPath("time")
                 ContentUris.appendId(builder, System.currentTimeMillis())
             }
         }
 
-        val viewIntent = Intent(Intent.ACTION_VIEW)
-            .setData(builder.build())
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime)
-            .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime)
+        val viewIntent =
+            Intent(Intent.ACTION_VIEW)
+                .setData(builder.build())
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime)
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime)
 
         try {
             context.startActivity(viewIntent)
         } catch (error: Error) {
-            getLogger(context).logException(mapOf("error" to error.stackTrace.toString(), "location" to "handleClickWidgetAgendaItem"))
+            getLogger(context)
+                .logException(
+                    mapOf(
+                        "error" to error.stackTrace.toString(),
+                        "location" to "handleClickWidgetAgendaItem"
+                    )
+                )
         }
     }
-
-
 
     private fun updateWidget(
         context: Context,
@@ -214,5 +212,4 @@ class AgendaWidget : AppWidgetProvider() {
             AgendaWidgetRenderer.renderPermissionRequestView(context, appWidgetManager, widgetId)
         }
     }
-
 }

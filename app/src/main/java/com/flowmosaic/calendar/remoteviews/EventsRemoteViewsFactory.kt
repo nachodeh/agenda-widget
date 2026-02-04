@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.flowmosaic.calendar.R
 import com.flowmosaic.calendar.data.CalendarDateUtils
@@ -30,10 +29,13 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
 
     init {
         if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
-            widgetId = intent.getIntExtra(
-                AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID
-            ).toString()
+            widgetId =
+                intent
+                    .getIntExtra(
+                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        AppWidgetManager.INVALID_APPWIDGET_ID
+                    )
+                    .toString()
         }
     }
 
@@ -69,19 +71,18 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
 
         return RemoteViews(context.packageName, getLayoutId(item, textColor)).apply {
             val textViewId = getTextViewId(item, textColor)
-            val text = when (item) {
-                is CalendarViewItem.Day -> CalendarDateUtils.getFormattedDate(
-                    context,
-                    item.date.time
-                )
-
-                is CalendarViewItem.Event -> CalendarDateUtils.getCalendarEventText(
-                    item.event,
-                    context,
-                    widgetId,
-                    prefs.getShowLocation(widgetId)
-                )
-            }
+            val text =
+                when (item) {
+                    is CalendarViewItem.Day ->
+                        CalendarDateUtils.getFormattedDate(context, item.date.time)
+                    is CalendarViewItem.Event ->
+                        CalendarDateUtils.getCalendarEventText(
+                            item.event,
+                            context,
+                            widgetId,
+                            prefs.getShowLocation(widgetId)
+                        )
+                }
 
             setTextColor(textViewId, textColor)
             setUpSeparator(textColor)
@@ -101,16 +102,20 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     private fun getLayoutId(calendarViewItem: CalendarViewItem, textColor: Int): Int {
         val isColorLight = isColorLight(textColor)
         return when (calendarViewItem) {
-            is CalendarViewItem.Day -> if (isColorLight) R.layout.item_date else R.layout.item_date_dark
-            is CalendarViewItem.Event -> if (isColorLight) R.layout.item_event else R.layout.item_event_dark
+            is CalendarViewItem.Day ->
+                if (isColorLight) R.layout.item_date else R.layout.item_date_dark
+            is CalendarViewItem.Event ->
+                if (isColorLight) R.layout.item_event else R.layout.item_event_dark
         }
     }
 
     private fun getTextViewId(calendarViewItem: CalendarViewItem, textColor: Int): Int {
         val isColorLight = isColorLight(textColor)
         return when (calendarViewItem) {
-            is CalendarViewItem.Day -> if (isColorLight) R.id.item_date_text_view else R.id.item_date_text_view_dark
-            is CalendarViewItem.Event -> if (isColorLight) R.id.item_event_text_view else R.id.item_event_text_view_dark
+            is CalendarViewItem.Day ->
+                if (isColorLight) R.id.item_date_text_view else R.id.item_date_text_view_dark
+            is CalendarViewItem.Event ->
+                if (isColorLight) R.id.item_event_text_view else R.id.item_event_text_view_dark
         }
     }
 
@@ -121,45 +126,49 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         setViewVisibility(R.id.date_separator_wrapper, separatorVisibility)
 
         // Set background color
-        setInt(
-            R.id.date_separator,
-            "setBackgroundColor",
-            color
-        )
+        setInt(R.id.date_separator, "setBackgroundColor", color)
 
         // Set spacing
         val verticalSpacing = prefs.getVerticalSpacing(widgetId)
-        val bottomPadding = UnitConverter.dpToPx(
-            when (verticalSpacing) {
-                AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
-                AgendaWidgetPrefs.VerticalSpacing.LARGE -> 6f
-            }, context
-        )
+        val bottomPadding =
+            UnitConverter.dpToPx(
+                when (verticalSpacing) {
+                    AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
+                    AgendaWidgetPrefs.VerticalSpacing.LARGE -> 6f
+                },
+                context
+            )
         setViewPadding(
             R.id.date_separator_wrapper,
-            0, 0, 0, bottomPadding,
+            0,
+            0,
+            0,
+            bottomPadding,
         )
     }
 
     private fun RemoteViews.setUpFontAlignment(textViewId: Int) {
-        val textAlignment = when (prefs.getTextAlignment(widgetId)) {
-            AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.START
-            AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
-            AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.END
-        }
+        val textAlignment =
+            when (prefs.getTextAlignment(widgetId)) {
+                AgendaWidgetPrefs.TextAlignment.LEFT -> Gravity.START
+                AgendaWidgetPrefs.TextAlignment.CENTER -> Gravity.CENTER
+                AgendaWidgetPrefs.TextAlignment.RIGHT -> Gravity.END
+            }
         setInt(textViewId, "setGravity", textAlignment)
     }
 
     private fun RemoteViews.setUpFontSize(textViewId: Int, calendarViewItem: CalendarViewItem) {
-        val defaultTextSizeSp = when (calendarViewItem) {
-            is CalendarViewItem.Day -> 16f
-            is CalendarViewItem.Event -> 14f
-        }
-        val fontSizeAdjustment = when (prefs.getFontSize(widgetId)) {
-            AgendaWidgetPrefs.FontSize.SMALL -> -2f
-            AgendaWidgetPrefs.FontSize.MEDIUM -> 0f
-            AgendaWidgetPrefs.FontSize.LARGE -> 2f
-        }
+        val defaultTextSizeSp =
+            when (calendarViewItem) {
+                is CalendarViewItem.Day -> 16f
+                is CalendarViewItem.Event -> 14f
+            }
+        val fontSizeAdjustment =
+            when (prefs.getFontSize(widgetId)) {
+                AgendaWidgetPrefs.FontSize.SMALL -> -2f
+                AgendaWidgetPrefs.FontSize.MEDIUM -> 0f
+                AgendaWidgetPrefs.FontSize.LARGE -> 2f
+            }
         setTextViewTextSize(
             textViewId,
             TypedValue.COMPLEX_UNIT_SP,
@@ -175,34 +184,45 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         val verticalSpacing = prefs.getVerticalSpacing(widgetId)
         when (calendarViewItem) {
             is CalendarViewItem.Day -> {
-                val topPadding = UnitConverter.dpToPx(
-                    when (verticalSpacing) {
-                        AgendaWidgetPrefs.VerticalSpacing.SMALL -> 4f
-                        AgendaWidgetPrefs.VerticalSpacing.LARGE -> 8f
-                    }, context
-                )
-                val bottomPadding = UnitConverter.dpToPx(
-                    when (verticalSpacing) {
-                        AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
-                        AgendaWidgetPrefs.VerticalSpacing.LARGE -> 4f
-                    }, context
-                )
+                val topPadding =
+                    UnitConverter.dpToPx(
+                        when (verticalSpacing) {
+                            AgendaWidgetPrefs.VerticalSpacing.SMALL -> 4f
+                            AgendaWidgetPrefs.VerticalSpacing.LARGE -> 8f
+                        },
+                        context
+                    )
+                val bottomPadding =
+                    UnitConverter.dpToPx(
+                        when (verticalSpacing) {
+                            AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
+                            AgendaWidgetPrefs.VerticalSpacing.LARGE -> 4f
+                        },
+                        context
+                    )
                 setViewPadding(
                     textViewId,
-                    0, topPadding, 0, bottomPadding,
+                    0,
+                    topPadding,
+                    0,
+                    bottomPadding,
                 )
             }
-
             is CalendarViewItem.Event -> {
-                val verticalPadding = UnitConverter.dpToPx(
-                    when (verticalSpacing) {
-                        AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
-                        AgendaWidgetPrefs.VerticalSpacing.LARGE -> 5f
-                    }, context
-                )
+                val verticalPadding =
+                    UnitConverter.dpToPx(
+                        when (verticalSpacing) {
+                            AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
+                            AgendaWidgetPrefs.VerticalSpacing.LARGE -> 5f
+                        },
+                        context
+                    )
                 setViewPadding(
                     textViewId,
-                    0, verticalPadding, 0, verticalPadding,
+                    0,
+                    verticalPadding,
+                    0,
+                    verticalPadding,
                 )
             }
         }
@@ -210,15 +230,13 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
 
     private fun getFillInIntent(item: CalendarViewItem): Intent {
         return when (item) {
-            is CalendarViewItem.Day -> Intent().apply {
-                putExtra(EXTRA_START_TIME, item.date.time)
-            }
-
-            is CalendarViewItem.Event -> Intent().apply {
-                putExtra(EXTRA_EVENT_ID, item.event.eventId)
-                putExtra(EXTRA_START_TIME, item.event.actualStartTime)
-                putExtra(EXTRA_END_TIME, item.event.actualEndTime)
-            }
+            is CalendarViewItem.Day -> Intent().apply { putExtra(EXTRA_START_TIME, item.date.time) }
+            is CalendarViewItem.Event ->
+                Intent().apply {
+                    putExtra(EXTRA_EVENT_ID, item.event.eventId)
+                    putExtra(EXTRA_START_TIME, item.event.actualStartTime)
+                    putExtra(EXTRA_END_TIME, item.event.actualEndTime)
+                }
         }
     }
 
@@ -290,5 +308,4 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             }
         }
     }
-
 }

@@ -13,29 +13,34 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Brand20,
-    inversePrimary = Brand,
-    onPrimary = Brand,
-    secondary = Brand20,
-    tertiary = Brand50,
-)
+private val DarkColorScheme =
+    darkColorScheme(
+        primary = Brand20,
+        inversePrimary = Brand,
+        onPrimary = Brand,
+        secondary = Brand20,
+        tertiary = Brand50,
+    )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Brand,
-    inversePrimary = Brand50,
-    onPrimary = White,
-    secondary = Brand80,
-    tertiary = Brand50
-)
+private val LightColorScheme =
+    lightColorScheme(
+        primary = Brand,
+        inversePrimary = Brand50,
+        onPrimary = White,
+        secondary = Brand80,
+        tertiary = Brand50
+    )
+
 @Composable
 fun getPrimaryColor(): Color {
-    return if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.primary
+    return if (isSystemInDarkTheme()) MaterialTheme.colorScheme.inversePrimary
+    else MaterialTheme.colorScheme.primary
 }
 
 @Composable
 fun getOnPrimaryColor(): Color {
-    return if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary
+    return if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurface
+    else MaterialTheme.colorScheme.onPrimary
 }
 
 @Composable
@@ -45,26 +50,25 @@ fun CalendarWidgetTheme(
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    val colorScheme =
+        when {
+            dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                val context = LocalContext.current
+                if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            }
+            darkTheme -> DarkColorScheme
+            else -> LightColorScheme
         }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-//            val window = (view.context as Activity).window
-//            window.statusBarColor = if (darkTheme) colorScheme.inversePrimary.toArgb() else colorScheme.primary.toArgb()
-//            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
+            //            val window = (view.context as Activity).window
+            //            window.statusBarColor = if (darkTheme) colorScheme.inversePrimary.toArgb()
+            // else colorScheme.primary.toArgb()
+            //            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars
+            // = true
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
 }

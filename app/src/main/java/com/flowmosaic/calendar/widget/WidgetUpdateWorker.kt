@@ -12,14 +12,12 @@ import androidx.work.WorkerParameters
 import java.util.concurrent.TimeUnit
 
 /**
- * WorkManager-based worker for reliable periodic widget updates.
- * This provides more reliable updates than updatePeriodMillis alone,
- * especially on devices with aggressive battery optimization.
+ * WorkManager-based worker for reliable periodic widget updates. This provides more reliable
+ * updates than updatePeriodMillis alone, especially on devices with aggressive battery
+ * optimization.
  */
-class WidgetUpdateWorker(
-    private val context: Context,
-    workerParams: WorkerParameters
-) : CoroutineWorker(context, workerParams) {
+class WidgetUpdateWorker(private val context: Context, workerParams: WorkerParameters) :
+    CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         return try {
@@ -30,10 +28,11 @@ class WidgetUpdateWorker(
 
             if (widgetIds.isNotEmpty()) {
                 // Send broadcast to update widgets
-                val intent = Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE).apply {
-                    component = widgetComponent
-                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
-                }
+                val intent =
+                    Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE).apply {
+                        component = widgetComponent
+                        putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds)
+                    }
                 context.sendBroadcast(intent)
             }
 
@@ -48,24 +47,23 @@ class WidgetUpdateWorker(
         private const val UPDATE_INTERVAL_MINUTES = 15L
 
         /**
-         * Schedule periodic widget updates using WorkManager.
-         * This should be called when the first widget is enabled.
+         * Schedule periodic widget updates using WorkManager. This should be called when the first
+         * widget is enabled.
          */
         fun schedulePeriodicUpdates(context: Context) {
-            val workRequest = PeriodicWorkRequestBuilder<WidgetUpdateWorker>(
-                UPDATE_INTERVAL_MINUTES, TimeUnit.MINUTES
-            ).build()
+            val workRequest =
+                PeriodicWorkRequestBuilder<WidgetUpdateWorker>(
+                        UPDATE_INTERVAL_MINUTES,
+                        TimeUnit.MINUTES
+                    )
+                    .build()
 
-            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-                WORK_NAME,
-                ExistingPeriodicWorkPolicy.KEEP,
-                workRequest
-            )
+            WorkManager.getInstance(context)
+                .enqueueUniquePeriodicWork(WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, workRequest)
         }
 
         /**
-         * Cancel periodic widget updates.
-         * This should be called when the last widget is disabled.
+         * Cancel periodic widget updates. This should be called when the last widget is disabled.
          */
         fun cancelPeriodicUpdates(context: Context) {
             WorkManager.getInstance(context).cancelUniqueWork(WORK_NAME)

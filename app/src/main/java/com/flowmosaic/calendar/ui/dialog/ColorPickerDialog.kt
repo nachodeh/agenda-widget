@@ -47,9 +47,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
@@ -75,10 +75,8 @@ fun ColorDialog(
             Surface(
                 shape = RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.surface,
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(16.dp)
-                    .widthIn(min = 280.dp, max = 400.dp),
+                modifier =
+                    Modifier.wrapContentSize().padding(16.dp).widthIn(min = 280.dp, max = 400.dp),
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     TabRow(selectedTabIndex = selectedTabIndex) {
@@ -102,31 +100,34 @@ fun ColorDialog(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     when (selectedTabIndex) {
-                        0 -> PresetColorsTab(
-                            colorList = colorList,
-                            currentlySelected = currentColor,
-                            onColorSelected = { color ->
-                                currentColor = color
-                                onColorSelected(color)
-                                onDismiss()
-                            }
-                        )
-                        1 -> SpectrumTab(
-                            currentColor = currentColor,
-                            onColorChanged = { currentColor = it },
-                            onColorSelected = {
-                                onColorSelected(currentColor)
-                                onDismiss()
-                            }
-                        )
-                        2 -> HexInputTab(
-                            currentColor = currentColor,
-                            onColorChanged = { currentColor = it },
-                            onColorSelected = {
-                                onColorSelected(currentColor)
-                                onDismiss()
-                            }
-                        )
+                        0 ->
+                            PresetColorsTab(
+                                colorList = colorList,
+                                currentlySelected = currentColor,
+                                onColorSelected = { color ->
+                                    currentColor = color
+                                    onColorSelected(color)
+                                    onDismiss()
+                                }
+                            )
+                        1 ->
+                            SpectrumTab(
+                                currentColor = currentColor,
+                                onColorChanged = { currentColor = it },
+                                onColorSelected = {
+                                    onColorSelected(currentColor)
+                                    onDismiss()
+                                }
+                            )
+                        2 ->
+                            HexInputTab(
+                                currentColor = currentColor,
+                                onColorChanged = { currentColor = it },
+                                onColorSelected = {
+                                    onColorSelected(currentColor)
+                                    onDismiss()
+                                }
+                            )
                     }
                 }
             }
@@ -154,20 +155,21 @@ private fun PresetColorsTab(
                 borderWidth = 2.dp
             }
 
-            Canvas(modifier = Modifier
-                .padding(vertical = 16.dp, horizontal = 8.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .border(
-                    borderWidth,
-                    MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
-                    RoundedCornerShape(20.dp)
-                )
-                .background(color)
-                .requiredSize(70.dp)
-                .clickable { onColorSelected(color) }
-                .semantics {
-                    contentDescription = "Color swatch: ${color.toArgb().toString(16)}"
-                }
+            Canvas(
+                modifier =
+                    Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .border(
+                            borderWidth,
+                            MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
+                            RoundedCornerShape(20.dp)
+                        )
+                        .background(color)
+                        .requiredSize(70.dp)
+                        .clickable { onColorSelected(color) }
+                        .semantics {
+                            contentDescription = "Color swatch: ${color.toArgb().toString(16)}"
+                        }
             ) {}
         }
     }
@@ -183,48 +185,49 @@ private fun SpectrumTab(
     var saturation by remember { mutableFloatStateOf(getSaturationFromColor(currentColor)) }
     var brightness by remember { mutableFloatStateOf(getBrightnessFromColor(currentColor)) }
 
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         // Color preview
         Box(
-            modifier = Modifier
-                .size(60.dp)
-                .clip(CircleShape)
-                .background(currentColor)
-                .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape)
+            modifier =
+                Modifier.size(60.dp)
+                    .clip(CircleShape)
+                    .background(currentColor)
+                    .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         // Hue slider with gradient bar
-        Text(stringResource(R.string.color_picker_hue), style = MaterialTheme.typography.labelMedium)
+        Text(
+            stringResource(R.string.color_picker_hue),
+            style = MaterialTheme.typography.labelMedium
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            Color.hsv(0f, 1f, 1f),
-                            Color.hsv(60f, 1f, 1f),
-                            Color.hsv(120f, 1f, 1f),
-                            Color.hsv(180f, 1f, 1f),
-                            Color.hsv(240f, 1f, 1f),
-                            Color.hsv(300f, 1f, 1f),
-                            Color.hsv(360f, 1f, 1f)
+            modifier =
+                Modifier.fillMaxWidth()
+                    .height(40.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(
+                        Brush.horizontalGradient(
+                            colors =
+                                listOf(
+                                    Color.hsv(0f, 1f, 1f),
+                                    Color.hsv(60f, 1f, 1f),
+                                    Color.hsv(120f, 1f, 1f),
+                                    Color.hsv(180f, 1f, 1f),
+                                    Color.hsv(240f, 1f, 1f),
+                                    Color.hsv(300f, 1f, 1f),
+                                    Color.hsv(360f, 1f, 1f)
+                                )
                         )
                     )
-                )
-                .pointerInput(Unit) {
-                    detectTapGestures { offset ->
-                        hue = (offset.x / size.width * 360f).coerceIn(0f, 360f)
-                        onColorChanged(Color.hsv(hue, saturation, brightness))
+                    .pointerInput(Unit) {
+                        detectTapGestures { offset ->
+                            hue = (offset.x / size.width * 360f).coerceIn(0f, 360f)
+                            onColorChanged(Color.hsv(hue, saturation, brightness))
+                        }
                     }
-                }
         )
         Slider(
             value = hue,
@@ -237,7 +240,10 @@ private fun SpectrumTab(
         )
 
         // Saturation slider
-        Text(stringResource(R.string.color_picker_saturation), style = MaterialTheme.typography.labelMedium)
+        Text(
+            stringResource(R.string.color_picker_saturation),
+            style = MaterialTheme.typography.labelMedium
+        )
         Slider(
             value = saturation,
             onValueChange = {
@@ -249,7 +255,10 @@ private fun SpectrumTab(
         )
 
         // Brightness slider
-        Text(stringResource(R.string.color_picker_brightness), style = MaterialTheme.typography.labelMedium)
+        Text(
+            stringResource(R.string.color_picker_brightness),
+            style = MaterialTheme.typography.labelMedium
+        )
         Slider(
             value = brightness,
             onValueChange = {
@@ -262,10 +271,7 @@ private fun SpectrumTab(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = onColorSelected,
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Button(onClick = onColorSelected, modifier = Modifier.fillMaxWidth()) {
             Text(stringResource(R.string.color_picker_select))
         }
     }
@@ -281,17 +287,14 @@ private fun HexInputTab(
     var hexText by remember { mutableStateOf(colorToHex(currentColor)) }
     var isError by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         // Color preview
         Box(
-            modifier = Modifier
-                .size(60.dp)
-                .clip(CircleShape)
-                .background(currentColor)
-                .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape)
+            modifier =
+                Modifier.size(60.dp)
+                    .clip(CircleShape)
+                    .background(currentColor)
+                    .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -304,26 +307,27 @@ private fun HexInputTab(
                 parseHexColor(filtered)?.let { color ->
                     isError = false
                     onColorChanged(color)
-                } ?: run {
-                    isError = filtered.isNotEmpty() && !filtered.startsWith("#")
-                }
+                } ?: run { isError = filtered.isNotEmpty() && !filtered.startsWith("#") }
             },
             label = { Text(stringResource(R.string.color_picker_hex_label)) },
             isError = isError,
-            supportingText = if (isError) {{ Text(stringResource(R.string.color_picker_hex_error)) }} else null,
+            supportingText =
+                if (isError) {
+                    { Text(stringResource(R.string.color_picker_hex_error)) }
+                } else null,
             singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Characters,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus()
-                    parseHexColor(hexText)?.let {
-                        onColorSelected()
+            keyboardOptions =
+                KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Characters,
+                    imeAction = ImeAction.Done
+                ),
+            keyboardActions =
+                KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                        parseHexColor(hexText)?.let { onColorSelected() }
                     }
-                }
-            ),
+                ),
             modifier = Modifier.fillMaxWidth()
         )
 

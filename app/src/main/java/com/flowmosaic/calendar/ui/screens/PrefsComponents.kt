@@ -24,7 +24,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,57 +48,53 @@ import com.flowmosaic.calendar.ui.dialog.ColorDialog
 import com.flowmosaic.calendar.ui.dialog.EmojiDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarBlobsDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarDialog
+import com.flowmosaic.calendar.ui.getCommonEmoji
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
-import com.flowmosaic.calendar.R
-import com.flowmosaic.calendar.ui.getCommonEmoji
 
 @Composable
 fun TitleWithDivider(title: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
+    Column(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)) {
         Text(
             text = title,
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.outline,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(top = 24.dp, bottom = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp).padding(top = 24.dp, bottom = 16.dp)
         )
     }
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun SelectCalendarsButton(displayText: String, widgetId: String, logger: AgendaWidgetLogger, prefs: AgendaWidgetPrefs) {
+fun SelectCalendarsButton(
+    displayText: String,
+    widgetId: String,
+    logger: AgendaWidgetLogger,
+    prefs: AgendaWidgetPrefs
+) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    val showCalendarSelectionDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showCalendarSelectionDialog = rememberSaveable { mutableStateOf(false) }
 
     val calendarFetcher = CalendarFetcher()
     val calendarList = remember { mutableStateOf(listOf<CalendarData>()) }
     val selectedCalendars = remember { mutableStateOf(setOf<String>()) }
 
-    val calendarPermissionsState = rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.WRITE_CALENDAR,
-            Manifest.permission.READ_CALENDAR,
+    val calendarPermissionsState =
+        rememberMultiplePermissionsState(
+            listOf(
+                Manifest.permission.WRITE_CALENDAR,
+                Manifest.permission.READ_CALENDAR,
+            )
         )
-    )
 
     LaunchedEffect(key1 = Unit) {
         if (calendarPermissionsState.allPermissionsGranted) {
             calendarList.value = calendarFetcher.queryCalendarData(context)
-            selectedCalendars.value =
-                prefs.getSelectedCalendars(calendarList.value, widgetId)
+            selectedCalendars.value = prefs.getSelectedCalendars(calendarList.value, widgetId)
         }
     }
 
@@ -108,14 +103,10 @@ fun SelectCalendarsButton(displayText: String, widgetId: String, logger: AgendaW
     }
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                coroutineScope.launch {
-                    showCalendarSelectionDialog.value = true
-                }
-            }
-            .padding(16.dp),
+        modifier =
+            Modifier.fillMaxWidth()
+                .clickable { coroutineScope.launch { showCalendarSelectionDialog.value = true } }
+                .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -133,9 +124,7 @@ fun SelectCalendarsButton(displayText: String, widgetId: String, logger: AgendaW
 
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog, widgetId)
-        logger.logUpdatePrefEvent(
-            AgendaWidgetLogger.PrefsScreenItemName.SELECT_CALENDARS
-        )
+        logger.logUpdatePrefEvent(AgendaWidgetLogger.PrefsScreenItemName.SELECT_CALENDARS)
     }
 }
 
@@ -147,16 +136,18 @@ fun CheckboxRow(
     saveCheckboxValue: (Boolean) -> Unit,
     logger: AgendaWidgetLogger
 ) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .clickable {
-            checkboxValue.value = !checkboxValue.value
-            saveCheckboxValue(checkboxValue.value)
-            logger.logUpdatePrefEvent(loggingItem)
-        }
-        .padding(16.dp),
+    Row(
+        modifier =
+            Modifier.fillMaxWidth()
+                .clickable {
+                    checkboxValue.value = !checkboxValue.value
+                    saveCheckboxValue(checkboxValue.value)
+                    logger.logUpdatePrefEvent(loggingItem)
+                }
+                .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween) {
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         Text(
             text = displayText,
             style = MaterialTheme.typography.bodyMedium,
@@ -254,10 +245,7 @@ fun <T> MultipleOptionsSelectorRow(
     val context = LocalContext.current
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { expanded.value = true }
-            .padding(16.dp),
+        modifier = Modifier.fillMaxWidth().clickable { expanded.value = true }.padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -302,20 +290,19 @@ fun ColorSelectorRow(
     selectedColor: MutableState<Color>,
     saveColorValue: (Color) -> Unit,
     logger: AgendaWidgetLogger,
-    loggingItem: AgendaWidgetLogger.PrefsScreenItemName = AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
+    loggingItem: AgendaWidgetLogger.PrefsScreenItemName =
+        AgendaWidgetLogger.PrefsScreenItemName.TEXT_COLOR
 ) {
-    val showDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showDialog = rememberSaveable { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                showDialog.value = true
-                logger.logUpdatePrefEvent(loggingItem)
-            }
-            .padding(16.dp),
+        modifier =
+            Modifier.fillMaxWidth()
+                .clickable {
+                    showDialog.value = true
+                    logger.logUpdatePrefEvent(loggingItem)
+                }
+                .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -325,29 +312,26 @@ fun ColorSelectorRow(
             modifier = Modifier.weight(1f)
         )
         Canvas(
-            modifier = Modifier
-                .clip(CircleShape)
-                .border(
-                    1.75.dp,
-                    MaterialTheme.colorScheme.primary,
-                    CircleShape
-                )
-                .background(selectedColor.value)
-                .requiredSize(24.dp)
+            modifier =
+                Modifier.clip(CircleShape)
+                    .border(1.75.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                    .background(selectedColor.value)
+                    .requiredSize(24.dp)
         ) {}
     }
 
-    val colors = listOf(
-        Color(0xFFFFFFFF),
-        MaterialTheme.colorScheme.primary,
-        MaterialTheme.colorScheme.inversePrimary,
-        Color(0xFF80CBC4),
-        Color(0xFFFFCC80),
-        Color(0xFFFFAB91),
-        Color(0xFF81D4FA),
-        Color(0xFFB39DDB),
-        Color(0xFF000000),
-    )
+    val colors =
+        listOf(
+            Color(0xFFFFFFFF),
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.colorScheme.inversePrimary,
+            Color(0xFF80CBC4),
+            Color(0xFFFFCC80),
+            Color(0xFFFFAB91),
+            Color(0xFF81D4FA),
+            Color(0xFFB39DDB),
+            Color(0xFF000000),
+        )
 
     if (showDialog.value) {
         ColorDialog(
@@ -367,9 +351,7 @@ fun OpacitySelectorRow(
     logger: AgendaWidgetLogger
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -386,9 +368,7 @@ fun OpacitySelectorRow(
                 saveOpacityValue(newValue)
             },
             onValueChangeFinished = {
-                logger.logUpdatePrefEvent(
-                    AgendaWidgetLogger.PrefsScreenItemName.OPACITY
-                )
+                logger.logUpdatePrefEvent(AgendaWidgetLogger.PrefsScreenItemName.OPACITY)
             },
             valueRange = 0f..1f,
             steps = 10,
@@ -399,33 +379,34 @@ fun OpacitySelectorRow(
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun ConfigureCalendarBlobsButton(displayText: String, widgetId: String, logger: AgendaWidgetLogger) {
+fun ConfigureCalendarBlobsButton(
+    displayText: String,
+    widgetId: String,
+    logger: AgendaWidgetLogger
+) {
     val coroutineScope = rememberCoroutineScope()
 
-    val showConfigureCalendarBlobsDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showConfigureCalendarBlobsDialog = rememberSaveable { mutableStateOf(false) }
 
-    val calendarPermissionsState = rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.WRITE_CALENDAR,
-            Manifest.permission.READ_CALENDAR,
+    val calendarPermissionsState =
+        rememberMultiplePermissionsState(
+            listOf(
+                Manifest.permission.WRITE_CALENDAR,
+                Manifest.permission.READ_CALENDAR,
+            )
         )
-    )
 
     if (!calendarPermissionsState.allPermissionsGranted) {
         return
     }
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                coroutineScope.launch {
-                    showConfigureCalendarBlobsDialog.value = true
+        modifier =
+            Modifier.fillMaxWidth()
+                .clickable {
+                    coroutineScope.launch { showConfigureCalendarBlobsDialog.value = true }
                 }
-            }
-            .padding(16.dp),
+                .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -443,9 +424,7 @@ fun ConfigureCalendarBlobsButton(displayText: String, widgetId: String, logger: 
 
     if (showConfigureCalendarBlobsDialog.value) {
         ShowCalendarBlobsDialog(openDialog = showConfigureCalendarBlobsDialog, widgetId, logger)
-        logger.logUpdatePrefEvent(
-            AgendaWidgetLogger.PrefsScreenItemName.CONFIGURE_CALENDAR_BLOBS
-        )
+        logger.logUpdatePrefEvent(AgendaWidgetLogger.PrefsScreenItemName.CONFIGURE_CALENDAR_BLOBS)
     }
 }
 
@@ -458,23 +437,20 @@ fun EmojiSelectorRow(
     logger: AgendaWidgetLogger,
     prefName: AgendaWidgetLogger.PrefsScreenItemName
 ) {
-    val showDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
+    val showDialog = rememberSaveable { mutableStateOf(false) }
 
     val emojis = getCommonEmoji()
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                showDialog.value = true
-                logger.logUpdatePrefEvent(prefName)
-            }
-            .padding(bottom = 16.dp)
-            .padding(start = 16.dp)
-            .padding(end = 16.dp),
-
+        modifier =
+            Modifier.fillMaxWidth()
+                .clickable {
+                    showDialog.value = true
+                    logger.logUpdatePrefEvent(prefName)
+                }
+                .padding(bottom = 16.dp)
+                .padding(start = 16.dp)
+                .padding(end = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -502,8 +478,5 @@ fun EmojiSelectorRow(
 
 @Composable
 fun CalendarEmoji(emoji: String) {
-    Text(
-        text = emoji,
-        style = MaterialTheme.typography.titleLarge
-    )
+    Text(text = emoji, style = MaterialTheme.typography.titleLarge)
 }

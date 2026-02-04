@@ -30,25 +30,23 @@ fun WidgetsListView(onNavigate: (widgetId: Int, widgetIndex: Int) -> Unit) {
     }
 
     LifecycleResumeEffect(Unit) {
-        widgetIds.value = AppWidgetManager.getInstance(context)
-            .getAppWidgetIds(ComponentName(context, AgendaWidget::class.java))
+        widgetIds.value =
+            AppWidgetManager.getInstance(context)
+                .getAppWidgetIds(ComponentName(context, AgendaWidget::class.java))
 
         onPauseOrDispose {}
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-    ) {
+    Column(modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.height(8.dp))
         widgetIds.value.forEachIndexed { index, id ->
-            val idx = index + 1;
+            val idx = index + 1
             LaunchWidgetConfigButton(
                 id = id,
                 index = idx,
                 text = "Widget $idx",
-                onNavigate = onNavigate )
+                onNavigate = onNavigate
+            )
         }
         LaunchWidgetConfigButton(
             id = 0,

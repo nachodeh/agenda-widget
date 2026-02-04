@@ -22,10 +22,10 @@ import com.flowmosaic.calendar.ui.theme.getPrimaryColor
 fun Header(subtitle: String = "") {
     val context = LocalContext.current
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(getPrimaryColor())
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+        modifier =
+            Modifier.fillMaxWidth()
+                .background(getPrimaryColor())
+                .padding(horizontal = 16.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
     ) {
@@ -42,9 +42,7 @@ fun Header(subtitle: String = "") {
                     color = getOnPrimaryColor(),
                     fontWeight = FontWeight.Light,
                     textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                 )
             }
         }

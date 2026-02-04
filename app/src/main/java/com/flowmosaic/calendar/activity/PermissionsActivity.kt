@@ -23,7 +23,8 @@ class PermissionsActivity : ComponentActivity() {
     private val logger by lazy { AgendaWidgetLogger(applicationContext) }
 
     private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            permissions ->
             val allPermissionsGranted = permissions.entries.all { it.value }
             logger.logPermissionsResultEvent(allPermissionsGranted)
             // After calendar permissions, request battery optimization exemption
@@ -41,30 +42,23 @@ class PermissionsActivity : ComponentActivity() {
 
         requestCalendarPermissions()
 
-        setContent {
-            enableEdgeToEdge()
-        }
+        setContent { enableEdgeToEdge() }
 
         logger.logActivityStartedEvent(AgendaWidgetLogger.Activity.PERMISSIONS_ACTIVITY)
     }
 
     private fun requestCalendarPermissions() {
         // Check if permissions are already granted
-        val writeCalendarPermission = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.WRITE_CALENDAR
-        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
-        val readCalendarPermission = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_CALENDAR
-        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        val writeCalendarPermission =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED
+        val readCalendarPermission =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED
 
         if (!writeCalendarPermission || !readCalendarPermission) {
             requestPermissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.WRITE_CALENDAR,
-                    Manifest.permission.READ_CALENDAR
-                )
+                arrayOf(Manifest.permission.WRITE_CALENDAR, Manifest.permission.READ_CALENDAR)
             )
         } else {
             // Calendar permissions already granted, check battery optimization
@@ -75,9 +69,10 @@ class PermissionsActivity : ComponentActivity() {
     private fun requestBatteryOptimizationExemption() {
         val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
-            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                data = Uri.parse("package:$packageName")
-            }
+            val intent =
+                Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                    data = Uri.parse("package:$packageName")
+                }
             batteryOptimizationLauncher.launch(intent)
         } else {
             // Already exempted, proceed to update widgets

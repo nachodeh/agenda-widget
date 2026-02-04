@@ -44,11 +44,11 @@ fun EmojiDialog(
             Surface(
                 shape = RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.surface,
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(16.dp)
-                    .heightIn(min = 100.dp, max = 500.dp)
-                    .widthIn(min = 100.dp, max = 500.dp),
+                modifier =
+                    Modifier.wrapContentSize()
+                        .padding(16.dp)
+                        .heightIn(min = 100.dp, max = 500.dp)
+                        .widthIn(min = 100.dp, max = 500.dp),
             ) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(5),
@@ -61,14 +61,9 @@ fun EmojiDialog(
                         // Add a border around the selected emoji
                         val borderWidth = if (selectedEmoji == emoji) 2.dp else 0.dp
 
-                        Surface(
-                            Modifier
-                                .aspectRatio(1.0f)
-                                .padding(4.dp)
-                        ) {
+                        Surface(Modifier.aspectRatio(1.0f).padding(4.dp)) {
                             Surface(
-                                Modifier
-                                    .fillMaxWidth(1.0f)
+                                Modifier.fillMaxWidth(1.0f)
                                     .fillMaxHeight(1.0f)
                                     .border(
                                         borderWidth,
@@ -82,9 +77,7 @@ fun EmojiDialog(
                             ) {
                                 Box(
                                     contentAlignment = Alignment.Center,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .fillMaxHeight()
+                                    modifier = Modifier.fillMaxWidth().fillMaxHeight()
                                 ) {
                                     if (emoji.isEmpty()) {
                                         // "None" option

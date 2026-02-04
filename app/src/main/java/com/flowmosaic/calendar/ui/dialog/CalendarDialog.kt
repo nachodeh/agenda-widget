@@ -55,14 +55,13 @@ fun ShowCalendarDialog(openDialog: MutableState<Boolean>, widgetId: String) {
         selectedCalendars.addAll(prefs.getSelectedCalendars(calendarList, widgetId))
     }
 
-    val checkedItems = BooleanArray(calendarList.size) { index ->
-        selectedCalendars.contains(calendarList[index].id.toString())
-    }
+    val checkedItems =
+        BooleanArray(calendarList.size) { index ->
+            selectedCalendars.contains(calendarList[index].id.toString())
+        }
 
     Dialog(
-        onDismissRequest = {
-            openDialog.value = false
-        },
+        onDismissRequest = { openDialog.value = false },
         properties = DialogProperties(usePlatformDefaultWidth = false),
         content = {
             CalendarDialogContent(
@@ -81,9 +80,7 @@ fun ShowCalendarDialog(openDialog: MutableState<Boolean>, widgetId: String) {
                     prefs.setSelectedCalendars(selectedCalendars.toSet(), widgetId)
                     openDialog.value = false
                 },
-                onCancelClick = {
-                    openDialog.value = false
-                }
+                onCancelClick = { openDialog.value = false }
             )
         }
     )
@@ -98,41 +95,39 @@ private fun CalendarDialogContent(
     onCancelClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier
-            .padding(16.dp)
-            .wrapContentSize()
-            .heightIn(min = 100.dp, max = 500.dp)
-            .widthIn(min = 100.dp, max = 500.dp),
+        modifier =
+            Modifier.padding(16.dp)
+                .wrapContentSize()
+                .heightIn(min = 100.dp, max = 500.dp)
+                .widthIn(min = 100.dp, max = 500.dp),
         shape = RoundedCornerShape(20.dp),
         color = MaterialTheme.colorScheme.surface,
     ) {
         Box(modifier = Modifier.padding(16.dp)) {
             LazyColumn(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(bottom = 80.dp) // Ensure there's enough space for the buttons
+                modifier =
+                    Modifier.align(Alignment.TopStart)
+                        .padding(bottom = 80.dp) // Ensure there's enough space for the buttons
             ) {
                 itemsIndexed(calendarList) { index, calendar ->
                     if (index < checkedItems.size) {
                         CalendarRow(
                             isChecked = checkedItems[index],
                             calendarName = calendar.name,
-                            onCheckedChange = { isChecked ->
-                                onCheckedChange(index, isChecked)
-                            }
+                            onCheckedChange = { isChecked -> onCheckedChange(index, isChecked) }
                         )
                     }
                 }
             }
 
             Row(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .fillMaxWidth(),
+                modifier = Modifier.align(Alignment.BottomStart).fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(onClick = onSaveClick) {
-                    Text(text = stringResource(id = R.string.save),)
+                    Text(
+                        text = stringResource(id = R.string.save),
+                    )
                 }
                 Button(
                     onClick = onCancelClick,
@@ -155,22 +150,17 @@ private fun CalendarRow(
     onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
-        modifier = Modifier
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(),
-                onClick = {
-                    onCheckedChange(!isChecked)
-                }
-            )
-            .padding(vertical = 8.dp)
-            .fillMaxWidth(),
+        modifier =
+            Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(),
+                    onClick = { onCheckedChange(!isChecked) }
+                )
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = onCheckedChange
-        )
+        Checkbox(checked = isChecked, onCheckedChange = onCheckedChange)
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = calendarName)
     }
