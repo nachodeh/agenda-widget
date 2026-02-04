@@ -41,6 +41,8 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         private const val PREF_CALENDAR_COLOR = "calendar_color"
         private const val PREF_CALENDAR_EMOJI = "calendar_emoji"
         private const val PREF_CALENDAR_INDICATOR_STYLE = "calendar_indicator_style"
+        private const val PREF_SHOW_TASKS = "show_tasks"
+        private const val PREF_SHOW_COMPLETED_TASKS = "show_completed_tasks"
     }
 
     enum class FontSize(private val displayResId: Int) {
@@ -450,5 +452,33 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     fun setIndicatorStyle(style: IndicatorStyle, widgetId: String) {
         val prefsKey = getKeyWithWidgetIdSave(PREF_CALENDAR_INDICATOR_STYLE, widgetId)
         sharedPreferences.edit().putString(prefsKey, style.name).apply()
+    }
+
+    fun getShowTasks(widgetId: String): Boolean {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_SHOW_TASKS, widgetId)
+        val showTasks = sharedPreferences.getBoolean(prefsKey, false) // Default off
+        if (!prefExists) {
+            setShowTasks(showTasks, widgetId)
+        }
+        return showTasks
+    }
+
+    fun setShowTasks(showTasks: Boolean, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_TASKS, widgetId)
+        sharedPreferences.edit().putBoolean(prefsKey, showTasks).apply()
+    }
+
+    fun getShowCompletedTasks(widgetId: String): Boolean {
+        val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_SHOW_COMPLETED_TASKS, widgetId)
+        val showCompletedTasks = sharedPreferences.getBoolean(prefsKey, true) // Default on
+        if (!prefExists) {
+            setShowCompletedTasks(showCompletedTasks, widgetId)
+        }
+        return showCompletedTasks
+    }
+
+    fun setShowCompletedTasks(showCompletedTasks: Boolean, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_COMPLETED_TASKS, widgetId)
+        sharedPreferences.edit().putBoolean(prefsKey, showCompletedTasks).apply()
     }
 }

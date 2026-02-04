@@ -12,6 +12,7 @@ import android.os.Looper
 import android.provider.CalendarContract
 import com.flowmosaic.calendar.analytics.AgendaWidgetLogger
 import com.flowmosaic.calendar.data.CalendarPermissionsChecker.hasCalendarPermission
+import com.flowmosaic.calendar.data.TaskFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,10 +21,13 @@ import kotlinx.coroutines.launch
 const val UPDATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_UPDATE_WIDGET"
 const val CREATE_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_CREATE_EVENT"
 const val CLICK_ACTION = "com.flowmosaic.calendar.widget.CLICK_ACTION"
+const val COMPLETE_TASK_ACTION = "com.flowmosaic.calendar.broadcast.ACTION_COMPLETE_TASK"
 
 const val EXTRA_START_TIME = "com.flowmosaic.calendar.START_TIME"
 const val EXTRA_END_TIME = "com.flowmosaic.calendar.END_TIME"
 const val EXTRA_EVENT_ID = "com.flowmosaic.calendar.EVENT_ID"
+const val EXTRA_TASK_ID = "com.flowmosaic.calendar.TASK_ID"
+const val EXTRA_TASK_COMPLETED = "com.flowmosaic.calendar.TASK_COMPLETED"
 
 /** Implementation of App Widget functionality. */
 class AgendaWidget : AppWidgetProvider() {
@@ -104,6 +108,9 @@ class AgendaWidget : AppWidgetProvider() {
             CLICK_ACTION -> {
                 handleClickWidgetAgendaItem(context, intent)
             }
+            COMPLETE_TASK_ACTION -> {
+                handleCompleteTask(context, intent)
+            }
         }
 
         super.onReceive(context, intent)
@@ -156,6 +163,14 @@ class AgendaWidget : AppWidgetProvider() {
         val startTime: Long = intent.getLongExtra(EXTRA_START_TIME, 0)
         val endTime: Long = intent.getLongExtra(EXTRA_END_TIME, 0)
         val eventId: Long = intent.getLongExtra(EXTRA_EVENT_ID, 0)
+        val taskId: Long = intent.getLongExtra(EXTRA_TASK_ID, 0)
+
+        // If this is a task click, handle task completion instead
+        if (taskId > 0) {
+            handleCompleteTask(context, intent)
+            return
+        }
+
         val builder: Uri.Builder = CalendarContract.CONTENT_URI.buildUpon()
 
         when {
@@ -193,6 +208,26 @@ class AgendaWidget : AppWidgetProvider() {
                     )
                 )
         }
+    }
+
+    private fun handleCompleteTask(context: Context, intent: Intent) {
+        val taskId: Long = intent.getLongExtra(EXTRA_TASK_ID, -1)
+        val completed: Boolean = intent.getBooleanExtra(EXTRA_TASK_COMPLETED, true)
+
+        if (taskId == -1L) {
+            return
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val success = TaskFetcher.setTaskCompleted(context, taskId, completed)
+
+            if (success) {
+                // Refresh widget to show updated task status
+                CoroutineScope(Dispatchers.Main).launch { forceWidgetUpdate(context) }
+            }
+        }
+
+        getLogger(context).logActionButtonEvent(AgendaWidgetLogger.ActionButton.COMPLETE_TASK)
     }
 
     private fun updateWidget(

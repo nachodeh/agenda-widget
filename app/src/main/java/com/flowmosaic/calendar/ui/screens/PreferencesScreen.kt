@@ -45,6 +45,10 @@ fun PreferencesScreen(appWidgetId: Int, onCloseClick: (() -> Unit)? = null) {
                 content = { GeneralPrefsSection(widgetId, logger, prefs) }
             ),
             PreferenceSection(
+                title = context.getString(R.string.prefs_title_tasks),
+                content = { TasksPrefsSection(widgetId, logger, prefs) }
+            ),
+            PreferenceSection(
                 title = context.getString(R.string.prefs_title_date_time_location),
                 content = { DateAndTimePrefsSection(widgetId, logger, prefs) }
             ),
@@ -140,6 +144,37 @@ fun GeneralPrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: Age
         },
         logger = logger
     )
+}
+
+@Composable
+fun TasksPrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: AgendaWidgetPrefs) {
+    val context = LocalContext.current
+
+    val showTasks = remember { mutableStateOf(prefs.getShowTasks(widgetId)) }
+    val showCompletedTasks = remember { mutableStateOf(prefs.getShowCompletedTasks(widgetId)) }
+
+    CheckboxRow(
+        displayText = context.getString(R.string.show_tasks),
+        loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_TASKS,
+        checkboxValue = showTasks,
+        saveCheckboxValue = { newValue: Boolean ->
+            showTasks.value = newValue
+            prefs.setShowTasks(newValue, widgetId)
+        },
+        logger = logger
+    )
+    if (showTasks.value) {
+        CheckboxRow(
+            displayText = context.getString(R.string.show_completed_tasks),
+            loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_COMPLETED_TASKS,
+            checkboxValue = showCompletedTasks,
+            saveCheckboxValue = { newValue: Boolean ->
+                showCompletedTasks.value = newValue
+                prefs.setShowCompletedTasks(newValue, widgetId)
+            },
+            logger = logger
+        )
+    }
 }
 
 @Composable

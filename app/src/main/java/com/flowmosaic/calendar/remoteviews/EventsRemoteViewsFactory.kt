@@ -10,15 +10,22 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.compose.ui.graphics.toArgb
 import com.flowmosaic.calendar.R
+import android.graphics.Paint
 import com.flowmosaic.calendar.data.CalendarDateUtils
 import com.flowmosaic.calendar.data.CalendarFetcher
 import com.flowmosaic.calendar.data.CalendarViewItem
+import com.flowmosaic.calendar.data.TaskData
+import com.flowmosaic.calendar.data.TaskFetcher
 import com.flowmosaic.calendar.prefs.AgendaWidgetPrefs
 import com.flowmosaic.calendar.ui.UnitConverter
 import com.flowmosaic.calendar.ui.isColorLight
 import com.flowmosaic.calendar.widget.EXTRA_END_TIME
 import com.flowmosaic.calendar.widget.EXTRA_EVENT_ID
 import com.flowmosaic.calendar.widget.EXTRA_START_TIME
+import com.flowmosaic.calendar.widget.EXTRA_TASK_ID
+import com.flowmosaic.calendar.widget.EXTRA_TASK_COMPLETED
+import java.util.Calendar
+import java.util.Date
 
 class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     RemoteViewsService.RemoteViewsFactory {
@@ -40,33 +47,34 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     }
 
     private val calendarFetcher = CalendarFetcher()
-    private val events: MutableList<CalendarViewItem> = mutableListOf()
+    private val taskFetcher = TaskFetcher()
+    private val items: MutableList<CalendarViewItem> = mutableListOf()
 
     override fun onCreate() {
-        events.clear()
-        events.addAll(getEvents())
+        items.clear()
+        items.addAll(getItems())
     }
 
     override fun onDataSetChanged() {
-        events.clear()
-        events.addAll(getEvents())
+        items.clear()
+        items.addAll(getItems())
     }
 
     override fun onDestroy() {
-        events.clear()
+        items.clear()
     }
 
     override fun getCount(): Int {
-        return events.size
+        return items.size
     }
 
     override fun getViewAt(position: Int): RemoteViews {
-        if (position < 0 || position >= events.size) {
+        if (position < 0 || position >= items.size) {
             // Return an empty view if out of bounds
             return RemoteViews(context.packageName, R.layout.empty_layout)
         }
 
-        val item = events[position]
+        val item = items[position]
         val textColor = prefs.getTextColor(widgetId).toArgb()
 
         return RemoteViews(context.packageName, getLayoutId(item, textColor)).apply {
@@ -82,16 +90,23 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                             widgetId,
                             prefs.getShowLocation(widgetId)
                         )
+                    is CalendarViewItem.Task -> item.task.title
+                    is CalendarViewItem.NoDueDateHeader ->
+                        context.getString(R.string.no_due_date)
                 }
 
             setTextColor(textViewId, textColor)
-            setUpSeparator(textColor)
+            setUpSeparator(item, textColor)
             setUpFontSize(textViewId, item)
             setUpVerticalSpacing(context, textViewId, item)
             setUpFontAlignment(textViewId)
 
             if (item is CalendarViewItem.Event) {
                 setUpCalendarBlob(textColor, item.event.calendarId)
+            }
+
+            if (item is CalendarViewItem.Task) {
+                setUpTaskCheckbox(item.task, textColor, textViewId)
             }
 
             setTextViewText(textViewId, text)
@@ -106,6 +121,11 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                 if (isColorLight) R.layout.item_date else R.layout.item_date_dark
             is CalendarViewItem.Event ->
                 if (isColorLight) R.layout.item_event else R.layout.item_event_dark
+            is CalendarViewItem.Task ->
+                if (isColorLight) R.layout.item_task else R.layout.item_task_dark
+            is CalendarViewItem.NoDueDateHeader ->
+                if (isColorLight) R.layout.item_no_due_date_header
+                else R.layout.item_no_due_date_header_dark
         }
     }
 
@@ -116,17 +136,35 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                 if (isColorLight) R.id.item_date_text_view else R.id.item_date_text_view_dark
             is CalendarViewItem.Event ->
                 if (isColorLight) R.id.item_event_text_view else R.id.item_event_text_view_dark
+            is CalendarViewItem.Task ->
+                if (isColorLight) R.id.item_task_text_view else R.id.item_task_text_view_dark
+            is CalendarViewItem.NoDueDateHeader ->
+                if (isColorLight) R.id.item_no_due_date_text_view
+                else R.id.item_no_due_date_text_view_dark
         }
     }
 
-    private fun RemoteViews.setUpSeparator(color: Int) {
+    private fun RemoteViews.setUpSeparator(item: CalendarViewItem, color: Int) {
+        // Only Day and NoDueDateHeader have separators
+        val (wrapperId, separatorId) = when (item) {
+            is CalendarViewItem.Day -> R.id.date_separator_wrapper to R.id.date_separator
+            is CalendarViewItem.NoDueDateHeader -> {
+                val isColorLight = isColorLight(color)
+                if (isColorLight)
+                    R.id.no_due_date_separator_wrapper to R.id.no_due_date_separator
+                else
+                    R.id.no_due_date_separator_wrapper_dark to R.id.no_due_date_separator_dark
+            }
+            else -> return // No separator for events or tasks
+        }
+
         // Set visibility
         val separatorVisibility =
             if (prefs.getSeparatorVisible(widgetId)) View.VISIBLE else View.GONE
-        setViewVisibility(R.id.date_separator_wrapper, separatorVisibility)
+        setViewVisibility(wrapperId, separatorVisibility)
 
         // Set background color
-        setInt(R.id.date_separator, "setBackgroundColor", color)
+        setInt(separatorId, "setBackgroundColor", color)
 
         // Set spacing
         val verticalSpacing = prefs.getVerticalSpacing(widgetId)
@@ -139,7 +177,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                 context
             )
         setViewPadding(
-            R.id.date_separator_wrapper,
+            wrapperId,
             0,
             0,
             0,
@@ -162,6 +200,8 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             when (calendarViewItem) {
                 is CalendarViewItem.Day -> 16f
                 is CalendarViewItem.Event -> 14f
+                is CalendarViewItem.Task -> 14f
+                is CalendarViewItem.NoDueDateHeader -> 16f
             }
         val fontSizeAdjustment =
             when (prefs.getFontSize(widgetId)) {
@@ -183,7 +223,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     ) {
         val verticalSpacing = prefs.getVerticalSpacing(widgetId)
         when (calendarViewItem) {
-            is CalendarViewItem.Day -> {
+            is CalendarViewItem.Day, is CalendarViewItem.NoDueDateHeader -> {
                 val topPadding =
                     UnitConverter.dpToPx(
                         when (verticalSpacing) {
@@ -208,7 +248,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                     bottomPadding,
                 )
             }
-            is CalendarViewItem.Event -> {
+            is CalendarViewItem.Event, is CalendarViewItem.Task -> {
                 val verticalPadding =
                     UnitConverter.dpToPx(
                         when (verticalSpacing) {
@@ -237,6 +277,12 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                     putExtra(EXTRA_START_TIME, item.event.actualStartTime)
                     putExtra(EXTRA_END_TIME, item.event.actualEndTime)
                 }
+            is CalendarViewItem.Task ->
+                Intent().apply {
+                    putExtra(EXTRA_TASK_ID, item.task.id)
+                    putExtra(EXTRA_TASK_COMPLETED, !item.task.isCompleted)
+                }
+            is CalendarViewItem.NoDueDateHeader -> Intent() // No action for header
         }
     }
 
@@ -245,7 +291,9 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
     }
 
     override fun getViewTypeCount(): Int {
-        return 5
+        // 2 for day (light/dark), 2 for event (light/dark), 2 for task (light/dark),
+        // 2 for no due date header (light/dark), 1 for empty
+        return 9
     }
 
     override fun getItemId(position: Int): Long {
@@ -256,8 +304,97 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
         return false
     }
 
-    private fun getEvents(): List<CalendarViewItem> {
-        return calendarFetcher.readCalendarData(context, widgetId)
+    private fun getItems(): List<CalendarViewItem> {
+        val events = calendarFetcher.readCalendarData(context, widgetId)
+        val tasks = taskFetcher.readTaskData(context, widgetId)
+
+        if (tasks.isEmpty()) {
+            return events
+        }
+
+        return mergeEventsAndTasks(events, tasks)
+    }
+
+    /**
+     * Merges events and tasks into a single list. Tasks are organized as follows: - Undated tasks
+     * appear at the very top under a "No due date" header - Dated tasks appear before events on
+     * each day
+     */
+    private fun mergeEventsAndTasks(
+        events: List<CalendarViewItem>,
+        tasks: List<TaskData>
+    ): List<CalendarViewItem> {
+        val result = mutableListOf<CalendarViewItem>()
+
+        // Separate tasks by whether they have a due date
+        val (datedTasks, undatedTasks) = tasks.partition { it.dueDate != null }
+
+        // Add undated tasks at the top with header
+        if (undatedTasks.isNotEmpty()) {
+            result.add(CalendarViewItem.NoDueDateHeader)
+            undatedTasks.forEach { task -> result.add(CalendarViewItem.Task(task)) }
+        }
+
+        // Group dated tasks by date
+        val tasksByDate =
+            datedTasks.groupBy { task ->
+                CalendarDateUtils.getDateFromTimestamp(task.dueDate!!)
+            }
+
+        // Process each day from the events list and insert tasks before events
+        var currentDate: Date? = null
+        for (item in events) {
+            when (item) {
+                is CalendarViewItem.Day -> {
+                    // Add the day header
+                    result.add(item)
+                    currentDate = item.date
+
+                    // Add tasks for this day (before events)
+                    val tasksForDay = tasksByDate[currentDate]
+                    tasksForDay?.forEach { task -> result.add(CalendarViewItem.Task(task)) }
+                }
+                is CalendarViewItem.Event -> {
+                    result.add(item)
+                }
+                else -> {
+                    result.add(item)
+                }
+            }
+        }
+
+        // Add any tasks for dates that don't have events
+        val eventDates = events.filterIsInstance<CalendarViewItem.Day>().map { it.date }.toSet()
+        val tasksOnNewDates =
+            tasksByDate.filterKeys { date -> date !in eventDates }.toSortedMap()
+
+        for ((date, tasksForDay) in tasksOnNewDates) {
+            result.add(CalendarViewItem.Day(date))
+            tasksForDay.forEach { task -> result.add(CalendarViewItem.Task(task)) }
+        }
+
+        return result
+    }
+
+    private fun RemoteViews.setUpTaskCheckbox(task: TaskData, textColor: Int, textViewId: Int) {
+        val isColorLight = isColorLight(textColor)
+        val checkboxId =
+            if (isColorLight) R.id.item_task_checkbox else R.id.item_task_checkbox_dark
+
+        // Set checkbox drawable based on completion state
+        val checkboxDrawable =
+            if (task.isCompleted) R.drawable.ic_checkbox_checked
+            else R.drawable.ic_checkbox_unchecked
+
+        setImageViewResource(checkboxId, checkboxDrawable)
+        setInt(checkboxId, "setColorFilter", textColor)
+
+        // Apply strikethrough for completed tasks
+        if (task.isCompleted) {
+            setInt(textViewId, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+        } else {
+            setInt(textViewId, "setPaintFlags", Paint.ANTI_ALIAS_FLAG)
+        }
     }
 
     private fun RemoteViews.setUpCalendarBlob(textColor: Int, calendarId: Long) {

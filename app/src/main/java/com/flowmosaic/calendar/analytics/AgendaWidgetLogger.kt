@@ -47,11 +47,13 @@ internal constructor(private val prefs: AgendaWidgetPrefs, private val context: 
     enum class ActionButton(val buttonName: String) {
         REFRESH("refresh"),
         ADD_EVENT("add_event"),
+        COMPLETE_TASK("complete_task"),
     }
 
     enum class WidgetItemName(val itemName: String) {
         DATE("date"),
-        EVENT("event")
+        EVENT("event"),
+        TASK("task")
     }
 
     enum class PrefsScreenItemName(val itemName: String) {
@@ -73,7 +75,9 @@ internal constructor(private val prefs: AgendaWidgetPrefs, private val context: 
         SHOW_CALENDAR_BLOB("show_calendar_blob"),
         CONFIGURE_CALENDAR_BLOBS("configure_calendar_blobs"),
         CALENDAR_COLOR("calendar_color"),
-        CALENDAR_EMOJI("calendar_emoji")
+        CALENDAR_EMOJI("calendar_emoji"),
+        SHOW_TASKS("show_tasks"),
+        SHOW_COMPLETED_TASKS("show_completed_tasks")
     }
 
     enum class WidgetStatus(val status: String) {

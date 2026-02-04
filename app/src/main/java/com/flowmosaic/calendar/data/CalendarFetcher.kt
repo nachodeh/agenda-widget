@@ -24,10 +24,24 @@ data class CalendarEvent(
     val calendarId: Long
 )
 
+data class TaskData(
+    val id: Long,
+    val title: String,
+    val dueDate: Long?, // Due date in milliseconds, null if no due date
+    val isCompleted: Boolean,
+    val calendarId: Long,
+    val description: String?
+)
+
 sealed class CalendarViewItem {
     data class Day(val date: Date) : CalendarViewItem()
 
     data class Event(val event: CalendarEvent) : CalendarViewItem()
+
+    data class Task(val task: TaskData) : CalendarViewItem()
+
+    // Special header for tasks without a due date
+    object NoDueDateHeader : CalendarViewItem()
 }
 
 class CalendarFetcher {
