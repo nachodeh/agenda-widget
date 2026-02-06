@@ -134,6 +134,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
             UnitConverter.dpToPx(
                 when (verticalSpacing) {
                     AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
+                    AgendaWidgetPrefs.VerticalSpacing.MEDIUM -> 3f
                     AgendaWidgetPrefs.VerticalSpacing.LARGE -> 6f
                 },
                 context
@@ -188,6 +189,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                     UnitConverter.dpToPx(
                         when (verticalSpacing) {
                             AgendaWidgetPrefs.VerticalSpacing.SMALL -> 4f
+                            AgendaWidgetPrefs.VerticalSpacing.MEDIUM -> 6f
                             AgendaWidgetPrefs.VerticalSpacing.LARGE -> 8f
                         },
                         context
@@ -196,6 +198,7 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                     UnitConverter.dpToPx(
                         when (verticalSpacing) {
                             AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
+                            AgendaWidgetPrefs.VerticalSpacing.MEDIUM -> 2f
                             AgendaWidgetPrefs.VerticalSpacing.LARGE -> 4f
                         },
                         context
@@ -212,8 +215,9 @@ class EventsRemoteViewsFactory(private val context: Context, intent: Intent) :
                 val verticalPadding =
                     UnitConverter.dpToPx(
                         when (verticalSpacing) {
-                            AgendaWidgetPrefs.VerticalSpacing.SMALL -> 0f
-                            AgendaWidgetPrefs.VerticalSpacing.LARGE -> 5f
+                            AgendaWidgetPrefs.VerticalSpacing.SMALL -> 2f
+                            AgendaWidgetPrefs.VerticalSpacing.MEDIUM -> 5f
+                            AgendaWidgetPrefs.VerticalSpacing.LARGE -> 8f
                         },
                         context
                     )

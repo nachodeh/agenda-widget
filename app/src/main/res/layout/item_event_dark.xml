@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="5dp"
     android:gravity="center">
 
     <RelativeLayout
@@ -31,7 +30,6 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="@color/white"
-        android:paddingVertical="5dp"
         android:text="@string/event_placeholder"
         android:maxLines="1"
         android:ellipsize="end"

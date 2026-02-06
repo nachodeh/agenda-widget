@@ -55,6 +55,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
 
     enum class VerticalSpacing(private val displayResId: Int) {
         SMALL(R.string.font_size_small),
+        MEDIUM(R.string.font_size_medium),
         LARGE(R.string.font_size_large);
 
         fun getDisplayText(context: Context): String {
@@ -234,7 +235,8 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     fun getVerticalSpacing(widgetId: String): VerticalSpacing {
         val (prefsKey, prefExists) = getKeyWithWidgetId(PREF_VERTICAL_SPACING, widgetId)
         val size =
-            sharedPreferences.getString(prefsKey, VerticalSpacing.LARGE.name) ?: FontSize.LARGE.name
+            sharedPreferences.getString(prefsKey, VerticalSpacing.MEDIUM.name)
+                ?: FontSize.MEDIUM.name
         val verticalSpacing = VerticalSpacing.valueOf(size)
         if (!prefExists) {
             setVerticalSpacing(verticalSpacing, widgetId)
