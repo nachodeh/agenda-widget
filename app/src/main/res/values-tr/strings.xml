@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_widget_description">Yaklaşan etkinliklerinizi basit bir biçimde görüntüleyen ajanda widget\'ı</string>
+
+    <string name="tap_to_set_up">%1$s etkinliklerinizi göstermek için takviminize erişim izni gerekiyor.\n\n Buraya dokunun ve izin verin.</string>
+    <string name="prefs_title_editing_default_config">Varsayılan yapılandırmayı düzenleme</string>
+    <string name="prefs_title_general">Genel</string>
+    <string name="prefs_title_date_time_location">Tarih ve Saat, Konum</string>
+    <string name="prefs_title_appearance">Görünüm</string>
+    <string name="select_calendars">Takvimleri seçin</string>
+    <string name="number_of_days_to_display">Görüntülenecek gün sayısı</string>
+    <string name="show_end_time">Bitiş saatini göster</string>
+    <string name="show_action_buttons">Eylem düğmelerini göster</string>
+    <string name="show_no_upcoming_events">Yaklaşan etkinlik yok metnini göster</string>
+    <string name="use_12_hour_format">12 saat biçimini kullan</string>
+    <string name="show_location">Konumu göster</string>
+    <string name="date_separator_visible">Tarih ayırıcısını göster</string>
+    <string name="align_widget_bottom">Alt hizalama</string>
+    <string name="font_size">Yazı tipi boyutu</string>
+    <string name="font_size_small">Küçük</string>
+    <string name="font_size_medium">Orta</string>
+    <string name="font_size_large">Büyük</string>
+    <string name="vertical_spacing">Dikey boşluk</string>
+    <string name="text_alignment">Metin hizalama</string>
+    <string name="text_alignment_left">Sol</string>
+    <string name="text_alignment_center">Orta</string>
+    <string name="text_alignment_right">Sağ</string>
+    <string name="text_color">Metin rengi</string>
+    <string name="background_color">Arka plan rengi</string>
+    <string name="background_opacity">Arka plan şeffaflığı</string>
+    <string name="color_picker_presets">Hazır ayarlar</string>
+    <string name="color_picker_spectrum">Spektrum</string>
+    <string name="color_picker_hex">Hex</string>
+    <string name="color_picker_hue">Ton</string>
+    <string name="color_picker_saturation">Doygunluk</string>
+    <string name="color_picker_brightness">Parlaklık</string>
+    <string name="color_picker_select">Seç</string>
+    <string name="color_picker_hex_label">Hex renk (örn. #FF5500)</string>
+    <string name="color_picker_hex_error">Geçersiz hex renk</string>
+    <string name="save">Kaydet</string>
+    <string name="cancel">İptal</string>
+    <string name="grant_permissions">İzinleri Ver</string>
+    <string name="calendar_access_info">Agenda Widget etkinlikleri görüntülemek için takviminize erişim izni gerektirir. Widget\'ı kullanmak için lütfen takvim izinlerini verin.</string>
+    <string name="today">Bugün</string>
+    <string name="tomorrow">Yarın</string>
+    <string name="no_upcoming_events">Yaklaşan etkinlik yok</string>
+
+    <string name="active_widgets">Widget yapılandırması</string>
+    <string name="default_configuration">Varsayılan yapılandırma</string>
+
+    <string name="date_placeholder">Tarih yer tutucusu</string>
+    <string name="event_placeholder">Etkinlik yer tutucusu</string>
+
+    <string name="agenda_widget_updated">Agenda Widget Güncellendi</string>
+
+    <string name="onboarding_0">Agenda Widget\'a hoş geldiniz! Ana ekranınıza eklemek için bu talimatları izleyin.</string>
+    <string name="onboarding_1">Agenda Widget\'ı eklemek için ana ekrana uzun basın</string>
+    <string name="onboarding_2">Ana ekran seçenekler menüsünden Widget\'ları seçin</string>
+    <string name="onboarding_3">Agenda Widget\'ı ana ekranınıza sürükleyin. Hazırsınız!</string>
+
+    <string name="onboarding_skip">Atla</string>
+    <string name="onboarding_next">İleri</string>
+    <string name="onboarding_got_it">Anladım</string>
+
+    <string name="preview_item_1">11:15 – 12:00 | Proje X toplantısı</string>
+    <string name="preview_item_2">17:00 – 18:00 | Futbol</string>
+    <string name="preview_item_3">Jack\'ın doğum günü</string>
+
+    <string name="battery_optimization_warning">Güvenilir widget güncellemeleri için pil optimizasyonunu devre dışı bırakmak üzere dokunun</string>
+
+    <string name="show_calendar_blob">Takvim işaretçisini göster</string>
+    <string name="configure_calendar_blobs">Takvim işaretçilerini yapılandır</string>
+    <string name="title_color">Renk</string>
+    <string name="title_emoji">Emoji</string>
+    <string name="label_none">Yok</string>
+    <string name="indicator_style">Gösterge stili</string>
+    <string name="style_colors">Renkler</string>
+    <string name="style_emojis">Emojiler</string>
+</resources>
