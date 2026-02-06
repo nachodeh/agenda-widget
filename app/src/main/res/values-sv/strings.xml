@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_widget_description">Agendawidget för att visa dina kommande händelser i ett enkelt format</string>
+
+    <string name="tap_to_set_up">%1$s behöver åtkomst till din kalender för att visa dina händelser.\n\n Tryck här och ge åtkomst.</string>
+    <string name="prefs_title_editing_default_config">Redigera standardkonfiguration</string>
+    <string name="prefs_title_general">Allmänt</string>
+    <string name="prefs_title_date_time_location">Datum och tid, plats</string>
+    <string name="prefs_title_appearance">Utseende</string>
+    <string name="select_calendars">Välj kalendrar</string>
+    <string name="number_of_days_to_display">Antal dagar att visa</string>
+    <string name="show_end_time">Visa sluttid</string>
+    <string name="show_action_buttons">Visa åtgärdsknappar</string>
+    <string name="show_no_upcoming_events">Visa text för inga kommande händelser</string>
+    <string name="use_12_hour_format">Använd 12-timmarsformat</string>
+    <string name="show_location">Visa plats</string>
+    <string name="date_separator_visible">Visa datumavskiljare</string>
+    <string name="align_widget_bottom">Bottenjustering</string>
+    <string name="font_size">Teckenstorlek</string>
+    <string name="font_size_small">Liten</string>
+    <string name="font_size_medium">Medel</string>
+    <string name="font_size_large">Stor</string>
+    <string name="vertical_spacing">Vertikalt avstånd</string>
+    <string name="text_alignment">Textjustering</string>
+    <string name="text_alignment_left">Vänster</string>
+    <string name="text_alignment_center">Mitten</string>
+    <string name="text_alignment_right">Höger</string>
+    <string name="text_color">Textfärg</string>
+    <string name="background_color">Bakgrundsfärg</string>
+    <string name="background_opacity">Bakgrundsopacitet</string>
+    <string name="color_picker_presets">Förinställningar</string>
+    <string name="color_picker_spectrum">Spektrum</string>
+    <string name="color_picker_hex">Hex</string>
+    <string name="color_picker_hue">Nyans</string>
+    <string name="color_picker_saturation">Mättnad</string>
+    <string name="color_picker_brightness">Ljusstyrka</string>
+    <string name="color_picker_select">Välj</string>
+    <string name="color_picker_hex_label">Hexfärg (t.ex. #FF5500)</string>
+    <string name="color_picker_hex_error">Ogiltig hexfärg</string>
+    <string name="save">Spara</string>
+    <string name="cancel">Avbryt</string>
+    <string name="grant_permissions">Ge behörigheter</string>
+    <string name="calendar_access_info">Agenda Widget behöver åtkomst till din kalender för att visa händelser. Vänligen ge kalenderbehörigheter för att använda widgeten.</string>
+    <string name="today">Idag</string>
+    <string name="tomorrow">Imorgon</string>
+    <string name="no_upcoming_events">Inga kommande händelser</string>
+
+    <string name="active_widgets">Widgetkonfiguration</string>
+    <string name="default_configuration">Standardkonfiguration</string>
+
+    <string name="date_placeholder">Datumplatshållare</string>
+    <string name="event_placeholder">Händelseplatshållare</string>
+
+    <string name="agenda_widget_updated">Agenda Widget uppdaterad</string>
+
+    <string name="onboarding_0">Välkommen till Agenda Widget! Följ dessa instruktioner för att lägga till den på din hemskärm.</string>
+    <string name="onboarding_1">För att lägga till Agenda Widget, tryck och håll på hemskärmen</string>
+    <string name="onboarding_2">Välj Widgetar från hemskärmens meny</string>
+    <string name="onboarding_3">Dra Agenda Widget till din hemskärm. Nu är du klar!</string>
+
+    <string name="onboarding_skip">Hoppa över</string>
+    <string name="onboarding_next">Nästa</string>
+    <string name="onboarding_got_it">Uppfattat</string>
+
+    <string name="preview_item_1">11:15 – 12:00 | Projekt X-möte</string>
+    <string name="preview_item_2">17:00 – 18:00 | Fotboll</string>
+    <string name="preview_item_3">Jacks födelsedag</string>
+
+    <string name="battery_optimization_warning">Tryck för att inaktivera batterioptimering för tillförlitliga widgetuppdateringar</string>
+
+    <string name="show_calendar_blob">Visa kalendermarkering</string>
+    <string name="configure_calendar_blobs">Konfigurera kalendermarkeringar</string>
+    <string name="title_color">Färg</string>
+    <string name="title_emoji">Emoji</string>
+    <string name="label_none">Ingen</string>
+    <string name="indicator_style">Indikatorstil</string>
+    <string name="style_colors">Färger</string>
+    <string name="style_emojis">Emojis</string>
+</resources>
