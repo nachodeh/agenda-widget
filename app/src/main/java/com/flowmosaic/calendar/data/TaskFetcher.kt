@@ -25,17 +25,18 @@ class TaskFetcher {
 
     private fun getTasks(context: Context, widgetId: String, prefs: AgendaWidgetPrefs): List<TaskData> {
         val tasks = arrayListOf<TaskData>()
-        val selectedCalendarIds = prefs.getSelectedCalendars(null, widgetId)
+        // Use task calendars, not regular selected calendars
+        val taskCalendarIds = prefs.getTaskCalendars(widgetId)
         val showCompletedTasks = prefs.getShowCompletedTasks(widgetId)
 
-        if (selectedCalendarIds.isEmpty()) {
+        if (taskCalendarIds.isEmpty()) {
             return emptyList()
         }
 
         val (startTime, endTime) = getStartAndEndTime(prefs, widgetId)
 
         // Build selection for calendars
-        val calendarSelection = selectedCalendarIds.joinToString(",") { "?" }
+        val calendarSelection = taskCalendarIds.joinToString(",") { "?" }
 
         val projection =
             arrayOf(
@@ -49,16 +50,14 @@ class TaskFetcher {
                 CalendarContract.Instances.ALL_DAY,
             )
 
-        // Query for tasks: all-day events are typically tasks when synced from task apps
-        // We'll query all events and filter for all-day ones which are common for tasks
+        // Query ALL events from task calendars (not just all-day)
         val selection =
             "${CalendarContract.Instances.CALENDAR_ID} IN ($calendarSelection) AND " +
-                "${CalendarContract.Instances.ALL_DAY} = 1 AND " +
                 "${CalendarContract.Instances.BEGIN} >= ? AND " +
                 "${CalendarContract.Instances.BEGIN} <= ?"
 
         val selectionArgs =
-            selectedCalendarIds.toTypedArray() + arrayOf(startTime.toString(), endTime.toString())
+            taskCalendarIds.toTypedArray() + arrayOf(startTime.toString(), endTime.toString())
 
         val sortOrder = "${CalendarContract.Instances.BEGIN} ASC"
 
@@ -82,24 +81,24 @@ class TaskFetcher {
             return emptyList()
         }
 
-        // Also query for tasks without due dates (events with BEGIN = 0 or in the past marked as tasks)
-        tasks.addAll(getUndatedTasks(context, selectedCalendarIds, showCompletedTasks))
+        // Also query for tasks without due dates
+        tasks.addAll(getUndatedTasks(context, taskCalendarIds, showCompletedTasks))
 
         return tasks
     }
 
     private fun getUndatedTasks(
         context: Context,
-        selectedCalendarIds: Set<String>,
+        taskCalendarIds: Set<String>,
         showCompletedTasks: Boolean
     ): List<TaskData> {
         val tasks = arrayListOf<TaskData>()
 
-        if (selectedCalendarIds.isEmpty()) {
+        if (taskCalendarIds.isEmpty()) {
             return emptyList()
         }
 
-        val calendarSelection = selectedCalendarIds.joinToString(",") { "?" }
+        val calendarSelection = taskCalendarIds.joinToString(",") { "?" }
 
         val projection =
             arrayOf(
@@ -109,17 +108,14 @@ class TaskFetcher {
                 CalendarContract.Events.DESCRIPTION,
                 CalendarContract.Events.STATUS,
                 CalendarContract.Events.DTSTART,
-                CalendarContract.Events.ALL_DAY,
             )
 
         // Query for events with no start date (some task apps create these)
-        // or events that are all-day with DTSTART = 0
         val selection =
             "${CalendarContract.Events.CALENDAR_ID} IN ($calendarSelection) AND " +
-                "${CalendarContract.Events.ALL_DAY} = 1 AND " +
                 "(${CalendarContract.Events.DTSTART} IS NULL OR ${CalendarContract.Events.DTSTART} = 0)"
 
-        val selectionArgs = selectedCalendarIds.toTypedArray()
+        val selectionArgs = taskCalendarIds.toTypedArray()
 
         try {
             context.contentResolver.query(

@@ -81,6 +81,7 @@
     <!-- Task Integration -->
     <string name="prefs_title_tasks">Tasks</string>
     <string name="show_tasks">Show tasks</string>
+    <string name="select_task_calendars">Select task calendars</string>
     <string name="show_completed_tasks">Show completed tasks</string>
     <string name="task_placeholder">Task placeholder</string>
     <string name="task_checkbox">Task checkbox</string>

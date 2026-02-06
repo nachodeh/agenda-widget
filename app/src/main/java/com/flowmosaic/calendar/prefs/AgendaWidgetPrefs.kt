@@ -43,6 +43,7 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
         private const val PREF_CALENDAR_INDICATOR_STYLE = "calendar_indicator_style"
         private const val PREF_SHOW_TASKS = "show_tasks"
         private const val PREF_SHOW_COMPLETED_TASKS = "show_completed_tasks"
+        private const val PREF_TASK_CALENDARS = "task_calendars"
     }
 
     enum class FontSize(private val displayResId: Int) {
@@ -480,5 +481,16 @@ class AgendaWidgetPrefs internal constructor(private val sharedPreferences: Shar
     fun setShowCompletedTasks(showCompletedTasks: Boolean, widgetId: String) {
         val prefsKey = getKeyWithWidgetIdSave(PREF_SHOW_COMPLETED_TASKS, widgetId)
         sharedPreferences.edit().putBoolean(prefsKey, showCompletedTasks).apply()
+    }
+
+    fun getTaskCalendars(widgetId: String): MutableSet<String> {
+        val (prefsKey, _) = getKeyWithWidgetId(PREF_TASK_CALENDARS, widgetId)
+        return sharedPreferences.getStringSet(prefsKey, mutableSetOf())?.toMutableSet()
+            ?: mutableSetOf()
+    }
+
+    fun setTaskCalendars(taskCalendarIds: Set<String>, widgetId: String) {
+        val prefsKey = getKeyWithWidgetIdSave(PREF_TASK_CALENDARS, widgetId)
+        sharedPreferences.edit().putStringSet(prefsKey, taskCalendarIds).apply()
     }
 }

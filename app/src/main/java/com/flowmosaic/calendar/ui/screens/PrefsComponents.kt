@@ -48,6 +48,7 @@ import com.flowmosaic.calendar.ui.dialog.ColorDialog
 import com.flowmosaic.calendar.ui.dialog.EmojiDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarBlobsDialog
 import com.flowmosaic.calendar.ui.dialog.ShowCalendarDialog
+import com.flowmosaic.calendar.ui.dialog.ShowTaskCalendarDialog
 import com.flowmosaic.calendar.ui.getCommonEmoji
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -125,6 +126,56 @@ fun SelectCalendarsButton(
     if (showCalendarSelectionDialog.value) {
         ShowCalendarDialog(openDialog = showCalendarSelectionDialog, widgetId)
         logger.logUpdatePrefEvent(AgendaWidgetLogger.PrefsScreenItemName.SELECT_CALENDARS)
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun SelectTaskCalendarsButton(
+    displayText: String,
+    widgetId: String,
+    logger: AgendaWidgetLogger,
+    prefs: AgendaWidgetPrefs
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val showTaskCalendarSelectionDialog = rememberSaveable { mutableStateOf(false) }
+
+    val calendarPermissionsState =
+        rememberMultiplePermissionsState(
+            listOf(
+                Manifest.permission.WRITE_CALENDAR,
+                Manifest.permission.READ_CALENDAR,
+            )
+        )
+
+    if (!calendarPermissionsState.allPermissionsGranted) {
+        return
+    }
+
+    Row(
+        modifier =
+            Modifier.fillMaxWidth()
+                .clickable { coroutineScope.launch { showTaskCalendarSelectionDialog.value = true } }
+                .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = displayText,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.weight(1f)
+        )
+        Icon(
+            imageVector = Icons.Default.DateRange,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
+    }
+
+    if (showTaskCalendarSelectionDialog.value) {
+        ShowTaskCalendarDialog(openDialog = showTaskCalendarSelectionDialog, widgetId)
+        logger.logUpdatePrefEvent(AgendaWidgetLogger.PrefsScreenItemName.SHOW_TASKS)
     }
 }
 

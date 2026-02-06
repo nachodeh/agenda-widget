@@ -164,6 +164,12 @@ fun TasksPrefsSection(widgetId: String, logger: AgendaWidgetLogger, prefs: Agend
         logger = logger
     )
     if (showTasks.value) {
+        SelectTaskCalendarsButton(
+            displayText = context.getString(R.string.select_task_calendars),
+            widgetId = widgetId,
+            logger = logger,
+            prefs = prefs
+        )
         CheckboxRow(
             displayText = context.getString(R.string.show_completed_tasks),
             loggingItem = AgendaWidgetLogger.PrefsScreenItemName.SHOW_COMPLETED_TASKS,

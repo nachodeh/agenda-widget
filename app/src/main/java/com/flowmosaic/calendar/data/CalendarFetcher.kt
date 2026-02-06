@@ -105,6 +105,9 @@ class CalendarFetcher {
         val events = arrayListOf<CalendarEvent>()
         val (startTime, endTime) = getStartAndEndTime(prefs, widgetId)
         val selectedCalendarIds = prefs.getSelectedCalendars(null, widgetId)
+        // Exclude task calendars from regular event display to avoid duplicates
+        val taskCalendarIds = prefs.getTaskCalendars(widgetId)
+        val eventCalendarIds = selectedCalendarIds - taskCalendarIds
 
         val projection =
             arrayOf(
@@ -157,7 +160,7 @@ class CalendarFetcher {
                         allDay == null ||
                         actualStartTime == null ||
                         actualEndTime == null ||
-                        calendarId.toString() !in selectedCalendarIds
+                        calendarId.toString() !in eventCalendarIds
                 ) {
                     continue
                 }

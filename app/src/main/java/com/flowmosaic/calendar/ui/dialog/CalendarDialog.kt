@@ -165,3 +165,48 @@ private fun CalendarRow(
         Text(text = calendarName)
     }
 }
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ShowTaskCalendarDialog(openDialog: MutableState<Boolean>, widgetId: String) {
+    val context = LocalContext.current
+    val prefs = AgendaWidgetPrefs(context)
+    val calendarFetcher = CalendarFetcher()
+    val calendarList = remember { mutableStateListOf<CalendarData>() }
+    val selectedTaskCalendars = remember { mutableStateListOf<String>() }
+
+    LaunchedEffect(Unit) {
+        calendarList.addAll(calendarFetcher.queryCalendarData(context))
+        selectedTaskCalendars.addAll(prefs.getTaskCalendars(widgetId))
+    }
+
+    val checkedItems =
+        BooleanArray(calendarList.size) { index ->
+            selectedTaskCalendars.contains(calendarList[index].id.toString())
+        }
+
+    Dialog(
+        onDismissRequest = { openDialog.value = false },
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        content = {
+            CalendarDialogContent(
+                calendarList = calendarList,
+                checkedItems = checkedItems,
+                onCheckedChange = { index, isChecked ->
+                    val calendarId = calendarList[index].id.toString()
+                    if (isChecked) {
+                        selectedTaskCalendars.add(calendarId)
+                    } else {
+                        selectedTaskCalendars.remove(calendarId)
+                    }
+                    checkedItems[index] = isChecked
+                },
+                onSaveClick = {
+                    prefs.setTaskCalendars(selectedTaskCalendars.toSet(), widgetId)
+                    openDialog.value = false
+                },
+                onCancelClick = { openDialog.value = false }
+            )
+        }
+    )
+}
