@@ -150,14 +150,14 @@ class CalendarFetcher {
 
                 val startDateTime = adjustTimeForTimezone(actualStartTime, allDay)
                 val endDateTime = adjustTimeForTimezone(actualEndTime, allDay)
-                val maxEndTime = adjustTimeForTimezone(endTime, allDay)
 
                 if (endDateTime < System.currentTimeMillis()) continue // Skip past events
+                if (startDateTime >= endTime) continue // Skip events that will show as next day in current timezone.
 
                 events.add(
                     CalendarEvent(
                         startDateTime,
-                        endDateTime.coerceAtMost(maxEndTime),
+                        endDateTime.coerceAtMost(endTime),
                         title,
                         location,
                         allDay,
@@ -173,6 +173,10 @@ class CalendarFetcher {
         return events
     }
 
+    /**
+     * Adjusts the given time by the timezone offset of the device.
+     * Important: Only ALL day events are adjusted!
+     */
     private fun adjustTimeForTimezone(time: Long, allDay: Boolean): Long {
         if (!allDay) {
             return time
