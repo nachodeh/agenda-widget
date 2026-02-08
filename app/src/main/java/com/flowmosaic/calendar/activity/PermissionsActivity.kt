@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -40,9 +39,9 @@ class PermissionsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestCalendarPermissions()
+        enableEdgeToEdge()
 
-        setContent { enableEdgeToEdge() }
+        requestCalendarPermissions()
 
         logger.logActivityStartedEvent(AgendaWidgetLogger.Activity.PERMISSIONS_ACTIVITY)
     }
