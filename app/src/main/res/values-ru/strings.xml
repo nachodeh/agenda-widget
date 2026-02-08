@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_widget_description">Виджет повестки дня для отображения предстоящих событий в простом формате</string>
+
+    <string name="tap_to_set_up">%1$s необходим доступ к вашему календарю для отображения событий.\n\n Нажмите здесь и предоставьте доступ.</string>
+    <string name="select_calendars">Выбрать календари</string>
+    <string name="number_of_days_to_display">Количество дней для отображения</string>
+    <string name="show_end_time">Показать время окончания</string>
+    <string name="show_action_buttons">Показать кнопки действий</string>
+    <string name="show_no_upcoming_events">Показать текст \"Нет предстоящих событий\"</string>
+    <string name="use_12_hour_format">Использовать 12-часовой формат</string>
+    <string name="show_location">Показать местоположение</string>
+    <string name="date_separator_visible">Показать разделитель дат</string>
+    <string name="align_widget_bottom">Выравнивание по нижнему краю</string>
+    <string name="font_size">Размер шрифта</string>
+    <string name="font_size_small">Маленький</string>
+    <string name="font_size_medium">Средний</string>
+    <string name="font_size_large">Большой</string>
+    <string name="vertical_spacing">Вертикальный интервал</string>
+    <string name="text_alignment">Выравнивание текста</string>
+    <string name="text_alignment_left">Слева</string>
+    <string name="text_alignment_center">По центру</string>
+    <string name="text_alignment_right">Справа</string>
+    <string name="text_color">Цвет текста</string>
+    <string name="background_color">Цвет фона</string>
+    <string name="background_opacity">Прозрачность фона</string>
+    <string name="color_picker_presets">Предустановки</string>
+    <string name="color_picker_spectrum">Спектр</string>
+    <string name="color_picker_hex">Hex</string>
+    <string name="color_picker_hue">Оттенок</string>
+    <string name="color_picker_saturation">Насыщенность</string>
+    <string name="color_picker_brightness">Яркость</string>
+    <string name="color_picker_select">Выбрать</string>
+    <string name="color_picker_hex_label">Hex-цвет (например, #FF5500)</string>
+    <string name="color_picker_hex_error">Неверный hex-цвет</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="grant_permissions">Предоставить разрешения</string>
+    <string name="calendar_access_info">Виджету повестки дня необходим доступ к вашему календарю для отображения событий. Пожалуйста, предоставьте разрешение на доступ к календарю.</string>
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="no_upcoming_events">Нет предстоящих событий</string>
+
+    <string name="active_widgets">Настройка виджета</string>
+    <string name="default_configuration">Конфигурация по умолчанию</string>
+
+    <string name="date_placeholder">Заполнитель даты</string>
+    <string name="event_placeholder">Заполнитель события</string>
+
+    <string name="agenda_widget_updated">Виджет повестки дня обновлён</string>
+
+    <string name="onboarding_0">Добро пожаловать в Agenda Widget! Следуйте инструкциям, чтобы добавить его на главный экран.</string>
+    <string name="onboarding_1">Чтобы добавить виджет, нажмите и удерживайте главный экран</string>
+    <string name="onboarding_2">Выберите «Виджеты» в меню главного экрана</string>
+    <string name="onboarding_3">Перетащите Agenda Widget на главный экран. Готово!</string>
+
+    <string name="onboarding_skip">Пропустить</string>
+    <string name="onboarding_next">Далее</string>
+    <string name="onboarding_got_it">Понятно</string>
+
+    <string name="preview_item_1">11:15 – 12:00 | Совещание по проекту X</string>
+    <string name="preview_item_2">17:00 – 18:00 | Футбол</string>
+    <string name="preview_item_3">День рождения Джека</string>
+
+    <string name="battery_optimization_warning">Нажмите, чтобы отключить оптимизацию батареи для надёжного обновления виджета</string>
+
+    <string name="show_calendar_blob">Показать метку календаря</string>
+    <string name="configure_calendar_blobs">Настроить метки календаря</string>
+    <string name="title_color">Цвет</string>
+    <string name="title_emoji">Эмодзи</string>
+    <string name="label_none">Нет</string>
+    <string name="indicator_style">Стиль индикатора</string>
+    <string name="style_colors">Цвета</string>
+    <string name="style_emojis">Эмодзи</string>
+
+    <string name="prefs_title_editing_default_config">Редактирование конфигурации по умолчанию</string>
+    <string name="prefs_title_general">Общие</string>
+    <string name="prefs_title_date_time_location">Дата и время, Местоположение</string>
+    <string name="prefs_title_appearance">Внешний вид</string>
+</resources>
