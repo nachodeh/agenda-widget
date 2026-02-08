@@ -139,7 +139,6 @@ class CalendarFetcher {
                     calendarId == null ||
                         eventId == null ||
                         title == null ||
-                        location == null ||
                         allDay == null ||
                         actualStartTime == null ||
                         actualEndTime == null ||
