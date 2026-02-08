@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_widget_description">Widget agendy pro zobrazení nadcházejících událostí v jednoduchém formátu</string>
+
+    <string name="tap_to_set_up">%1$s potřebuje přístup k vašemu kalendáři pro zobrazení událostí.\n\n Klepněte sem a udělte přístup.</string>
+    <string name="select_calendars">Vybrat kalendáře</string>
+    <string name="number_of_days_to_display">Počet dní k zobrazení</string>
+    <string name="show_end_time">Zobrazit čas ukončení</string>
+    <string name="show_action_buttons">Zobrazit akční tlačítka</string>
+    <string name="show_no_upcoming_events">Zobrazit text \"Žádné nadcházející události\"</string>
+    <string name="use_12_hour_format">Použít 12hodinový formát</string>
+    <string name="show_location">Zobrazit místo</string>
+    <string name="date_separator_visible">Zobrazit oddělovač dat</string>
+    <string name="align_widget_bottom">Zarovnání dolů</string>
+    <string name="font_size">Velikost písma</string>
+    <string name="font_size_small">Malé</string>
+    <string name="font_size_medium">Střední</string>
+    <string name="font_size_large">Velké</string>
+    <string name="vertical_spacing">Vertikální mezery</string>
+    <string name="text_alignment">Zarovnání textu</string>
+    <string name="text_alignment_left">Vlevo</string>
+    <string name="text_alignment_center">Na střed</string>
+    <string name="text_alignment_right">Vpravo</string>
+    <string name="text_color">Barva textu</string>
+    <string name="background_color">Barva pozadí</string>
+    <string name="background_opacity">Průhlednost pozadí</string>
+    <string name="color_picker_presets">Předvolby</string>
+    <string name="color_picker_spectrum">Spektrum</string>
+    <string name="color_picker_hex">Hex</string>
+    <string name="color_picker_hue">Odstín</string>
+    <string name="color_picker_saturation">Sytost</string>
+    <string name="color_picker_brightness">Jas</string>
+    <string name="color_picker_select">Vybrat</string>
+    <string name="color_picker_hex_label">Hex barva (např. #FF5500)</string>
+    <string name="color_picker_hex_error">Neplatná hex barva</string>
+    <string name="save">Uložit</string>
+    <string name="cancel">Zrušit</string>
+    <string name="grant_permissions">Udělit oprávnění</string>
+    <string name="calendar_access_info">Agenda Widget potřebuje přístup k vašemu kalendáři pro zobrazení událostí. Udělte prosím oprávnění ke kalendáři pro použití widgetu.</string>
+    <string name="today">Dnes</string>
+    <string name="tomorrow">Zítra</string>
+    <string name="no_upcoming_events">Žádné nadcházející události</string>
+
+    <string name="active_widgets">Konfigurace widgetu</string>
+    <string name="default_configuration">Výchozí konfigurace</string>
+
+    <string name="date_placeholder">Zástupný text data</string>
+    <string name="event_placeholder">Zástupný text události</string>
+
+    <string name="agenda_widget_updated">Agenda Widget aktualizován</string>
+
+    <string name="onboarding_0">Vítejte v Agenda Widget! Postupujte podle pokynů pro přidání na domovskou obrazovku.</string>
+    <string name="onboarding_1">Pro přidání Agenda Widgetu dlouze stiskněte domovskou obrazovku</string>
+    <string name="onboarding_2">Vyberte Widgety z nabídky domovské obrazovky</string>
+    <string name="onboarding_3">Přetáhněte Agenda Widget na domovskou obrazovku. Hotovo!</string>
+
+    <string name="onboarding_skip">Přeskočit</string>
+    <string name="onboarding_next">Další</string>
+    <string name="onboarding_got_it">Rozumím</string>
+
+    <string name="preview_item_1">11:15 – 12:00 | Schůzka k projektu X</string>
+    <string name="preview_item_2">17:00 – 18:00 | Fotbal</string>
+    <string name="preview_item_3">Jackovy narozeniny</string>
+
+    <string name="battery_optimization_warning">Klepněte pro vypnutí optimalizace baterie pro spolehlivé aktualizace widgetu</string>
+
+    <string name="show_calendar_blob">Zobrazit značku kalendáře</string>
+    <string name="configure_calendar_blobs">Konfigurovat značky kalendáře</string>
+    <string name="title_color">Barva</string>
+    <string name="title_emoji">Emoji</string>
+    <string name="label_none">Žádný</string>
+    <string name="indicator_style">Styl indikátoru</string>
+    <string name="style_colors">Barvy</string>
+    <string name="style_emojis">Emoji</string>
+
+    <string name="prefs_title_editing_default_config">Úprava výchozí konfigurace</string>
+    <string name="prefs_title_general">Obecné</string>
+    <string name="prefs_title_date_time_location">Datum a čas, Místo</string>
+    <string name="prefs_title_appearance">Vzhled</string>
+</resources>

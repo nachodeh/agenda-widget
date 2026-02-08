@@ -1,0 +1,79 @@
+<resources>
+    <string name="app_widget_description">Widget agenda untuk menampilkan acara mendatang dalam format sederhana</string>
+
+    <string name="tap_to_set_up">%1$s memerlukan akses ke kalender Anda untuk menampilkan acara.\n\n Ketuk di sini dan berikan akses.</string>
+    <string name="select_calendars">Pilih kalender</string>
+    <string name="number_of_days_to_display">Jumlah hari yang ditampilkan</string>
+    <string name="show_end_time">Tampilkan waktu selesai</string>
+    <string name="show_action_buttons">Tampilkan tombol aksi</string>
+    <string name="show_no_upcoming_events">Tampilkan teks \"Tidak ada acara mendatang\"</string>
+    <string name="use_12_hour_format">Gunakan format 12 jam</string>
+    <string name="show_location">Tampilkan lokasi</string>
+    <string name="date_separator_visible">Tampilkan pemisah tanggal</string>
+    <string name="align_widget_bottom">Perataan bawah</string>
+    <string name="font_size">Ukuran font</string>
+    <string name="font_size_small">Kecil</string>
+    <string name="font_size_medium">Sedang</string>
+    <string name="font_size_large">Besar</string>
+    <string name="vertical_spacing">Jarak vertikal</string>
+    <string name="text_alignment">Perataan teks</string>
+    <string name="text_alignment_left">Kiri</string>
+    <string name="text_alignment_center">Tengah</string>
+    <string name="text_alignment_right">Kanan</string>
+    <string name="text_color">Warna teks</string>
+    <string name="background_color">Warna latar belakang</string>
+    <string name="background_opacity">Opasitas latar belakang</string>
+    <string name="color_picker_presets">Preset</string>
+    <string name="color_picker_spectrum">Spektrum</string>
+    <string name="color_picker_hex">Hex</string>
+    <string name="color_picker_hue">Hue</string>
+    <string name="color_picker_saturation">Saturasi</string>
+    <string name="color_picker_brightness">Kecerahan</string>
+    <string name="color_picker_select">Pilih</string>
+    <string name="color_picker_hex_label">Warna hex (contoh #FF5500)</string>
+    <string name="color_picker_hex_error">Warna hex tidak valid</string>
+    <string name="save">Simpan</string>
+    <string name="cancel">Batal</string>
+    <string name="grant_permissions">Berikan Izin</string>
+    <string name="calendar_access_info">Agenda Widget memerlukan akses ke kalender Anda untuk menampilkan acara. Mohon berikan izin kalender untuk menggunakan widget.</string>
+    <string name="today">Hari ini</string>
+    <string name="tomorrow">Besok</string>
+    <string name="no_upcoming_events">Tidak ada acara mendatang</string>
+
+    <string name="active_widgets">Konfigurasi widget</string>
+    <string name="default_configuration">Konfigurasi default</string>
+
+    <string name="date_placeholder">Placeholder tanggal</string>
+    <string name="event_placeholder">Placeholder acara</string>
+
+    <string name="agenda_widget_updated">Agenda Widget Diperbarui</string>
+
+    <string name="onboarding_0">Selamat datang di Agenda Widget! Ikuti petunjuk ini untuk menambahkannya ke layar utama Anda.</string>
+    <string name="onboarding_1">Untuk menambahkan Agenda Widget, tekan lama pada layar utama</string>
+    <string name="onboarding_2">Pilih Widget dari menu opsi layar utama</string>
+    <string name="onboarding_3">Seret Agenda Widget ke layar utama Anda. Selesai!</string>
+
+    <string name="onboarding_skip">Lewati</string>
+    <string name="onboarding_next">Berikutnya</string>
+    <string name="onboarding_got_it">Mengerti</string>
+
+    <string name="preview_item_1">11:15 – 12:00 | Rapat Proyek X</string>
+    <string name="preview_item_2">17:00 – 18:00 | Sepak bola</string>
+    <string name="preview_item_3">Ulang tahun Jack</string>
+
+    <string name="battery_optimization_warning">Ketuk untuk menonaktifkan optimasi baterai agar pembaruan widget lebih andal</string>
+
+    <string name="show_calendar_blob">Tampilkan penanda kalender</string>
+    <string name="configure_calendar_blobs">Konfigurasi penanda kalender</string>
+    <string name="title_color">Warna</string>
+    <string name="title_emoji">Emoji</string>
+    <string name="label_none">Tidak ada</string>
+    <string name="indicator_style">Gaya indikator</string>
+    <string name="style_colors">Warna</string>
+    <string name="style_emojis">Emoji</string>
+
+    <string name="prefs_title_editing_default_config">Mengedit konfigurasi default</string>
+    <string name="prefs_title_general">Umum</string>
+    <string name="prefs_title_date_time_location">Tanggal dan Waktu, Lokasi</string>
+    <string name="prefs_title_appearance">Tampilan</string>
+</resources>
